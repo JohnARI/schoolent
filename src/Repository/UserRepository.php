@@ -36,6 +36,64 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function findByRole(string $role)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', "%$role%")
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByRoleGroup()
+    {
+        return $this->createQueryBuilder('u')
+            ->addSelect('COUNT(u) as total')
+            ->groupBy('u.roles')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySession(string $role,$session)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.roles LIKE :role')
+            ->andWhere('u.session = :session')
+            ->setParameter('role', "%$role%")
+            ->setParameter('session', $session)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByEmail(string $email)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email LIKE :email')
+            ->setParameter('email', "%$email%")
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+      * Calcule nombre d utilisateurs par mois pour l annéé en cour
+      * @return int|mixed
+      * @throws Exception
+      * @throws \Doctrine\DBAL\Exception
+      */
+      public function findUserByMonth(): array
+      {
+          $date = new \DateTime();
+          return $this->createQueryBuilder('u')
+             ->addSelect('MONTH(u.createdAt) as month , count(u) as total')
+             ->andWhere('YEAR(u.createdAt) = YEAR(:dateNow)')
+             ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
+             ->groupBy('month')
+             ->orderBy('month', 'ASC')
+             ->getQuery()
+             ->getResult()
+          ;
+    }
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
@@ -64,4 +122,5 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+
 }

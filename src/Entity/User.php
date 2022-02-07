@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -30,6 +33,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     /**
+     *@var string
+     */
+    private $role;
+
+    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
@@ -41,9 +49,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastname;
 
     /**
+     * @var string
+     */
+    private $fullname;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
+
+
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -51,24 +66,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $picture;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255)
      */
     private $phone;
+
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $checking;
 
+
+
     /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
+
     /**
      * @ORM\Column(type="boolean")
      */
     private $sexe;
+
+
+
+    public function __construct()
+    {
+
+        $this->createdAt = new DateTimeImmutable();
+        $this->setRoles(['ROLE_USER']);
+        $this->createdAt = $this->updatedAt = new \DateTime();
+        $this->notifications = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
+        $this->calendars = new ArrayCollection();
+        $this->sent = new ArrayCollection();
+        $this->received = new ArrayCollection();
+        $this->checking = 1;
+    }
 
     public function getId(): ?int
     {
@@ -159,7 +194,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-  
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
 
 
     public function getLastName(): ?string
@@ -167,7 +208,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function getFullName(): ?string
+    {
+        return $this->getLastName() . ' ' . $this->getFirstName();
+    }
+
+    public function setLastName(string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -232,21 +278,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
-    
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
 
     public function getChecking(): ?bool
     {
         return $this->checking;
     }
 
-    public function setChecking(bool $checking): self
+    public function setChecking(?bool $checking): self
     {
         $this->checking = $checking;
 
         return $this;
     }
 
-    
+    /**
+     * @return Collection|Calendar[]
+     */
+    public function getCalendars(): Collection
+    {
+        return $this->calendars;
+    }
+
+
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getSent(): Collection
+    {
+        return $this->sent;
+    }
+
+
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getReceived(): Collection
+    {
+        return $this->received;
+    }
 
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -261,7 +340,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-  
     public function getSexe(): ?bool
     {
         return $this->sexe;
