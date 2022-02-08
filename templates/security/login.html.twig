@@ -58,6 +58,7 @@ Login
                                                 value="{{ last_username }}" name="email" id="inputEmail"
                                                 autocomplete="email" required autofocus>
                                         </div>
+                                        
                                         <div class="wrap-input100 validate-input input-group" id="Password-toggle">
                                             <a href="#" class="input-group-text bg-white text-muted">
                                                 <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
@@ -66,11 +67,12 @@ Login
                                                 type="password" name="password" id="inputPassword"
                                                 autocomplete="current-password" required>
 
-                                            <input type="hidden" name="_csrf_token"
-                                                value="{{ csrf_token('authenticate') }}">
+                                            
 
 
                                         </div>
+                                        <input type="hidden" name="_csrf_token"
+                                                value="{{ csrf_token('authenticate') }}">
                                         <div class="text-end pt-4">
                                             <p class="mb-0"><a href="{{path("reset-password")}}"
                                                     class="text-primary ms-1">Forgot Password?</a></p>
