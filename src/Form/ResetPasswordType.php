@@ -16,9 +16,11 @@ class ResetPasswordType extends AbstractType
         $builder
         ->add('email',EmailType::class,[
             'label' => 'Email du compte',
-            'attr' => ['placeholder'=>'Email','class'=>'form-control form-control-lg form-control-solid']])
+            'attr' => ['placeholder'=>'Email','class'=>'form-control form-control-lg form-control-solid mx-auto col-md-6',
+            
+            ]])
         ->add('submit', SubmitType::class, [
-            'attr' => ['class' => 'btn btn-primary btn-block'],
+            'attr' => ['class' => 'btn btn-primary btn-block mx-auto col-md-3',],
             'label' => 'Réinitialiser mon mot de passe'])
             ;
     }
