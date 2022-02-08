@@ -5,20 +5,14 @@ Dashboard admin
 {% endblock %}
 
 
-{% block final_stylesheets %}
 
-{% endblock %}
-
-
-{% block final_javascripts %}
-
-
-
-{% endblock %}
 
 {% block body %}
 
-  <!--app-content open-->
+ <!-- PAGE -->
+    <div class="page">
+        <div class="page-main">
+            <!--app-content open-->
             <div class="main-content app-content mt-0">
                 <div class="side-app">
 
@@ -27,7 +21,7 @@ Dashboard admin
 
                         <!-- PAGE-HEADER -->
                         <div class="page-header">
-                            <h1 class="page-title">Dashboard 01</h1>
+                            <h1 class="page-title">Administration</h1>
                             <div>
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -38,84 +32,50 @@ Dashboard admin
                         <!-- PAGE-HEADER END -->
 
                         <!-- ROW-1 -->
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-                                        <div class="card overflow-hidden">
-                                            <div class="card-body">
-                                                <div class="d-flex">
-                                                    <div class="mt-2">
-                                                        <h6 class="">Total Users</h6>
-                                                        <h2 class="mb-0 number-font">44,278</h2>
+                       <div class="row" id="user-profile">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="wideget-user mb-2">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12">
+                                                    <div class="row">
+                                                        <div class="panel profile-cover">
+                                                            <div class="profile-cover__action bg-img"></div>
+                                                            <div class="profile-cover__img">
+                                                                <div class="profile-img-1">
+                                                                    <img src="../assets/images/users/21.jpg" alt="img">
+                                                                </div>
+                                                                <div class="profile-img-content text-dark text-start">
+                                                                    <div class="text-dark">
+                                                                        <h3 class="h3 mb-2">Prenom et nom</h3> {# TODO: Inserer le nom et le prenom #}
+                                                                        <h5 class="text-muted">Role</h5> {# TODO: Inserer le role #}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
                                                     </div>
-                                                    <div class="ms-auto">
-                                                        <div class="chart-wrapper mt-1">
-                                                            <canvas id="saleschart" class="h-8 w-9 chart-dropshadow"></canvas>
+                                                    <div class="row">
+                                                        <div class="">
+                                                            <div class="social social-profile-buttons mt-5 float-end">
+                                                                <div class="mt-3">
+                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-facebook"></i></a>
+                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-twitter"></i></a>
+                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-youtube"></i></a>
+                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-rss"></i></a>
+                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-linkedin"></i></a>
+                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-google-plus"></i></a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span class="text-muted fs-12"><span class="text-secondary"><i class="fe fe-arrow-up-circle  text-secondary"></i> 5%</span> Last week</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-                                        <div class="card overflow-hidden">
-                                            <div class="card-body">
-                                                <div class="d-flex">
-                                                    <div class="mt-2">
-                                                        <h6 class="">Total Profit</h6>
-                                                        <h2 class="mb-0 number-font">67,987</h2>
-                                                    </div>
-                                                    <div class="ms-auto">
-                                                        <div class="chart-wrapper mt-1">
-                                                            <canvas id="leadschart" class="h-8 w-9 chart-dropshadow"></canvas>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <span class="text-muted fs-12"><span class="text-pink"><i class="fe fe-arrow-down-circle text-pink"></i> 0.75%</span> Last 6 days</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-                                        <div class="card overflow-hidden">
-                                            <div class="card-body">
-                                                <div class="d-flex">
-                                                    <div class="mt-2">
-                                                        <h6 class="">Total Expenses</h6>
-                                                        <h2 class="mb-0 number-font">$76,965</h2>
-                                                    </div>
-                                                    <div class="ms-auto">
-                                                        <div class="chart-wrapper mt-1">
-                                                            <canvas id="profitchart" class="h-8 w-9 chart-dropshadow"></canvas>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <span class="text-muted fs-12"><span class="text-green"><i class="fe fe-arrow-up-circle text-green"></i> 0.9%</span> Last 9 days</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-                                        <div class="card overflow-hidden">
-                                            <div class="card-body">
-                                                <div class="d-flex">
-                                                    <div class="mt-2">
-                                                        <h6 class="">Total Cost</h6>
-                                                        <h2 class="mb-0 number-font">$59,765</h2>
-                                                    </div>
-                                                    <div class="ms-auto">
-                                                        <div class="chart-wrapper mt-1">
-                                                            <canvas id="costchart" class="h-8 w-9 chart-dropshadow"></canvas>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <span class="text-muted fs-12"><span class="text-warning"><i class="fe fe-arrow-up-circle text-warning"></i> 0.6%</span> Last year</span>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
                         <!-- ROW-1 END -->
 
                         <!-- ROW-2 -->
@@ -1764,4 +1724,88 @@ Dashboard admin
                 </div>
             </div>
             <!--app-content close-->
+
+        </div>
+
+        <!-- Sidebar-right -->
+        <div class="sidebar sidebar-right sidebar-animate">
+            <div class="panel panel-primary card mb-0 shadow-none border-0">
+                <div class="tab-menu-heading border-0 d-flex p-3">
+                    <div class="card-title mb-0"><i class="fe fe-bell me-2"></i><span class=" pulse"></span>Notifications</div>
+                    <div class="card-options ms-auto">
+                        <a href="javascript:void(0);" class="sidebar-icon text-end float-end me-3 mb-1" data-bs-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x text-white"></i></a>
+                    </div>
+                </div>
+                <div class="panel-body tabs-menu-body latest-tasks p-0 border-0">
+                    <div class="tabs-menu border-bottom">
+                        
+
+        <!-- Country-selector modal-->
+        <div class="modal fade" id="country-selector">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content country-select-modal">
+                    <div class="modal-header">
+                        <h6 class="modal-title">Choose Country</h6><button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row p-3">
+                            <div class="col-lg-6">
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio1"  checked="">
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio1">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/us_flag.jpg" class="me-3 language"></span>USA
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio2">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/italy_flag.jpg" class="me-3 language"></span>Italy
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio3" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio3">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/spain_flag.jpg" class="me-3 language"></span>Spain
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio4" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio4">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/india_flag.jpg" class="me-3 language"></span>India
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio5" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio5">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/french_flag.jpg" class="me-3 language"></span>French
+                            </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio7" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio7">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/russia_flag.jpg" class="me-3 language"></span>Russia
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio8" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio8">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/germany_flag.jpg" class="me-3 language"></span>Germany
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio9" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio9">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/argentina.jpg" class="me-3 language"></span>Argentina
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio10" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio10">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/malaysia.jpg" class="me-3 language"></span>Malaysia
+                            </label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio11" >
+                                <label class="btn btn-country btn-lg btn-block" for="btnradio11">
+                                <span class="country-selector"><img alt="" src="../assets/images/flags/turkey.jpg" class="me-3 language"></span>Turkey
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Country-selector modal-->
+    </div>
 {% endblock %}
