@@ -81,11 +81,14 @@
 	<!-- /GLOBAL-LOADER -->
 	<div class="page">
 		<div class="page-main">
+		{% block header %}
 			{% include 'components/header.html.twig' %}
-			{% include 'components/sidebar.html.twig' %}{% block body %}
+			{% endblock %}
+
+			{% block sidebar %} {% include 'components/sidebar.html.twig' %}{% endblock %}{% block body %}
 			{% endblock %}
 		</div>
-		{% include 'components/footer.html.twig' %}
+		{% block footer %}{% include 'components/footer.html.twig' %}{% endblock %}
 	</div>
 </body>
 
