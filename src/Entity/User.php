@@ -89,6 +89,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $sexe;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="teacher")
+     */
+    private $calendars;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=session::class, inversedBy="users")
+     */
+    private $session;
+
 
 
     public function __construct()
@@ -348,6 +358,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSexe(bool $sexe): self
     {
         $this->sexe = $sexe;
+
+        return $this;
+    }
+
+    public function addCalendar(Calendar $calendar): self
+    {
+        if (!$this->calendars->contains($calendar)) {
+            $this->calendars[] = $calendar;
+            $calendar->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendar(Calendar $calendar): self
+    {
+        if ($this->calendars->removeElement($calendar)) {
+            // set the owning side to null (unless already changed)
+            if ($calendar->getTeacher() === $this) {
+                $calendar->setTeacher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSession(): ?session
+    {
+        return $this->session;
+    }
+
+    public function setSession(?session $session): self
+    {
+        $this->session = $session;
 
         return $this;
     }
