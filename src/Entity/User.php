@@ -58,7 +58,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $firstname;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity=Notification::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $notifications;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -70,34 +73,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $phone;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Grade::class, mappedBy="user",cascade={"remove"})
+     */
+    private $grades;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="user")
+     */
+    private $session;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $checking;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="teacher", orphanRemoval=true)
+     */
+    private $calendars;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender", orphanRemoval=true)
+     */
+    private $sent;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipient", orphanRemoval=true)
+     */
+    private $received;
 
     /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="teacher")
+     */
+    private $payment;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $sexe;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="teacher")
-     */
-    private $calendars;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=session::class, inversedBy="users")
-     */
-    private $session;
 
 
 
@@ -108,7 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->setRoles(['ROLE_USER']);
         $this->createdAt = $this->updatedAt = new \DateTime();
         $this->notifications = new ArrayCollection();
-        $this->ratings = new ArrayCollection();
+        $this->grades = new ArrayCollection();
         $this->calendars = new ArrayCollection();
         $this->sent = new ArrayCollection();
         $this->received = new ArrayCollection();
@@ -212,6 +231,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->notifications;
     }
 
+    public function addNotification(Notification $notification): void
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setUser($this);
+        }
+    }
+
+
+    public function removeNotification(Notification $notification): void
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+    }
+
 
     public function getLastName(): ?string
     {
@@ -289,13 +327,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Rating[]
+     * @return Collection|Grade[]
      */
-    public function getRatings(): Collection
+    public function getGrades(): Collection
     {
-        return $this->ratings;
+        return $this->grades;
     }
 
+    public function addGrade(Grade $grade): self
+    {
+        if (!$this->grades->contains($grade)) {
+            $this->grades[] = $grade;
+            $grade->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGrade(Grade $grade): self
+    {
+        if ($this->grades->removeElement($grade)) {
+            // set the owning side to null (unless already changed)
+            if ($grade->getUser() === $this) {
+                $grade->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSession(): ?Session
+    {
+        return $this->session;
+    }
+
+    public function setSession(?Session $session): self
+    {
+        $this->session = $session;
+
+        return $this;
+    }
 
     public function getChecking(): ?bool
     {
@@ -315,51 +386,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCalendars(): Collection
     {
         return $this->calendars;
-    }
-
-
-
-    /**
-     * @return Collection|Message[]
-     */
-    public function getSent(): Collection
-    {
-        return $this->sent;
-    }
-
-
-
-    /**
-     * @return Collection|Message[]
-     */
-    public function getReceived(): Collection
-    {
-        return $this->received;
-    }
-
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getSexe(): ?bool
-    {
-        return $this->sexe;
-    }
-
-    public function setSexe(bool $sexe): self
-    {
-        $this->sexe = $sexe;
-
-        return $this;
     }
 
     public function addCalendar(Calendar $calendar): self
@@ -384,14 +410,98 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSession(): ?session
+    /**
+     * @return Collection|Message[]
+     */
+    public function getSent(): Collection
     {
-        return $this->session;
+        return $this->sent;
     }
 
-    public function setSession(?session $session): self
+    public function addSent(Message $sent): self
     {
-        $this->session = $session;
+        if (!$this->sent->contains($sent)) {
+            $this->sent[] = $sent;
+            $sent->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSent(Message $sent): self
+    {
+        if ($this->sent->removeElement($sent)) {
+            // set the owning side to null (unless already changed)
+            if ($sent->getSender() === $this) {
+                $sent->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getReceived(): Collection
+    {
+        return $this->received;
+    }
+
+    public function addReceived(Message $received): self
+    {
+        if (!$this->received->contains($received)) {
+            $this->received[] = $received;
+            $received->setRecipient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceived(Message $received): self
+    {
+        if ($this->received->removeElement($received)) {
+            // set the owning side to null (unless already changed)
+            if ($received->getRecipient() === $this) {
+                $received->setRecipient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): self
+    {
+        $this->payment = $payment;
+
+        return $this;
+    }
+
+    public function getSexe(): ?bool
+    {
+        return $this->sexe;
+    }
+
+    public function setSexe(bool $sexe): self
+    {
+        $this->sexe = $sexe;
 
         return $this;
     }

@@ -19,6 +19,112 @@ class CalendarRepository extends ServiceEntityRepository
         parent::__construct($registry, Calendar::class);
     }
 
+
+
+    /**
+     * Calcule du nombres de dates par mois pour l annéé en cour
+     * @return int|mixed
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findCalendarForMonth(): array
+    {
+        $date = new \DateTime();
+        return $this->createQueryBuilder('c')
+            ->addSelect('MONTH(c.start) as month ,SUM(DATE_DIFF(c.end,c.start)) as total')
+            ->andWhere('YEAR(c.start) = YEAR(:dateNow)')
+            ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
+            ->groupBy('month')
+            ->orderBy('month', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * Calcule le nombre de dates par mois pour l'annéé en cour
+     * @return int|mixed
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findStats($id): array
+    {
+        $date = new \DateTime();
+        return $this->createQueryBuilder('c')
+            ->addSelect('MONTH(c.start) as month ,  SUM(DATE_DIFF(c.end,c.start))  as total')
+            ->where('c.teacher = :id')
+            ->andWhere('YEAR(c.createdAt) = YEAR(:dateNow)')
+            ->setParameter('id', $id)
+            ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
+            ->groupBy('month')
+            ->orderBy('month', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * Calcule du nombres de dates multiplier par le taux Jr de Payment par mois pour l annéé en cour
+     * @return int|mixed
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function totalPaymentForTeacherByMonth($id): array
+    {
+        $date = new \DateTime();
+        return $this->createQueryBuilder('c')
+            ->addSelect('MONTH(c.start) as month , SUM(DATE_DIFF(c.end,c.start)) as total')
+            ->where('c.teacher = :id')
+            ->andWhere('YEAR(c.start) = YEAR(:dateNow)')
+            ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('id', $id)
+            ->groupBy('month')
+            ->orderBy('month', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Calcule du nombres de dates multiplier par le taux Jr de Payment pour le mois en cour
+     * @return int|mixed
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function totalPaymentForMonth($id): array
+    {
+        $date = new \DateTime();
+        return $this->createQueryBuilder('c')
+            ->addSelect('MONTH(c.start) as month , SUM(DATE_DIFF(c.end,c.start)) as total')
+            ->where('c.teacher = :id')
+            ->andWhere('MONTH(c.start) = MONTH(:dateNow)')
+            ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('id', $id)
+            ->groupBy('month')
+            ->orderBy('month', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
+
+    /**
+     * Calcule du nombres de dates multiplier par le taux Jr de Payment par mois pour l annéé en cour
+     * @return int|mixed
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function totalcalendar(): array
+    {
+        $date = new \DateTime();
+        return $this->createQueryBuilder('c')
+            ->addSelect('SUM(DATE_DIFF(c.end,c.start)) as total')
+            ->andWhere('YEAR(c.start) = YEAR(:dateNow)')
+            ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Calendar[] Returns an array of Calendar objects
     //  */

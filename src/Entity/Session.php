@@ -42,11 +42,17 @@ class Session
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="session")
      */
-    private $users;
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="session")
+     */
+    private $calendars;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->user = new ArrayCollection();
+        $this->calendars = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,15 +111,15 @@ class Session
     /**
      * @return Collection|User[]
      */
-    public function getUsers(): Collection
+    public function getUser(): Collection
     {
-        return $this->users;
+        return $this->user;
     }
 
     public function addUser(User $user): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
             $user->setSession($this);
         }
 
@@ -122,10 +128,40 @@ class Session
 
     public function removeUser(User $user): self
     {
-        if ($this->users->removeElement($user)) {
+        if ($this->user->removeElement($user)) {
             // set the owning side to null (unless already changed)
             if ($user->getSession() === $this) {
                 $user->setSession(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Calendar[]
+     */
+    public function getCalendars(): Collection
+    {
+        return $this->calendars;
+    }
+
+    public function addCalendar(Calendar $calendar): self
+    {
+        if (!$this->calendars->contains($calendar)) {
+            $this->calendars[] = $calendar;
+            $calendar->setSession($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendar(Calendar $calendar): self
+    {
+        if ($this->calendars->removeElement($calendar)) {
+            // set the owning side to null (unless already changed)
+            if ($calendar->getSession() === $this) {
+                $calendar->setSession(null);
             }
         }
 

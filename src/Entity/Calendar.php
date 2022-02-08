@@ -18,10 +18,15 @@ class Calendar
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=programmingLanguage::class, inversedBy="calendars")
+     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="calendars")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $category;
+    private $Category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="calendars")
+     */
+    private $session;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -53,14 +58,26 @@ class Calendar
         return $this->id;
     }
 
-    public function getCategory(): ?programmingLanguage
+    public function getCategory(): ?ProgrammingLanguage
     {
-        return $this->category;
+        return $this->Category;
     }
 
-    public function setCategory(?programmingLanguage $category): self
+    public function setCategory(?ProgrammingLanguage $Category): self
     {
-        $this->category = $category;
+        $this->Category = $Category;
+
+        return $this;
+    }
+
+    public function getSession(): ?Session
+    {
+        return $this->session;
+    }
+
+    public function setSession(?Session $session): self
+    {
+        $this->session = $session;
 
         return $this;
     }

@@ -18,6 +18,12 @@ class Course
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="courses")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -32,15 +38,21 @@ class Course
      */
     private $link;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="courses")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $category;
-
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getCategory(): ?ProgrammingLanguage
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?ProgrammingLanguage $category): self
+    {
+        $this->category = $category;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -75,18 +87,6 @@ class Course
     public function setLink(string $link): self
     {
         $this->link = $link;
-
-        return $this;
-    }
-
-    public function getCategory(): ?ProgrammingLanguage
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?ProgrammingLanguage $category): self
-    {
-        $this->category = $category;
 
         return $this;
     }

@@ -25,23 +25,29 @@ class ProgrammingLanguage
     private $name;
 
     /**
+     * @ORM\OneToMany(targetEntity=Course::class, mappedBy="category", orphanRemoval=true)
+     */
+    private $courses;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $picture;
 
     /**
-     * @ORM\OneToMany(targetEntity=Course::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity=Grade::class, mappedBy="category")
      */
-    private $courses;
+    private $grades;
 
     /**
-     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="Category")
      */
     private $calendars;
 
     public function __construct()
     {
         $this->courses = new ArrayCollection();
+        $this->grades = new ArrayCollection();
         $this->calendars = new ArrayCollection();
     }
 
@@ -58,18 +64,6 @@ class ProgrammingLanguage
     public function setName(?string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): self
-    {
-        $this->picture = $picture;
 
         return $this;
     }
@@ -98,6 +92,48 @@ class ProgrammingLanguage
             // set the owning side to null (unless already changed)
             if ($course->getCategory() === $this) {
                 $course->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Grade[]
+     */
+    public function getgrades(): Collection
+    {
+        return $this->grades;
+    }
+
+    public function addGrade(Grade $grade): self
+    {
+        if (!$this->grades->contains($grade)) {
+            $this->grades[] = $grade;
+            $grade->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGrade(Grade $grade): self
+    {
+        if ($this->grades->removeElement($grade)) {
+            // set the owning side to null (unless already changed)
+            if ($grade->getCategory() === $this) {
+                $grade->setCategory(null);
             }
         }
 
