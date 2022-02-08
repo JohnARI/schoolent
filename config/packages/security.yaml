@@ -36,8 +36,14 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/profile, roles: ROLE_USER }
-         - { path: ^/teacher, roles:  [ROLE_ADMIN, ROLE_TEACHER] }
+         - { path: ^/dashboard, roles: ROLE_USER }
+         - { path: ^/teacher, roles: ROLE_TEACHER}
+    
+    role_hierarchy:
+        ROLE_USER : ['IS_AUTHENTICATED_FULLY']
+        ROLE_TEACHER : ['ROLE_TEACHER']
+        ROLE_ADMIN : ['ROLE_ADMIN']
+
 
 when@test:
     security:
@@ -51,3 +57,6 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
+            
+            
+            
