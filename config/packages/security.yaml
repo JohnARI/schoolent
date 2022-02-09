@@ -40,7 +40,7 @@ security:
          - { path: ^/teacher, roles: ROLE_TEACHER}
     
     role_hierarchy:
-        ROLE_USER : ['IS_AUTHENTICATED_FULLY']
+        ROLE_USER : ['ROLE_USER']
         ROLE_TEACHER : ['ROLE_TEACHER']
         ROLE_ADMIN : ['ROLE_ADMIN']
 
