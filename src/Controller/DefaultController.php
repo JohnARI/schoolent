@@ -16,17 +16,15 @@ class DefaultController extends AbstractController
      */
     public function index(): Response
     {
-        $roles = $this->getUser()->getRole();
+        if ($this->isGranted('ROLE_USER') == false) {
+            return $this->redirectToRoute('login');
+        } else {
+            return $this->redirectToRoute('dashboard');
+        }
 
-        switch ($roles) {
-            case $this->isGranted('ROLE_USER') == false: 
-        return $this->redirectToRoute('login');
-        break;
-        default: return $this->redirectToRoute('dashboard');
-        break;
+      
     
 
     }
 }
 
-}
