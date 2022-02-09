@@ -22,6 +22,7 @@ Administrator
                                         <h3 class="card-title">Utilisateur</h3>
                                     </div>
                                     <div class="card-body">
+                                    <a href="{{path('register')}}" id="table2-new-row-button" class="btn btn-primary mb-4"> Ajouter un nouvel utilisateur</a>
                                         <div class="table-responsive">
                                             <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                                                 <thead>
@@ -31,6 +32,7 @@ Administrator
                                                         <th class="wd-20p border-bottom-0">Role</th>
                                                         <th class="wd-15p border-bottom-0">Numéro</th>
                                                         <th class="wd-10p border-bottom-0">Email</th>
+                                                        <th class="wd-10p border-bottom-0">Actions</th>
                                                         
                                                     </tr>
                                                 </thead>
@@ -42,7 +44,24 @@ Administrator
                                                         <td>{{ user.role }}</td>
                                                         <td>{{ user.phone }}</td>
                                                         <td>{{ user.email }}</td>
-                                                     
+                                                        
+                                                        <td name="bstable-actions">
+                                                            <div class="btn-list">
+                                                            {# Bouton modifier #}
+                                                                <a href="{{path('edit_user',{'id': user.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+                                                                    <span class="fe fe-edit">
+
+                                                                    </span>
+                                                                </a>
+                                                                {# fin bouton modifier #}
+
+                                                                {# Bouton supprimer #}
+                                                                <a href="" id="bDel" type="button" class="btn btn-sm btn-danger">
+                                                                    <span class="fe fe-trash-2"></span>
+                                                                </a>
+                                                                {# fin bouton supprimer #}
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                     {% endfor %}
                                                     
