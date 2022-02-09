@@ -8,6 +8,7 @@ Login
 {% block footer %}{% endblock %}
 {% block body %}
     <!-- PAGE -->
+    <div class="login-img">
     <div class="page">
         <div class="">
             <!-- Theme-Layout -->
@@ -34,7 +35,7 @@ Login
                         </div>
                         {% endif %}
                         <span class="login100-form-title pb-5">
-                            Login
+                            Connexion
                         </span>
                         <div class="panel panel-primary">
                             <div class="tab-menu-heading">
@@ -75,17 +76,17 @@ Login
                                                 value="{{ csrf_token('authenticate') }}">
                                         <div class="text-end pt-4">
                                             <p class="mb-0"><a href="{{path("reset-password")}}"
-                                                    class="text-primary ms-1">Forgot Password?</a></p>
+                                                    class="text-primary ms-1">Mot de passe oublié ?</a></p>
                                         </div>
                                         <div class="container-login100-form-btn">
 
                                             <button type="submit" href="" class="login100-form-btn btn-primary">
-                                                Login
+                                                Connexion
                                             </button>
                                         </div>
                                         <div class="text-center pt-3">
-                                            <p class="text-dark mb-0">Not a member?<a href="{{path('register')}}"
-                                                    class="text-primary ms-1">Sign UP</a></p>
+                                            <p class="text-dark mb-0">Pas encore de compte ?<a href="{{path('register')}}"
+                                                    class="text-primary ms-1">Faire une demande</a></p>
                                         </div>
                                     </div>
                                     

@@ -23,11 +23,11 @@ Register
                     </div>
                 </div>
                 <div class="container-login100">
-                    <div class="wrap-login100 p-6">
-
-                            <span class="login100-form-title">
-									Registration
-								</span>
+                    <div class="wrap-login100 p-6 row">
+                        <span class="login100-form-title">
+                                Registration
+                            </span>
+                        <div class="col">
                                 {{form_start(form)}}
                             <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
                                 <a href="#" class="input-group-text bg-white text-muted">
@@ -37,7 +37,7 @@ Register
                             </div>
                             <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
                                 <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="zmdi zmdi-account-o" aria-hidden="true"></i>
+                                    <i class="mdi mdi-account" aria-hidden="true"></i>
                                 </a>
                                 {{form_widget(form.firstname)}}
                             </div>
@@ -53,6 +53,8 @@ Register
                                 </a>
                                 {{form_widget(form.phone)}}
                             </div>
+                        </div>
+                        <div class="col">
                             <div class="wrap-input100 validate-input input-group" id="Password-toggle">
                                 <a href="#" class="input-group-text bg-white text-muted">
                                     <i class="zmdi zmdi-eye" aria-hidden="true"></i>
@@ -73,9 +75,10 @@ Register
                             </div>
                             
                             <label class="custom-control custom-checkbox mt-4">
-									<input type="checkbox" class="custom-control-input">
+									<input type="checkbox" class="custom-control-input" required>
 									<span class="custom-control-label">Agree the <a href="terms.html">terms and policy</a></span>
 								</label>
+                            </div>
                             <div class="container-login100-form-btn">
                                 {{form_widget(form.submit)}}
                             </div>
@@ -83,8 +86,7 @@ Register
                             <div class="text-center pt-3">
                                 <p class="text-dark mb-0">Already have account?<a href="{{path('login')}}" class="text-primary ms-1">Sign In</a></p>
                             </div>
-                            
-                    </div>
+                        </div>
                 </div>
                 <!-- CONTAINER CLOSED -->
             </div>

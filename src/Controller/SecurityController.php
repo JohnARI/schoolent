@@ -51,7 +51,7 @@ class SecurityController extends AbstractController
     }
 
        /**
-     * @Route("/resset-password", name="reset-password")
+     * @Route("/reset-password", name="reset-password")
      */
     public function resetPassword(Request $request, UserRepository $userRepository): Response
     {
