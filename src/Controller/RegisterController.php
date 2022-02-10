@@ -14,7 +14,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegisterController extends AbstractController
 {
-
     public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
 
@@ -22,34 +21,50 @@ class RegisterController extends AbstractController
         $this->passwordHasher = $passwordHasher;
     }
     /**
-     * @Route("/register", name="register")
+     * @Route("/admin/register", name="register")
      */
     public function register(Request $request, UserRepository $userRepository): Response
-
-
     {
-        $admins =   $userRepository->findByRole('ROLE_ADMIN');
-        $teachers = $userRepository->findByRole('ROLE_TEACHER');
-        $students = $userRepository->findByRole('ROLE_USER');
+        $roles = $this->getUser()->getRole();
 
-        $user = new User();
-        $form = $this->createForm(RegisterType::class, $user);
-        $form->handleRequest($request);
+        switch ($roles) {
+            case "Formateur":
+                return $this->redirectToRoute('login');
+                break;
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            case "Eleve":
+                return $this->redirectToRoute('login');
+                break;
 
-            $user = $form->getData();
-            $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+            case $this->isGranted('ROLE_USER') == false:
+                return $this->redirectToRoute('login');
+                break;
+                
+            case "Administrateur":
+                $admins =   $userRepository->findByRole('ROLE_ADMIN');
+                $teachers = $userRepository->findByRole('ROLE_TEACHER');
+                $students = $userRepository->findByRole('ROLE_USER');
 
-            return $this->redirectToRoute('login');
+                $user = new User();
+                $form = $this->createForm(RegisterType::class, $user);
+                $form->handleRequest($request);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+
+                    $user = $form->getData();
+                    $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
+                    $this->entityManager->persist($user);
+                    $this->entityManager->flush();
+
+                    return $this->redirectToRoute('view-users');
+                }
+                return $this->render('register/register.html.twig', [
+                    'form' => $form->createView(),
+                    'admins' => $admins,
+                    'teachers' => $teachers,
+                    'students' => $students,
+                ]);
+                break;
         }
-        return $this->render('register/register.html.twig', [
-            'form' => $form->createView(),
-            'admins' => $admins,
-            'teachers' => $teachers,
-            'students' => $students,
-        ]);
     }
 }
