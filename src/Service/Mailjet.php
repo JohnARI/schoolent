@@ -8,7 +8,7 @@ namespace App\Service;
 use Mailjet\Client;
 use App\Entity\User;
 use Twig\Environment;
-use Mailjet\Resources;
+use Mailjet\Ressources;
 
 class Mailjet
 {
@@ -70,7 +70,7 @@ class Mailjet
        
         $mj = new Client($this->mailJetKey, $this->mailJetKeySecret, true, ['version' => 'v3.1']);
       
-        $response = $mj->post(Resources::$Email, ['body' => $body]);
+        $response = $mj->post(Ressources::$Email, ['body' => $body]);
         $response->success();
     }
 
