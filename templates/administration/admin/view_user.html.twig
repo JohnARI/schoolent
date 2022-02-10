@@ -42,7 +42,7 @@ Administrator
                                                         <td>{{ user.firstname }}</td>
                                                         <td>{{ user.lastname }}</td>
                                                         <td>{{ user.role }}</td>
-                                                        <td>{{ user.phone }}</td>
+                                                        <td>0{{ user.phone }}</td>
                                                         <td>{{ user.email }}</td>
                                                         
                                                         <td name="bstable-actions">
@@ -56,7 +56,7 @@ Administrator
                                                                 {# fin bouton modifier #}
 
                                                                 {# Bouton supprimer #}
-                                                                <a href="" id="bDel" type="button" class="btn btn-sm btn-danger">
+                                                                <a href="{{path('delete_user',{'id': user.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
                                                                     <span class="fe fe-trash-2"></span>
                                                                 </a>
                                                                 {# fin bouton supprimer #}

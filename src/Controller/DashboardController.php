@@ -55,5 +55,16 @@ class DashboardController extends AbstractController
         ]);
     }
 
+        /**
+     * @Route("/admin/delete/user/{id}", name="delete_user")
+     */
+    public function deleteUser(User $user, Request $request): Response
+    {
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->get('redirect') ?? '/admin/view-users');
+    }
+
 
 }
