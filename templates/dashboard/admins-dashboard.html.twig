@@ -44,14 +44,12 @@ Dashboard admin
                                                         <div class="profile-cover__action bg-img"></div>
                                                         <div class="profile-cover__img">
                                                             <div class="profile-img-1">
-                                                                <img src="../assets/images/users/21.jpg" alt="img">
+                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="img">
                                                             </div>
                                                             <div class="profile-img-content text-dark text-start">
                                                                 <div class="text-dark">
-                                                                    <h3 class="h3 mb-2">Prenom et nom</h3> {# TODO:
-                                                                    Inserer le nom et le prenom #}
-                                                                    <h5 class="text-muted">Role</h5> {# TODO: Inserer le
-                                                                    role #}
+                                                                    <h3 class="h3 mb-2">{{app.user.firstname ~ ' ' ~ app.user.lastname}}</h3>
+                                                                    <h5 class="text-muted">{{app.user.role}}</h5>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -110,20 +108,20 @@ Dashboard admin
                                                 id="basic-datatable">
                                                 <thead>
                                                     <tr>
+                                                        <th class="wd-15p border-bottom-0">Photo</th>
                                                         <th class="wd-15p border-bottom-0">Prénom</th>
                                                         <th class="wd-15p border-bottom-0">Nom</th>
                                                         <th class="wd-20p border-bottom-0">Role</th>
-                                                        <th class="wd-15p border-bottom-0">Numéro</th>
                                                         <th class="wd-10p border-bottom-0">Email</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {% for user in users %}
                                                     <tr>
+                                                        <td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ user.picture)}}" alt=""></td>
                                                         <td>{{ user.firstname }}</td>
                                                         <td>{{ user.lastname }}</td>
                                                         <td>{{ user.role }}</td>
-                                                        <td>{{ user.phone }}</td>
                                                         <td>{{ user.email }}</td>
                                                     </tr>
                                                     {% endfor %}
