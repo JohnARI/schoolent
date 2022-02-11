@@ -27,10 +27,10 @@ Administrator
                                             <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                                                 <thead>
                                                     <tr>
+                                                        <th class="wd-15p border-bottom-0">Photo</th>
                                                         <th class="wd-15p border-bottom-0">Prénom</th>
                                                         <th class="wd-15p border-bottom-0">Nom</th>
                                                         <th class="wd-20p border-bottom-0">Role</th>
-                                                        <th class="wd-15p border-bottom-0">Numéro</th>
                                                         <th class="wd-10p border-bottom-0">Email</th>
                                                         <th class="wd-10p border-bottom-0">Actions</th>
                                                         
@@ -39,10 +39,10 @@ Administrator
                                                 <tbody>
                                                 {% for user in users %}
                                                     <tr>
+                                                        <td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ user.picture)}}" alt=""></td>
                                                         <td>{{ user.firstname }}</td>
                                                         <td>{{ user.lastname }}</td>
                                                         <td>{{ user.role }}</td>
-                                                        <td>0{{ user.phone }}</td>
                                                         <td>{{ user.email }}</td>
                                                         
                                                         <td name="bstable-actions">

@@ -29,13 +29,13 @@ Register
                             </span>
                         <div class="col">
                                 {{form_start(form)}}
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
                                 <a href="#" class="input-group-text bg-white text-muted">
                                     <i class="mdi mdi-account" aria-hidden="true"></i>
                                 </a>
                                 {{form_widget(form.lastname)}}
                             </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
                                 <a href="#" class="input-group-text bg-white text-muted">
                                     <i class="mdi mdi-account" aria-hidden="true"></i>
                                 </a>
@@ -47,7 +47,7 @@ Register
                                 </a>
                                 {{form_widget(form.email)}}
                             </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
                                 <a href="#" class="input-group-text bg-white text-muted">
                                     <i class="zmdi zmdi-phone" aria-hidden="true"></i>
                                 </a>
@@ -61,17 +61,21 @@ Register
                                 </a>
                                 {{form_widget(form.password)}}
                             </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
                                 <a href="#" class="input-group-text bg-white text-muted">
                                     <i class="zmdi zmdi-key" aria-hidden="true"></i>
                                 </a>
                                 {{form_widget(form.roles)}}
                             </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
                                 <a href="#" class="input-group-text bg-white text-muted">
                                     <i class="zmdi zmdi-male-female" aria-hidden="true"></i>
                                 </a>
                                 {{form_widget(form.sexe)}}
+                            </div>
+
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="z">
+                                {{form_widget(form.picture)}}
                             </div>
                             
                             <label class="custom-control custom-checkbox mt-4">
