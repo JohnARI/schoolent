@@ -83,12 +83,13 @@ class RegisterController extends AbstractController
                     $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
                             return $this->redirectToRoute('register'); 
                         }
+
                     $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
 
                     $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
-                    $this->redirectToRoute('home');
+                    return $this->redirectToRoute('dashboard');
                 }
 
                 return $this->render('administration/admin/add_users.html.twig', [
