@@ -6,10 +6,8 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -52,15 +50,7 @@ class RegisterType extends AbstractType
                     'class' => 'input100 form-control',
                 ],
             ])
-                // Choix du mdp
-            ->add('password', PasswordType::class, [
-                'required' => true,
-                'attr' => [
-                    'placeholder' => 'Entrez votre mot de passe',
-                    'class' => 'input100 form-control',
-                ]
-
-            ])
+      
                     // Choix du sexe
             ->add('sexe', ChoiceType::class, [
                 'attr' => [
@@ -92,19 +82,7 @@ class RegisterType extends AbstractType
                 ]
             ])
 
-            ->add('picture', FileType::class, [    
-                'required' => true,
-                'constraints'=> [
-
-                    new Image([
-                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
-                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
-                    ])
-                ]
-
-
-
-            ])
+            
 
             ->add('submit', SubmitType::class, [
                 'label' => "S'inscrire",
