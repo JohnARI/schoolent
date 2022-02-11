@@ -23,9 +23,9 @@ class RegisterController extends AbstractController
         $this->passwordHasher = $passwordHasher;
     }
     /**
-     * @Route("/admin/register", name="register")
+     * @Route("/admin/add-user", name="addUser")
      */
-    public function register(Request $request, UserRepository $userRepository, SluggerInterface $slugger): Response
+    public function addUser(Request $request, UserRepository $userRepository, SluggerInterface $slugger): Response
     {
         $roles = $this->getUser()->getRole();
 
@@ -72,7 +72,7 @@ class RegisterController extends AbstractController
                                
                     } else { 
                     $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
-                            return $this->redirectToRoute('register'); 
+                            return $this->redirectToRoute('addUser'); 
                         }
 
                     $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
@@ -81,7 +81,7 @@ class RegisterController extends AbstractController
 
                     return $this->redirectToRoute('view-users');
                 }
-                return $this->render('register/register.html.twig', [
+                return $this->render('administration/admin/add_users.html.twig', [
                     'form' => $form->createView(),
                     'admins' => $admins,
                     'teachers' => $teachers,

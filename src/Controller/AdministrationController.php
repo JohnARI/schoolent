@@ -66,7 +66,7 @@ class AdministrationController extends AbstractController
                        
             } else { 
                     $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
-                    return $this->redirectToRoute('register'); 
+                    return $this->redirectToRoute('add_users'); 
                 }
 
 
