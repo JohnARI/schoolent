@@ -89,6 +89,8 @@ class RegisterController extends AbstractController
                     $this->entityManager->flush();
 
                     $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
+                    $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
+                    //Message de succès
                     return $this->redirectToRoute('dashboard');
                 }
 

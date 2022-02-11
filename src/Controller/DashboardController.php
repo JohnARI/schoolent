@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-
+use App\Entity\Contact;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,6 +55,20 @@ class DashboardController extends AbstractController
         
         return $this->render("administration/admin/view_admin.html.twig",[
             'users' => $users,
+        ]);
+    } 
+
+    /**
+     * @Route("admin/contact", name="view-contact")
+     */
+    public function showContact(): Response {
+
+
+
+        $contacts = $this->entityManager->getRepository(Contact::class)->findAll();
+        
+        return $this->render("administration/admin/view_contact.html.twig", [
+            'contacts' => $contacts,
         ]);
     } 
     

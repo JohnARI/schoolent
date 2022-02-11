@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Service;
 
 use Mailjet\Client;
 use App\Entity\User;
@@ -20,7 +20,7 @@ Class EmailSender{
             [
               'From' => [
                 'Email' => "maisongaultier78@gmail.com",
-                'Name' => "Paul TOTI"
+                'Name' => "School"
               ],
               'To' => [
                 [
