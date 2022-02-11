@@ -35,7 +35,7 @@ class RegisterController extends AbstractController
                 break;
 
             case "Eleve":
-                return $this->redirectToRoute('login');
+                return $this->redirectToRoute('dashboard');
                 break;
 
             case $this->isGranted('ROLE_USER') == false:
@@ -79,6 +79,8 @@ class RegisterController extends AbstractController
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
 
+                    $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
+                    $this->redirectToRoute('dashboard');
                 }
                 return $this->render('administration/admin/add_users.html.twig', [
                     'form' => $form->createView(),
