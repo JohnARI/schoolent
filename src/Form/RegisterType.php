@@ -50,15 +50,7 @@ class RegisterType extends AbstractType
                     'class' => 'input100 form-control',
                 ],
             ])
-                // Choix du mdp
-            ->add('password', PasswordType::class, [
-                'required' => true,
-                'attr' => [
-                    'placeholder' => 'Entrez votre mot de passe',
-                    'class' => 'input100 form-control',
-                ]
-
-            ])
+      
                     // Choix du sexe
             ->add('sexe', ChoiceType::class, [
                 'attr' => [
