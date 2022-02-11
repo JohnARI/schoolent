@@ -30,7 +30,7 @@ class RegisterController extends AbstractController
         
     }
     /**
-     * @Route("/admin/register", name="register")
+     * @Route("administration/admin/add-user", name="addUser")
      */
     public function register(Request $request, UserRepository $userRepository, PasswordGenerator $passwordGenerator): Response
     {
@@ -69,7 +69,7 @@ class RegisterController extends AbstractController
                     $this->redirectToRoute('home');
                 }
 
-                return $this->render('register/register.html.twig', [
+                return $this->render('administration/admin/add_users.html.twig', [
                     'form' => $form->createView(),
                     'admins' => $admins,
                     'teachers' => $teachers,

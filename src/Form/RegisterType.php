@@ -6,8 +6,10 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -80,6 +82,20 @@ class RegisterType extends AbstractType
                     'Formateur' => "ROLE_TEACHER",
                     'Eleve' => "ROLE_USER",
                 ]
+            ])
+
+            ->add('picture', FileType::class, [    
+                'required' => true,
+                'constraints'=> [
+
+                    new Image([
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
+                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
+                    ])
+                ]
+
+
+
             ])
 
             
