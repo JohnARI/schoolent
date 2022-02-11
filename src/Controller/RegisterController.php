@@ -40,10 +40,12 @@ class RegisterController extends AbstractController
         $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
         switch ($roles) {
             case "Formateur":
-                return $this->redirectToRoute('login');
+                $this->addFlash('success', 'le mail a été envoyé avec succès!');
+                return $this->redirectToRoute('dashboard');
                 break;
 
             case "Eleve":
+                $this->addFlash('success', 'le mail a été envoyé avec succès!');
                 return $this->redirectToRoute('dashboard');
                 break;
 
@@ -89,6 +91,7 @@ class RegisterController extends AbstractController
                     $this->entityManager->flush();
 
                     $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
+                    $this->addFlash('success', 'le mail a été envoyé avec succès!');
                     $this->redirectToRoute('dashboard');
                 }
                 return $this->render('administration/admin/add_users.html.twig', [
