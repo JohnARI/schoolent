@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\Mailjet;
 use App\Form\RegisterType;
 use App\Repository\UserRepository;
+use App\Service\PasswordGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,26 +18,33 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class RegisterController extends AbstractController
 {
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
+    private $mailjet;
+    
+
+
+
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet )
     {
 
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
+        $this->mailjet = $mailjet;
+        
     }
     /**
      * @Route("/admin/add-user", name="addUser")
      */
-    public function addUser(Request $request, UserRepository $userRepository, SluggerInterface $slugger): Response
+    public function register(Request $request, UserRepository $userRepository, PasswordGenerator $passwordGenerator): Response
     {
         $roles = $this->getUser()->getRole();
-
+        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
         switch ($roles) {
             case "Formateur":
                 return $this->redirectToRoute('login');
                 break;
 
             case "Eleve":
-                return $this->redirectToRoute('login');
+                return $this->redirectToRoute('dashboard');
                 break;
 
             case $this->isGranted('ROLE_USER') == false:
@@ -79,7 +88,8 @@ class RegisterController extends AbstractController
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
 
-                    return $this->redirectToRoute('view-users');
+                    $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
+                    $this->redirectToRoute('dashboard');
                 }
                 return $this->render('administration/admin/add_users.html.twig', [
                     'form' => $form->createView(),
@@ -87,7 +97,10 @@ class RegisterController extends AbstractController
                     'teachers' => $teachers,
                     'students' => $students,
                 ]);
+                
                 break;
         }
+
+        return $this->redirectToRoute('login');
     }
 }
