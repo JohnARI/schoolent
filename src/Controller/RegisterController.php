@@ -25,7 +25,7 @@ class RegisterController extends AbstractController
     /**
      * @Route("/admin/add-user", name="addUser")
      */
-    public function addUser(Request $request, UserRepository $userRepository, SluggerInterface $slugger): Response
+    public function register(Request $request, UserRepository $userRepository, PasswordGenerator $passwordGenerator, SluggerInterface $slugger): Response
     {
         $roles = $this->getUser()->getRole();
 
