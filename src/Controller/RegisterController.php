@@ -84,6 +84,9 @@ class RegisterController extends AbstractController
 =======
                     $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
                     $this->redirectToRoute('home');
+<<<<<<< HEAD
+>>>>>>> parent of d423364 (Rec 2)
+=======
 >>>>>>> parent of d423364 (Rec 2)
                 }
                 return $this->render('administration/admin/add_users.html.twig', [
