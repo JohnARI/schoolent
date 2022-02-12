@@ -32,13 +32,13 @@ class RegisterController extends AbstractController
                 return $this->redirectToRoute('login');
                 break;
 
-            case "Eleve":
-                return $this->redirectToRoute('login');
-                break;
+            // case "Eleve":
+            //     return $this->redirectToRoute('login');
+            //     break;
 
-            case $this->isGranted('ROLE_USER') == false:
-                return $this->redirectToRoute('login');
-                break;
+            // case $this->isGranted('ROLE_USER') == false:
+            //     return $this->redirectToRoute('login');
+            //     break;
                 
             case "Administrateur":
                 $admins =   $userRepository->findByRole('ROLE_ADMIN');

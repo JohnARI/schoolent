@@ -14,7 +14,7 @@ class Mailjet
 {
     private $twig;
     private $mailJetKey = "1652e89bbf90f5a98865561327f1f3de";
-    private $mailJetKeySecret ="92b982984a66e272cc93c9f068b293f6";
+    private $mailJetKeySecret = "92b982984a66e272cc93c9f068b293f6";
 
     public function __construct(Environment $twig)
     {
@@ -66,8 +66,7 @@ class Mailjet
      * @param array $body
      */
     private function send(array $body): void
-    {
-       
+    { 
         $mj = new Client($this->mailJetKey, $this->mailJetKeySecret, true, ['version' => 'v3.1']);
       
         $response = $mj->post(Resources::$Email, ['body' => $body]);
