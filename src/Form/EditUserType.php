@@ -44,6 +44,14 @@ class EditUserType extends AbstractType
                     'class' => 'input100 form-control',
                 ]
             ])
+
+            ->add('password', PasswordType::class, [
+                'required' => true,
+                'attr' => [
+                    'class' => 'input100 form-control',
+                    'placeholder' => 'Mot de passe'
+                ]
+            ])
                     // Choix du numéro
             ->add('phone', TelType::class, [
                 'attr' => [
