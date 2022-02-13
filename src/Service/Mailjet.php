@@ -13,14 +13,14 @@ use Mailjet\Resources;
 class Mailjet
 {
     private $twig;
-    private $mailJetKey = "1652e89bbf90f5a98865561327f1f3de";
-    private $mailJetKeySecret = "92b982984a66e272cc93c9f068b293f6";
+    private $mailJetKey;
+    private $mailJetKeySecret;
 
-    public function __construct(Environment $twig)
+    public function __construct(Environment $twig,$mailJet_api_key, $mailJet_api_key_secret)
     {
         $this->twig = $twig;
-        // $this->mailJetKey = $mailJet_api_key;
-        // $this->mailJetKeySecret = $mailJet_api_key_secret;
+        $this->mailJetKey = $mailJet_api_key;
+        $this->mailJetKeySecret = $mailJet_api_key_secret;
     }
 
     public function sendEmail(User $user, string $myMessage)

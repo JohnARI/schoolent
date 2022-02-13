@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use App\Service\Mailjet;
+use App\Service\PasswordGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,12 +54,12 @@ class SecurityController extends AbstractController
     /**
      * @Route("/reset-password", name="reset-password")
     */
-    public function resetPassword(Request $request, UserRepository $userRepository): Response
+    public function resetPassword(Request $request, UserRepository $userRepository, PasswordGenerator $passwordGenerator): Response
     {
 
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
-        $temporaryPassword = $this->passwordAleatory(10);
+        $temporaryPassword = $passwordGenerator->passwordAleatoire(10);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -74,8 +75,8 @@ class SecurityController extends AbstractController
                 $em->persist($user[0]);
                 $em->flush();
 
-                $this->mailjet->sendEmail($user[0], "Votre mot de passe a été réinitialisé! ceci est temporaire, pensez à le modifier : "   . $temporaryPassword);
-                $this->addFlash('success', 'Un email vient d\' etre envoyer à cette adresse !');
+                $this->mailjet->sendEmail($user[0], "Voici votre nouveau de mot passe temporaire : "   . $temporaryPassword . " Pensez à le modifier lors de la prochaine connexion sur votre espace personnel.");
+                $this->addFlash('success', 'Un email vient d\' être envoyé à cette adresse !');
             } else {
                 $this->addFlash('erreur', 'Ce compte n\'existe pas !');
             }
@@ -86,21 +87,21 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    function passwordAleatory($nbChar)
-    {
-        $chaine = "mnoTUzS5678kVvwxy9WXYZRNCDEFrslq41GtuaHIJKpOPQA23LcdefghiBMbj0";
-        srand((float)microtime() * 1000000);
-        $pass = '';
-        for ($i = 0; $i < $nbChar; $i++) {
-            $pass .= $chaine[rand() % strlen($chaine)];
-        }
-        return $pass;
-    }
+    // function passwordAleatory($nbChar)
+    // {
+    //     $chaine = "mnoTUzS5678kVvwxy9WXYZRNCDEFrslq41GtuaHIJKpOPQA23LcdefghiBMbj0";
+    //     srand((float)microtime() * 1000000);
+    //     $pass = '';
+    //     for ($i = 0; $i < $nbChar; $i++) {
+    //         $pass .= $chaine[rand() % strlen($chaine)];
+    //     }
+    //     return $pass;
+    // }
 
-    function passgen2($nbChar)
-    {
-        return substr(str_shuffle(
-            'abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        ), 1, $nbChar);
-    }
+    // function passgen2($nbChar)
+    // {
+    //     return substr(str_shuffle(
+    //         'abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    //     ), 1, $nbChar);
+    // }
 }

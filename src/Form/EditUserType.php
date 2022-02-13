@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,13 +15,13 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class RegisterType extends AbstractType
+class EditUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-                // Choix du prénom
-            ->add('firstname', TextType::class, [
+               // Choix du prénom
+               ->add('firstname', TextType::class, [
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Prénom',
@@ -45,6 +44,14 @@ class RegisterType extends AbstractType
                     'class' => 'input100 form-control',
                 ]
             ])
+
+            ->add('password', PasswordType::class, [
+                'required' => true,
+                'attr' => [
+                    'class' => 'input100 form-control',
+                    'placeholder' => 'Mot de passe'
+                ]
+            ])
                     // Choix du numéro
             ->add('phone', TelType::class, [
                 'attr' => [
@@ -52,7 +59,6 @@ class RegisterType extends AbstractType
                     'class' => 'input100 form-control',
                 ],
             ])
-      
                     // Choix du sexe
             ->add('sexe', ChoiceType::class, [
                 'attr' => [
@@ -86,6 +92,7 @@ class RegisterType extends AbstractType
 
             ->add('picture', FileType::class, [    
                 'required' => true,
+                'data_class' => null,
                 'constraints'=> [
 
                     new Image([
@@ -124,7 +131,7 @@ class RegisterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            // Configure your form options here
         ]);
     }
 }

@@ -6,11 +6,11 @@
                         <!-- sidebar-toggle-->
                         <a class="logo-horizontal " href="index.html">
                             <img src="../assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
-                            <img src="../assets/images/brand/logo-3.png" class="header-brand-img light-logo1" alt="logo">
+                            <img src="../assets/images/brand/logo.png" class="header-brand-img light-logo1" alt="logo">
                         </a>
                         <!-- LOGO -->
                         <div class="main-header-center ms-3 d-none d-lg-block">
-                            <input class="form-control" placeholder="Search for results..." type="search">
+                            <input class="form-control" placeholder="Rechercher..." type="search">
                             <button class="btn px-0 pt-2"><i class="fe fe-search" aria-hidden="true"></i></button>
                         </div>
                         <div class="d-flex order-lg-2 ms-auto header-right-icons">
@@ -50,7 +50,7 @@
                                         <!-- COUNTRY -->
                                         <div class="d-flex country">
                                             <a class="nav-link icon text-center" data-bs-target="#country-selector" data-bs-toggle="modal">
-                                                <i class="fe fe-globe"></i><span class="fs-16 ms-2 d-none d-xl-block">English</span>
+                                                <i class="fe fe-globe"></i><span class="fs-16 ms-2 d-none d-xl-block">Français</span>
                                             </a>
                                         </div>
                                         <!-- SEARCH -->
@@ -191,13 +191,13 @@
                                         <!-- SIDE-MENU -->
                                         <div class="dropdown d-flex profile-1">
                                             <a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
-                                                <img src="../assets/images/users/21.jpg" alt="profile-user" class="avatar  profile-user brround cover-image">{# TODO: Inserer la photo de profil #}
+                                                <img src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="profile-user" class="avatar profile-user brround cover-image">
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                                 <div class="drop-heading">
                                                     <div class="text-center">
-                                                        <h5 class="text-dark mb-0 fs-14 fw-semibold">Percy Kewshun</h5>
-                                                        <small class="text-muted">Senior Admin</small>
+                                                        <h5 class="text-dark mb-0 fs-14 fw-semibold">{{app.user.firstname ~ ' ' ~ app.user.lastname}}</h5>
+                                                        <small class="text-muted">{{app.user.role}}</small>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-divider m-0"></div>

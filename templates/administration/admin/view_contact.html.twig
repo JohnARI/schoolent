@@ -1,0 +1,72 @@
+ {% extends 'base.html.twig' %}
+
+{% block title %}
+Administrator
+{% endblock %}
+
+{% block body %}
+    <!-- PAGE -->
+    <div class="page">
+        <div class="page-main">
+<!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    
+
+                        <!-- Row -->
+                        <div class="row row-sm">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Contact</h3>
+                                    </div>
+                                    <div class="card-body">
+                                            <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="wd-15p border-bottom-0">Nom</th>
+                                                        <th class="wd-15p border-bottom-0">Phone</th>
+                                                        <th class="wd-20p border-bottom-0">Mail</th>
+                                                        <th class="wd-10p border-bottom-0">Objet</th>
+                                                        <th class="wd-10p border-bottom-0">Message</th>
+                                                        <th class="wd-10p border-bottom-0">Lu</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for contact in contacts %}
+                                                    <tr>
+                                
+                                                        <td>{{ contact.name }}</td>
+                                                        <td>{{ contact.phone }}</td>
+                                                        <td>{{ contact.email }}</td>
+                                                        <td>{{ contact.objet }}</td>
+                                                        <td>{{ contact.message }}</td>
+                                                        <td>{{ contact.lu }}</td>
+                                                        
+                                                        
+                                                    </tr>
+                                                    {% endfor %}
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Row -->
+
+
+                    </div>
+                    <!-- CONTAINER CLOSED -->
+
+                </div>
+            </div>
+            <!--app-content closed-->
+        </div>
+
+    
+
+        {% endblock %}
