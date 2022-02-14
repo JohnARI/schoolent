@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Register
+{% endblock %}
+{% block header %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block body %}
+
+	<!-- BACKGROUND-IMAGE -->
+	<div
+		class="login-img">
+
+		<!-- PAGE -->
+		<div class="page">
+			<div class="">
+				<!-- Theme-Layout -->
+
+				<!-- CONTAINER OPEN -->
+					<div class="col col-login mx-auto mt-7"> <div class="text-center">
+						<img src="../assets/images/brand/logo-white.png" class="header-brand-img m-0" alt="">
+					</div>
+				</div>
+				<div class="container-login100">
+					<div class="wrap-login100 p-6 row">
+						<span class="login100-form-title">
+							Ajouter une téchnologie
+						</span>
+						<div class="col">
+							
+							{% for message in app.flashes('contact_success') %}
+								<div class="col-md-12 alert alert alert-success alert-dismissible fade show" role="alert">
+									{{ message }}
+									<button type="button" class="close" data-dismiss="alert" aria-label="close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+							{% endfor %}
+						</div>
+						
+                        {{form_start(form)}}
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+								{# <a href="#" class="input-group-text bg-white text-muted">
+									<i class="zmdi zmdi-male-female" aria-hidden="true"></i>
+								</a> #}
+								{{form_widget(form.name)}}
+							</div>
+
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="z">
+								{{form_widget(form.picture)}}
+							</div>
+						
+						<div class="container-login100-form-btn">
+							{{form_widget(form.submit)}}
+						</div>
+						{{form_end(form)}}
+						
+					</div>
+				</div>
+				<!-- CONTAINER CLOSED -->
+			</div>
+		</div>
+		<!-- END PAGE -->
+
+	</div>
+	<!-- BACKGROUND-IMAGE CLOSED -->
+{% endblock %}

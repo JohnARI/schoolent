@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\ProgrammingLanguage;
 use App\Entity\User;
+use App\Form\AddProgrammingLanguageType;
 use App\Form\EditUserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,7 +84,7 @@ class AdministrationController extends AbstractController
         ]);
     }
 
-        /**
+    /**
      * @Route("/admin/delete/user/{id}", name="delete_user")
      */
     public function deleteUser(User $user, Request $request): Response
@@ -91,6 +93,69 @@ class AdministrationController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-users');
+    }
+
+    /**
+     * @Route("/admin/view-technologies", name="view-techno")
+     */
+    public function view_technologies(): Response
+    {
+        $technologies = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
+
+        return $this->render('administration/admin/view_technologies.html.twig', [
+            'technologies' => $technologies,
+
+        ]);
+    }
+
+    /**
+     * @Route("/admin/add/technologie", name="add_techno")
+     */
+    public function addTechnoLanguage(Request $request, SluggerInterface $slugger): Response
+    {
+
+        $techno = new ProgrammingLanguage();
+
+        $form = $this->createForm(AddProgrammingLanguageType::class, $techno);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $technoPicture = $form->get('picture')->getData();
+
+            // this condition is needed because the 'avatar' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($technoPicture) {
+                $originalFilename = pathinfo($technoPicture->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $technoPicture->guessExtension();
+
+                // Move the file to the directory where avatars are stored
+                try {
+                    $technoPicture->move(
+                        $this->getParameter('techno_picture'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'technoPicturename' property to store the PDF file name
+                // instead of its contents
+                $techno->setPicture($newFilename);
+            }
+           
+            $this->entityManager->persist($techno);
+            $this->entityManager->flush();
+            // $this->redirectToRoute('view-technologies');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-technologies');
+            $this->addFlash('success', 'Nouvelle technologie ajouter !');
+        }
+
+        return $this->render('administration/admin/add_technologies.html.twig', [
+            'form' => $form->createView(),
+
+        ]);
     }
 
 }

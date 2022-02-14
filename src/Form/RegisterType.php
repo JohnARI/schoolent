@@ -93,9 +93,6 @@ class RegisterType extends AbstractType
                         'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
                     ])
                 ]
-
-
-
             ])
 
             
