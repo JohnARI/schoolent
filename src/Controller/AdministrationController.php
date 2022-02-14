@@ -2,10 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Calendar;
 use App\Entity\ProgrammingLanguage;
+use App\Entity\Session;
 use App\Entity\User;
 use App\Form\AddProgrammingLanguageType;
+use App\Form\CalendarType;
+use App\Form\EditCalendarType;
+use App\Form\EditProgrammingLanguageType;
 use App\Form\EditUserType;
+use App\Service\Mailjet;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +25,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AdministrationController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet)
     {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
+        $this->mailjet = $mailjet;
     }
 
     /**
@@ -37,7 +45,7 @@ class AdministrationController extends AbstractController
         ]);
     }
 
-         /**
+    /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
     public function editUser($id, Request $request, SluggerInterface $slugger): Response
@@ -96,7 +104,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/view-technologies", name="view-techno")
+     * @Route("/admin/view-technologie", name="view-techno")
      */
     public function view_technologies(): Response
     {
@@ -122,11 +130,53 @@ class AdministrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $technoPicture = $form->get('picture')->getData();
 
-            // this condition is needed because the 'avatar' field is not required
-            // so the PDF file must be processed only when a file is uploaded
             if ($technoPicture) {
                 $originalFilename = pathinfo($technoPicture->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $technoPicture->guessExtension();
+
+                try {
+                    $technoPicture->move(
+                        $this->getParameter('techno_picture'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $techno->setPicture($newFilename);
+            }
+           
+            $this->entityManager->persist($techno);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Nouvelle technologie ajoutée !');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
+            
+        }
+
+        return $this->render('administration/admin/add_technologies.html.twig', [
+            'form' => $form->createView(),
+
+        ]);
+    }
+
+    /**
+     * @Route("/admin/edit/technologie/{id}", name="edit_technologie", methods={"GET|POST"})
+     */
+    public function editTechnologie($id, Request $request, SluggerInterface $slugger): Response
+    {
+
+        $technologie = $this->entityManager->getRepository(ProgrammingLanguage::class)->find($id);
+
+        $form = $this->createForm(EditProgrammingLanguageType::class, $technologie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $technoPicture = $form->get('picture')->getData();
+
+            if ($technoPicture) {
+                $originalFilename = pathinfo($technoPicture->getClientOriginalName(), PATHINFO_FILENAME);
+
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $technoPicture->guessExtension();
 
@@ -139,23 +189,134 @@ class AdministrationController extends AbstractController
                 } catch (FileException $e) {
                     // ... handle exception if something happens during file upload
                 }
-
-                // updates the 'technoPicturename' property to store the PDF file name
-                // instead of its contents
-                $techno->setPicture($newFilename);
+                if ($form->get('picture')->getData()) {
+                    $technologie->setPicture($newFilename);
+                }
+                
             }
-           
-            $this->entityManager->persist($techno);
+
+            $this->entityManager->persist($technologie);
             $this->entityManager->flush();
-            // $this->redirectToRoute('view-technologies');
-            return $this->redirect($request->get('redirect') ?? '/admin/view-technologies');
-            $this->addFlash('success', 'Nouvelle technologie ajouter !');
+            $this->addFlash('success', 'Nouvelle technologie modifiée !');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
         }
 
-        return $this->render('administration/admin/add_technologies.html.twig', [
+        return $this->render('administration/admin/edit_technologies.html.twig', [
+
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/delete/technologie/{id}", name="delete_technologie")
+     */
+    public function deleteTehnologie(ProgrammingLanguage $technologie, Request $request): Response
+    {
+        $this->entityManager->remove($technologie);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'La technologie a été suprimmée !');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
+    }
+
+    /**
+     * @Route("/admin/view-sessions", name="view-sessions")
+     */
+    public function viewSessions(): Response
+    {
+        $session = $this->entityManager->getRepository(Session::class)->findBy([], ['id' => 'DESC']);
+
+        return $this->render('administration/admin/view-session.html.twig', [
+            'sessions' => $session,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/view-calendar", name="view-calendar")
+     */
+    public function viewCalendar(): Response
+    {
+
+        $calendar = $this->entityManager->getRepository(Calendar::class)->findBy([], ['id' => 'DESC']);
+
+        return $this->render('administration/admin/view-calendar.html.twig', [
+            'calendars' => $calendar,
+
+        ]);
+    }
+
+    /**
+     * @Route("/admin/add/calendar", name="add_calendar")
+     */
+    public function addcalendar(Request $request): Response
+    {
+
+        $calendar = new Calendar();
+
+        $form = $this->createForm(CalendarType::class, $calendar);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $calendar->setCreatedAt(new DateTimeImmutable());
+
+            $this->entityManager->persist($calendar);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Nouvelle date ajoutée !');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
+            
+        }
+
+        return $this->render('administration/admin/add_calendar.html.twig', [
             'form' => $form->createView(),
 
         ]);
     }
 
+    /**
+     * @Route("/admin/edit/calendar/{id}", name="edit_calendar",methods={"GET|POST"})
+     */
+    public function editCalendar($id, Request $request): Response
+    {
+
+        $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
+
+        $form = $this->createForm(EditCalendarType::class, $calendar[0]);
+        $form->handleRequest($request);
+
+        // dd($calendar);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user = $form->get('teacher')->getData();
+            $newTechnologie = $form->get('category')->getData()->getName();
+            $newStart = $form->get('start')->getData();
+            $newSession = $form->get('session')->getData()->getName();
+            $newEnd = $form->get('end')->getData();
+
+            $this->entityManager->persist($calendar[0]);
+            $this->entityManager->flush();
+            $this->mailjet->sendEmail($user, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Numero de session " . $newSession . ".");
+            $this->addFlash('success', 'Calendrier modifié !');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
+        }
+
+
+        return $this->render('administration/admin/edit-calendar.html.twig', [
+            'form' => $form->createView(),
+
+        ]);
+    }
+
+    /**
+     * @Route("/admin/delete/calendar/{id}", name="delete_calendar")
+     */
+    public function deleteCalendar(Calendar $calendar, Request $request): Response
+    {
+        $this->entityManager->remove($calendar);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'La date a été suprimmée');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
+    }
 }

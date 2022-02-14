@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Ajouter une téchnologie
+	Calendrier
 {% endblock %}
 {% block header %}{% endblock %}
 {% block sidebar %}{% endblock %}
@@ -25,10 +25,9 @@
 				<div class="container-login100">
 					<div class="wrap-login100 p-6 row">
 						<span class="login100-form-title">
-							Ajouter une téchnologie
+							Ajouter une date
 						</span>
-						<div class="col">
-							
+						{# <div class="col">
 							{% for message in app.flashes('contact_success') %}
 								<div class="col-md-12 alert alert alert-success alert-dismissible fade show" role="alert">
 									{{ message }}
@@ -37,23 +36,35 @@
 									</button>
 								</div>
 							{% endfor %}
-						</div>
-						
-                        {{form_start(form)}}
+						</div> #}
+                        {{form_start(form) }}
 							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-								<a href="#" class="input-group-text bg-white text-muted">
-									<i class="zmdi zmdi-code" aria-hidden="true"></i>
-								</a>
-								{{form_widget(form.name)}}
+								{{form_row(form.name) }}
 							</div>
 
 							<div class="wrap-input100 validate-input input-group" data-bs-validate="z">
-								{{form_widget(form.picture)}}
+								{{form_row(form.start) }}
+							</div>
+
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="z">
+								{{form_row(form.end) }}
+							</div>
+
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="z">
+								{{form_row(form.category) }}
+							</div>
+
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="z">
+								{{form_row(form.session) }}
+							</div>
+
+                            <div class="wrap-input100 validate-input input-group" data-bs-validate="z">
+								{{form_row(form.teacher) }}
 							</div>
 						
-						<div class="container-login100-form-btn">
-							{{form_widget(form.submit)}}
-						</div>
+                            <div class="container-login100-form-btn">
+                                {{form_widget(form.submit)}}
+                            </div>
 						{{form_end(form)}}
 						
 					</div>
