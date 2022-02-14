@@ -1,0 +1,284 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+View all
+{% endblock %}
+
+{% block body %}
+
+<!--app-content open-->
+<div class="main-content app-content mt-0">
+    <div class="side-app">
+
+        <!-- CONTAINER -->
+        <div class="main-container container-fluid">
+
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Info Tabs style</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="panel panel-primary">
+                            <div class="tab-menu-heading">
+                                <div class="tabs-menu">
+                                    <!-- Tabs -->
+                                    <ul class="nav panel-tabs panel-info">
+                                        <li><a href="#tab21" class="active" data-bs-toggle="tab"><span><i
+                                                        class="fe fe-user me-1"></i></span>Tab 1</a></li>
+                                        <li><a href="#tab22" data-bs-toggle="tab"><span><i
+                                                        class="fe fe-calendar me-1"></i></span>Tab 2</a></li>
+                                        <li><a href="#tab23" data-bs-toggle="tab"><span><i
+                                                        class="fe fe-settings me-1"></i></span>Tab 3</a></li>
+                                        <li><a href="#tab24" data-bs-toggle="tab"><span><i
+                                                        class="fe fe-bell me-1"></i></span>Tab 4</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body tabs-menu-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab21">
+                                        <div class="card-body">
+                                            <a href="{{path('addUser')}}" id="table2-new-row-button"
+                                                class="btn btn-primary mb-4"> Ajouter un nouvel utilisateur</a>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered text-nowrap border-bottom"
+                                                    id="responsive-datatable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="wd-15p border-bottom-0">Photo</th>
+                                                            <th class="wd-15p border-bottom-0">Prénom</th>
+                                                            <th class="wd-15p border-bottom-0">Nom</th>
+                                                            <th class="wd-20p border-bottom-0">Role</th>
+                                                            <th class="wd-10p border-bottom-0">Email</th>
+                                                            <th class="wd-10p border-bottom-0">Actions</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for user in users %}
+                                                        <tr>
+                                                            <td><img style="height:100px;width:100px;"
+                                                                    src="{{ asset('uploads/user/' ~ user.picture)}}"
+                                                                    alt=""></td>
+                                                            <td>{{ user.firstname }}</td>
+                                                            <td>{{ user.lastname }}</td>
+                                                            <td>{{ user.role }}</td>
+                                                            <td>{{ user.email }}</td>
+
+                                                            <td name="bstable-actions">
+                                                                <div class="btn-list">
+                                                                    {# Bouton modifier #}
+                                                                    <a href="{{path('edit_user',{'id': user.id})}}"
+                                                                        id="bEdit" type="button"
+                                                                        class="btn btn-sm btn-primary">
+                                                                        <span class="fe fe-edit">
+
+                                                                        </span>
+                                                                    </a>
+                                                                    {# fin bouton modifier #}
+
+                                                                    {# Bouton supprimer #}
+                                                                    <a href="{{path('delete_user',{'id': user.id})}}"
+                                                                        id="bDel" type="button"
+                                                                        class="btn btn-sm btn-danger">
+                                                                        <span class="fe fe-trash-2"></span>
+                                                                    </a>
+                                                                    {# fin bouton supprimer #}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab22">
+                                        <div class="card-body">
+                                            <a href="{{path('addUser')}}" id="table2-new-row-button"
+                                                class="btn btn-primary mb-4"> Ajouter un nouvel utilisateur</a>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered text-nowrap border-bottom"
+                                                    id="responsive-datatable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="wd-15p border-bottom-0">Photo</th>
+                                                            <th class="wd-15p border-bottom-0">Prénom</th>
+                                                            <th class="wd-15p border-bottom-0">Nom</th>
+                                                            <th class="wd-20p border-bottom-0">Role</th>
+                                                            <th class="wd-10p border-bottom-0">Email</th>
+                                                            <th class="wd-10p border-bottom-0">Actions</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for user in users %}
+                                                        <tr>
+                                                            <td><img style="height:100px;width:100px;"
+                                                                    src="{{ asset('uploads/user/' ~ user.picture)}}"
+                                                                    alt=""></td>
+                                                            <td>{{ user.firstname }}</td>
+                                                            <td>{{ user.lastname }}</td>
+                                                            <td>{{ user.role }}</td>
+                                                            <td>{{ user.email }}</td>
+
+                                                            <td name="bstable-actions">
+                                                                <div class="btn-list">
+                                                                    {# Bouton modifier #}
+                                                                    <a href="{{path('edit_user',{'id': user.id})}}"
+                                                                        id="bEdit" type="button"
+                                                                        class="btn btn-sm btn-primary">
+                                                                        <span class="fe fe-edit">
+
+                                                                        </span>
+                                                                    </a>
+                                                                    {# fin bouton modifier #}
+
+                                                                    {# Bouton supprimer #}
+                                                                    <a href="{{path('delete_user',{'id': user.id})}}"
+                                                                        id="bDel" type="button"
+                                                                        class="btn btn-sm btn-danger">
+                                                                        <span class="fe fe-trash-2"></span>
+                                                                    </a>
+                                                                    {# fin bouton supprimer #}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab23">
+                                        <div class="card-body">
+                                            <a href="{{path('addUser')}}" id="table2-new-row-button"
+                                                class="btn btn-primary mb-4"> Ajouter un nouvel utilisateur</a>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered text-nowrap border-bottom"
+                                                    id="responsive-datatable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="wd-15p border-bottom-0">Photo</th>
+                                                            <th class="wd-15p border-bottom-0">Prénom</th>
+                                                            <th class="wd-15p border-bottom-0">Nom</th>
+                                                            <th class="wd-20p border-bottom-0">Role</th>
+                                                            <th class="wd-10p border-bottom-0">Email</th>
+                                                            <th class="wd-10p border-bottom-0">Actions</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for user in users %}
+                                                        <tr>
+                                                            <td><img style="height:100px;width:100px;"
+                                                                    src="{{ asset('uploads/user/' ~ user.picture)}}"
+                                                                    alt=""></td>
+                                                            <td>{{ user.firstname }}</td>
+                                                            <td>{{ user.lastname }}</td>
+                                                            <td>{{ user.role }}</td>
+                                                            <td>{{ user.email }}</td>
+
+                                                            <td name="bstable-actions">
+                                                                <div class="btn-list">
+                                                                    {# Bouton modifier #}
+                                                                    <a href="{{path('edit_user',{'id': user.id})}}"
+                                                                        id="bEdit" type="button"
+                                                                        class="btn btn-sm btn-primary">
+                                                                        <span class="fe fe-edit">
+
+                                                                        </span>
+                                                                    </a>
+                                                                    {# fin bouton modifier #}
+
+                                                                    {# Bouton supprimer #}
+                                                                    <a href="{{path('delete_user',{'id': user.id})}}"
+                                                                        id="bDel" type="button"
+                                                                        class="btn btn-sm btn-danger">
+                                                                        <span class="fe fe-trash-2"></span>
+                                                                    </a>
+                                                                    {# fin bouton supprimer #}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab24">
+                                        <div class="card-body">
+                                            <a href="{{path('addUser')}}" id="table2-new-row-button"
+                                                class="btn btn-primary mb-4"> Ajouter un nouvel utilisateur</a>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered text-nowrap border-bottom"
+                                                    id="responsive-datatable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="wd-15p border-bottom-0">Photo</th>
+                                                            <th class="wd-15p border-bottom-0">Prénom</th>
+                                                            <th class="wd-15p border-bottom-0">Nom</th>
+                                                            <th class="wd-20p border-bottom-0">Role</th>
+                                                            <th class="wd-10p border-bottom-0">Email</th>
+                                                            <th class="wd-10p border-bottom-0">Actions</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for user in users %}
+                                                        <tr>
+                                                            <td><img style="height:100px;width:100px;"
+                                                                    src="{{ asset('uploads/user/' ~ user.picture)}}"
+                                                                    alt=""></td>
+                                                            <td>{{ user.firstname }}</td>
+                                                            <td>{{ user.lastname }}</td>
+                                                            <td>{{ user.role }}</td>
+                                                            <td>{{ user.email }}</td>
+
+                                                            <td name="bstable-actions">
+                                                                <div class="btn-list">
+                                                                    {# Bouton modifier #}
+                                                                    <a href="{{path('edit_user',{'id': user.id})}}"
+                                                                        id="bEdit" type="button"
+                                                                        class="btn btn-sm btn-primary">
+                                                                        <span class="fe fe-edit">
+
+                                                                        </span>
+                                                                    </a>
+                                                                    {# fin bouton modifier #}
+
+                                                                    {# Bouton supprimer #}
+                                                                    <a href="{{path('delete_user',{'id': user.id})}}"
+                                                                        id="bDel" type="button"
+                                                                        class="btn btn-sm btn-danger">
+                                                                        <span class="fe fe-trash-2"></span>
+                                                                    </a>
+                                                                    {# fin bouton supprimer #}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
