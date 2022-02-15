@@ -3,18 +3,25 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Course;
+use DateTimeImmutable;
 use DateTimeImmutable;
 use App\Entity\Session;
+use App\Entity\Session;
 use App\Entity\Calendar;
+use App\Entity\Calendar;
+use App\Form\CourseType;
 use App\Service\Mailjet;
+use App\Service\Mailjet;
+use App\Form\SessionType;
 use App\Form\CalendarType;
 use App\Form\EditUserType;
-use App\Form\RegisterType;
+use App\Form\EditSessionType;
 use App\Form\EditCalendarType;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
-use App\Form\AddProgrammingLanguageType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\EditProgrammingLanguageType;
 use App\Form\EditProgrammingLanguageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -292,18 +299,6 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/view-sessions", name="view-sessions")
-     */
-    public function viewSessions(): Response
-    {
-        $session = $this->entityManager->getRepository(Session::class)->findBy([], ['id' => 'DESC']);
-
-        return $this->render('administration/admin/view-session.html.twig', [
-            'sessions' => $session,
-        ]);
-    }
-
-    /**
      * @Route("/admin/view-calendar", name="view-calendar")
      */
     public function viewCalendar(): Response
@@ -352,6 +347,7 @@ class AdministrationController extends AbstractController
     {
 
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
+        $student = $this->entityManager->getRepository(User::class)->findAll();
 
         $form = $this->createForm(EditCalendarType::class, $calendar[0]);
         $form->handleRequest($request);
@@ -364,19 +360,21 @@ class AdministrationController extends AbstractController
             $newTechnologie = $form->get('category')->getData()->getName();
             $newStart = $form->get('start')->getData();
             $newSession = $form->get('session')->getData()->getName();
+            // $student = $form->get('session')->getData();
             $newEnd = $form->get('end')->getData();
+
+            // dd($student);
 
             $this->entityManager->persist($calendar[0]);
             $this->entityManager->flush();
             $this->mailjet->sendEmail($user, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Numero de session " . $newSession . ".");
+            // $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Avec le formateur ");
             $this->addFlash('success', 'Calendrier modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
         }
 
-
         return $this->render('administration/admin/edit-calendar.html.twig', [
             'form' => $form->createView(),
-
         ]);
     }
 
@@ -390,5 +388,141 @@ class AdministrationController extends AbstractController
 
         $this->addFlash('success', 'La date a été suprimmée');
         return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
+    }
+
+    /**
+     * @Route("/admin/view-sessions", name="view-sessions")
+     */
+    public function viewSessions(): Response
+    {
+        $session = $this->entityManager->getRepository(Session::class)->findAll();
+
+        return $this->render('administration/admin/view-session.html.twig', [
+            'sessions' => $session,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/add/session", name="add-session")
+     */
+    public function addSession(Request $request): Response
+    {
+
+        $session = new Session();
+
+        $form = $this->createForm(SessionType::class, $session);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $session->setCreatedAt(new DateTimeImmutable());
+
+            $this->entityManager->persist($session);
+            $this->entityManager->flush();
+            return $this->redirect($request->get('redirect') ?? '/admin/view-sessions');
+            $this->addFlash('success', 'Nouvelle session ajoutée !');
+        }
+
+        return $this->render('administration/admin/add-session.html.twig', [
+            'form' =>  $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/session/{id}/edit", name="edit-session",methods={"GET|POST"})
+     */
+    public function editSession(Session $session, Request $request): Response
+    {
+        $form = $this->createForm(EditSessionType::class, $session);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($session);
+            $this->entityManager->flush();
+            return $this->redirect($request->get('redirect') ?? '/admin/view-sessions');
+            $this->addFlash('success', 'La session a été modifiée !');
+        }
+
+        return $this->render('administration/admin/edit-session.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/delete/session/{id}", name="delete-session")
+     */
+    public function deleteSession(Session $session, Request $request): Response
+    {
+        $this->entityManager->remove($session);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'La session a été suprimmée');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-sessions');
+    }
+
+    /**
+     * @Route("/admin/view-cours", name="view-cours")
+     */
+    public function viewCours(): Response
+    {
+        $course = $this->entityManager->getRepository(Course::class)->findBy([], ['id' => 'DESC']);
+
+        return $this->render('administration/admin/view-cours.html.twig', [
+            'course' => $course,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/add/cours", name="add-cours")
+     */
+    public function addCourse(Request $request, SluggerInterface $slugger): Response
+    {
+
+        $course = new Course();
+
+        $form = $this->createForm(CourseType::class, $course);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $courseFile = $form->get('link')->getData();
+
+            if ($courseFile) {
+                $originalFilename = pathinfo($courseFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $courseFile->guessExtension();
+
+                try {
+                    $courseFile->move(
+                        $this->getParameter('cours_picture'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                $course->setLink($newFilename);
+            }
+
+            $this->entityManager->persist($course);
+            $this->entityManager->flush();
+            return $this->redirect($request->get('redirect') ?? '/admin/view-cours');
+            $this->addFlash('success', 'Nouveaux cours ajouté !');
+        }
+
+        return $this->render('administration/admin/add-cours.html.twig', [
+            'form' =>  $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/delete/cours/{id}", name="delete-cours",methods={"GET"})
+     */
+    public function clearCourse(Course $Course, Request $request): Response
+    {
+        $this->entityManager->remove($Course);
+        $this->entityManager->flush();
+
+        return $this->redirect($request->get('redirect') ?? '/admin/view-cours');
     }
 }

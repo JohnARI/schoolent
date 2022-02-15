@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Calendrier
+	Sessions
 {% endblock %}
 {% block header %}{% endblock %}
 {% block sidebar %}{% endblock %}
@@ -25,7 +25,7 @@
 				<div class="container-login100">
 					<div class="wrap-login100 p-6 row">
 						<span class="login100-form-title">
-							Ajouter une date
+							Modifier une session
 						</span>
 						{# <div class="col">
 							{% for message in app.flashes('contact_success') %}
@@ -37,15 +37,7 @@
 								</div>
 							{% endfor %}
 						</div> #}
-                        {{form_start(form) }}
-							{{form_row(form.name)}} 			
-							{{form_row(form.start) }}			            
-							{{form_row(form.end) }}			                
-							{{form_row(form.category) }}			            
-							{{form_row(form.session) }}			                
-							{{form_row(form.teacher) }}										                
-							{{form_widget(form.submit)}}
-						{{form_end(form)}}
+                        {{ form(form) }}
 						
 					</div>
 				</div>
