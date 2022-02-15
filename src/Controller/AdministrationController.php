@@ -41,7 +41,6 @@ class AdministrationController extends AbstractController
 
         return $this->render('administration/admin/view_user.html.twig', [
             'users' => $users,
-
         ]);
     }
 

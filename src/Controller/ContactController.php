@@ -18,10 +18,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class ContactController extends AbstractController
 {
-
     /**
      * @Route("/", name="contact_new", methods={"GET", "POST"})
-     */
+    */
     public function new(Request $request, EntityManagerInterface $entityManager, EmailSender $emailSender): Response
     {
         $contact = new Contact();

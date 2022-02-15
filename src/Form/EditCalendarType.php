@@ -46,8 +46,8 @@ class EditCalendarType extends AbstractType
             'choice_label' => 'fullname',
         ])
         ->add('submit', SubmitType::class, [
-            'attr' => ['class' => 'btn btn-primary btn-block'],
-            'label' => 'Ajouter/modifier une date'
+            'attr' => ['class' => 'col-md-6 btn btn-primary btn-block mx-auto'],
+            'label' => 'modifier une date'
         ]);
     }
 
