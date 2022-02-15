@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Calendar;
-use App\Entity\ProgrammingLanguage;
-use App\Entity\Session;
 use App\Entity\User;
-use App\Form\AddProgrammingLanguageType;
-use App\Form\CalendarType;
-use App\Form\EditCalendarType;
-use App\Form\EditProgrammingLanguageType;
-use App\Form\EditUserType;
-use App\Service\Mailjet;
 use DateTimeImmutable;
+use App\Entity\Session;
+use App\Entity\Calendar;
+use App\Service\Mailjet;
+use App\Form\CalendarType;
+use App\Form\EditUserType;
+use App\Form\RegisterType;
+use App\Form\EditCalendarType;
+use App\Service\PasswordGenerator;
+use App\Entity\ProgrammingLanguage;
+use App\Form\AddProgrammingLanguageType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\EditProgrammingLanguageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,25 +47,69 @@ class AdministrationController extends AbstractController
         ]);
     }
 
-       /**
+    /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(): Response
+    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator): Response
     {
+
+
+        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
+        $user = new User();
+        $formUser = $this->createForm(RegisterType::class, $user);
+        $formUser->handleRequest($request);
+
+        if ($formUser->isSubmitted() && $formUser->isValid()) {
+
+            $user = $formUser->getData();
+            $file = $formUser->get('picture')->getData();
+
+            if ($file) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = '.' . $file->guessExtension();
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . $extension;
+
+                try {
+                   
+                    $file->move($this->getParameter('user_picture'), $newFilename);      
+                    $user->setPicture($newFilename);
+                } catch (FileException $exception) {
+                    // Code à executer si une erreur est attrapée
+                }
+                       
+            } else { 
+            $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
+            return $this->redirectToRoute('register'); 
+        }
+
+    $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
+    $this->entityManager->persist($users);
+    $this->entityManager->flush();
+
+    $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
+    $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
+    //Message de succès
+    return $this->redirectToRoute('dashboard');
+}
+
 
         return $this->render('administration/admin/view_all.html.twig', [
             'users' => $users,
             'programmingLanguages' => $programmingLanguages,
             'sessions' => $sessions,
+            'formUser' => $formUser->createView(),
             
 
         ]);
     }
 
-         /**
+
+
+     /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
     public function editUser($id, Request $request, SluggerInterface $slugger): Response
