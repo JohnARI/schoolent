@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Sessions
+	Cours
 {% endblock %}
 
 {% block body %}
@@ -18,11 +18,11 @@
 						<div class="col-lg-12">
 							<div class="card">
 								<div class="card-header">
-									<h3 class="card-title">Sessions</h3>
+									<h3 class="card-title">Cours</h3>
 								</div>
 								<div class="card-body">
-									<a href="{{path('add-session')}}" id="table2-new-row-button" class="btn btn-primary mb-4">
-										Ajouter une session</a>
+									<a href="{{path('add-cours')}}" id="table2-new-row-button" class="btn btn-primary mb-4">
+										Ajouter un cours</a>
 									<div class="table-responsive">
 									<div style="position: relative; z-index: 55;" class="col-sm-12 col-lg-12 col-xl-12">
 										{% for message in app.flashes('success') %}
@@ -39,33 +39,32 @@
 												<tr>
                                                     <th>Id</th>
 													<th>Intitulé</th>
-													<th>Début</th>
-													<th>Fin</th>
-													<th>creation</th>
+													<th>Lien</th>
+													<th>Description</th>
+													<th>Language</th>
 													<th class="wd-25p">Options</th>
 												</tr>
 											</thead>
 											<tbody>
-												{% for session in sessions %}
+												{% for cours in course %}
 													<tr>
 						
-                                                        <td>{{ session .id }}</td>
-                                                        <td>{{ session .name }}</td>
-                                                        <td>{{ session .startSession | date('d/M/y') }}</td>
-                                                        <td>{{ session .endSession | date('d/M/y') }}</td>
-                                                        <td>{{ session .createdAt | date('d/M/y') }}</td>
+                                                        <td>{{ cours.id }}</td>
+                                                        <td>{{ cours.name }}</td>
+                                                        <td>{{ cours.link }}</td>
+                                                        <td>{{ cours.description }}</td>
+                                                        <td>{{ cours.category.name}}</td>
 														<td>
 															<div class="btn-list">
-                                                            	{# Bouton modifier #}
-                                                                <a href="{{path('edit-session', {'id': session.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
-                                                                    <span class="fe fe-edit">
-
-                                                                    </span>
-                                                                </a>
-                                                                {# fin bouton modifier #}
+                                                            	{# Bouton upload #}
+                                                                <a href="{{ asset('uploads/cours/' ~ cours.link )}}"
+																download="{{ cours.name }}" class="btn btn-sm btn-light">
+																<i class="fe fe-download text-success"></i>
+															    </a>
+                                                                {# fin bouton upload #}
 
                                                                 {# Bouton supprimer #}
-                                                                <a href="{{ path('delete-session', {'id': session.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
+                                                                <a href="{{ path('delete-cours', {'id': cours.id })}}" id="bDel" type="button" class="btn btn-sm btn-danger">
                                                                     <span class="fe fe-trash-2"></span>
                                                                 </a>
                                                                 {# fin bouton supprimer #}
