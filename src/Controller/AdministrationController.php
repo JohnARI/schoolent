@@ -17,8 +17,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -31,11 +31,12 @@ class AdministrationController extends AbstractController
         $this->passwordHasher = $passwordHasher;
         $this->mailjet = $mailjet;
     }
+    
 
     /**
      * @Route("/admin/view-users", name="view-users")
      */
-    public function index(): Response
+    public function viewUsers(): Response
     {
         $users = $this->entityManager->getRepository(User::class)->findAll();
 
@@ -44,7 +45,25 @@ class AdministrationController extends AbstractController
         ]);
     }
 
-    /**
+       /**
+     * @Route("/admin/view-all", name="view-all")
+     */
+    public function viewAll(): Response
+    {
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
+        $sessions = $this->entityManager->getRepository(Session::class)->findAll();
+
+        return $this->render('administration/admin/view_all.html.twig', [
+            'users' => $users,
+            'programmingLanguages' => $programmingLanguages,
+            'sessions' => $sessions,
+            
+
+        ]);
+    }
+
+         /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
     public function editUser($id, Request $request, SluggerInterface $slugger): Response
