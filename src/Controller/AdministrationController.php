@@ -54,10 +54,15 @@ class AdministrationController extends AbstractController
     {
 
 
-        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
+        // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
+        $calendars= $this->entityManager->getRepository(Calendar::class)->findAll();
+        // Fin tableaux
+
+        // Add user
+        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
         $user = new User();
         $formUser = $this->createForm(RegisterType::class, $user);
         $formUser->handleRequest($request);
@@ -66,7 +71,7 @@ class AdministrationController extends AbstractController
 
             $user = $formUser->getData();
             $file = $formUser->get('picture')->getData();
-
+            // Ajout de photo
             if ($file) {
                 $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = '.' . $file->guessExtension();
@@ -84,7 +89,8 @@ class AdministrationController extends AbstractController
             } else { 
             $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
             return $this->redirectToRoute('register'); 
-        }
+        } 
+        // Fin ajout photo
 
     $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
     $this->entityManager->persist($users);
@@ -101,10 +107,12 @@ class AdministrationController extends AbstractController
             'users' => $users,
             'programmingLanguages' => $programmingLanguages,
             'sessions' => $sessions,
+            'calendars' => $calendars,
             'formUser' => $formUser->createView(),
             
 
         ]);
+        // Fin add user
     }
 
 

@@ -28,9 +28,7 @@ class RegisterController extends AbstractController
         $this->mailjet = $mailjet;
         
     }
-    /**
-     * @Route("administration/admin/add-user", name="addUser")
-     */
+    
     public function register(Request $request, UserRepository $userRepository, PasswordGenerator $passwordGenerator, SluggerInterface $slugger): Response
     {
         $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
