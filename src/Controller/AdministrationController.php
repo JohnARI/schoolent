@@ -2,22 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use DateTimeImmutable;
+use App\Entity\Session;
 use App\Entity\Calendar;
 use App\Entity\Course;
-use App\Entity\ProgrammingLanguage;
-use App\Entity\Session;
-use App\Entity\User;
-use App\Form\AddProgrammingLanguageType;
-use App\Form\CalendarType;
-use App\Form\CourseType;
-use App\Form\EditCalendarType;
-use App\Form\EditProgrammingLanguageType;
-use App\Form\EditSessionType;
-use App\Form\EditUserType;
-use App\Form\SessionType;
 use App\Service\Mailjet;
-use DateTimeImmutable;
+use App\Form\CalendarType;
+use App\Form\EditUserType;
+use App\Form\RegisterType;
+use App\Form\EditCalendarType;
+use App\Service\PasswordGenerator;
+use App\Entity\ProgrammingLanguage;
+use App\Form\AddProgrammingLanguageType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\EditProgrammingLanguageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,23 +48,75 @@ class AdministrationController extends AbstractController
         ]);
     }
 
-       /**
+    /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(): Response
+    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator): Response
     {
+
+
+        // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
+        $calendars= $this->entityManager->getRepository(Calendar::class)->findAll();
+        // Fin tableaux
+
+        // Add user
+        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
+        $user = new User();
+        $formUser = $this->createForm(RegisterType::class, $user);
+        $formUser->handleRequest($request);
+
+        if ($formUser->isSubmitted() && $formUser->isValid()) {
+
+            $user = $formUser->getData();
+            $file = $formUser->get('picture')->getData();
+            // Ajout de photo
+            if ($file) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = '.' . $file->guessExtension();
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . $extension;
+
+                try {
+                   
+                    $file->move($this->getParameter('user_picture'), $newFilename);      
+                    $user->setPicture($newFilename);
+                } catch (FileException $exception) {
+                    // Code à executer si une erreur est attrapée
+                }
+                       
+            } else { 
+            $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
+            return $this->redirectToRoute('register'); 
+        } 
+        // Fin ajout photo
+
+    $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
+    $this->entityManager->persist($users);
+    $this->entityManager->flush();
+
+    $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
+    $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
+    //Message de succès
+    return $this->redirectToRoute('dashboard');
+}
+
 
         return $this->render('administration/admin/view_all.html.twig', [
             'users' => $users,
             'programmingLanguages' => $programmingLanguages,
             'sessions' => $sessions,
+            'calendars' => $calendars,
+            'formUser' => $formUser->createView(),
         ]);
+        // Fin add user
     }
 
-         /**
+
+
+     /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
     public function editUser($id, Request $request, SluggerInterface $slugger): Response
@@ -288,7 +339,7 @@ class AdministrationController extends AbstractController
     {
 
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
-        $student = $this->entityManager->getRepository(User::class)->findAll();
+        $student = $this->entityManager->getRepository(User::class)->findBy([], ['role' => 'ROLE_USER']);
 
         $form = $this->createForm(EditCalendarType::class, $calendar[0]);
         $form->handleRequest($request);
@@ -301,7 +352,7 @@ class AdministrationController extends AbstractController
             $newTechnologie = $form->get('category')->getData()->getName();
             $newStart = $form->get('start')->getData();
             $newSession = $form->get('session')->getData()->getName();
-            // $student = $form->get('session')->getData();
+            $student = $form->get('session')->getData();
             $newEnd = $form->get('end')->getData();
 
             // dd($student);
@@ -309,7 +360,7 @@ class AdministrationController extends AbstractController
             $this->entityManager->persist($calendar[0]);
             $this->entityManager->flush();
             $this->mailjet->sendEmail($user, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Numero de session " . $newSession . ".");
-            // $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Avec le formateur ");
+            $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Avec le formateur ");
             $this->addFlash('success', 'Calendrier modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
         }
