@@ -12,6 +12,7 @@ use App\Service\Mailjet;
 use App\Form\SessionType;
 use App\Form\CalendarType;
 use App\Form\EditUserType;
+use App\Form\RegisterType;
 use App\Form\EditSessionType;
 use App\Form\EditCalendarType;
 use App\Service\PasswordGenerator;
