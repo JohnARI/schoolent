@@ -52,11 +52,9 @@ class AdministrationController extends AbstractController
 
     /**
      * @Route("/admin/view-all", name="view-all")
-     */
+    */
     public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator): Response
     {
-
-
         // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
