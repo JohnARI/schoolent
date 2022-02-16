@@ -17,7 +17,6 @@ use App\Form\EditSessionType;
 use App\Form\EditCalendarType;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
-use App\Form\AddProgrammingLanguageType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EditProgrammingLanguageType;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +45,7 @@ class AdministrationController extends AbstractController
     {
         $users = $this->entityManager->getRepository(User::class)->findAll();
 
-        return $this->render('administration/admin/view/view_user.html.twig', [
+        return $this->render('administration/admin/view_user.html.twig', [
             'users' => $users,
         ]);
     }
@@ -61,7 +60,7 @@ class AdministrationController extends AbstractController
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
         $calendars= $this->entityManager->getRepository(Calendar::class)->findAll();
-        $courses= $this->entityManager->getRepository(Course::class)->findAll();
+        $course= $this->entityManager->getRepository(Course::class)->findAll();
         // Fin tableaux
 
         // Add user
@@ -96,115 +95,14 @@ class AdministrationController extends AbstractController
         // Fin ajout photo
 
     $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
-    $this->entityManager->persist($user);
+    $this->entityManager->persist($users);
     $this->entityManager->flush();
 
     $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
     $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
     //Message de succès
-    return $this->redirect($request->getUri());
+    return $this->redirectToRoute('dashboard');
 }
-// Fin add user
-// Add techno
-
-$techno = new ProgrammingLanguage();
-
-        $formTechno = $this->createForm(AddProgrammingLanguageType::class, $techno);
-        $formTechno->handleRequest($request);
-
-        if ($formTechno->isSubmitted() && $formTechno->isValid()) {
-            $technoPicture = $formTechno->get('picture')->getData();
-
-            if ($technoPicture) {
-                $originalFilename = pathinfo($technoPicture->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $technoPicture->guessExtension();
-
-                try {
-                    $technoPicture->move(
-                        $this->getParameter('techno_picture'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                $techno->setPicture($newFilename);
-            }
-           
-            $this->entityManager->persist($techno);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Nouvelle technologie ajoutée !');
-            return $this->redirect($request->getUri());
-        }
-        // Fin add techno
-        // Add session
-
-        $session = new Session();
-
-        $formSession = $this->createForm(SessionType::class, $session);
-        $formSession->handleRequest($request);
-
-        if ($formSession->isSubmitted() && $formSession->isValid()) {
-
-            $session->setCreatedAt(new DateTimeImmutable());
-
-            $this->entityManager->persist($session);
-            $this->entityManager->flush();
-            return $this->redirect($request->getUri());
-            $this->addFlash('success', 'Nouvelle session ajoutée !');
-        }
-        // Fin add session
-        // Add Calendar
-
-        $calendar = new Calendar();
-
-        $formCalendar = $this->createForm(CalendarType::class, $calendar);
-        $formCalendar->handleRequest($request);
-
-        if ($formCalendar->isSubmitted() && $formCalendar->isValid()) {
-
-            $calendar->setCreatedAt(new DateTimeImmutable());
-
-            $this->entityManager->persist($calendar);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Nouvelle date ajoutée !');
-            return $this->redirect($request->getUri());
-            
-        }
-        // Fin add calendar
-
-        $course = new Course();
-
-        $formCourse = $this->createForm(CourseType::class, $course);
-        $formCourse->handleRequest($request);
-
-        if ($formCourse->isSubmitted() && $formCourse->isValid()) {
-            $courseFile = $formCourse->get('link')->getData();
-
-            if ($courseFile) {
-                $originalFilename = pathinfo($courseFile->getClientOriginalName(), PATHINFO_FILENAME);
-
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $courseFile->guessExtension();
-
-                try {
-                    $courseFile->move(
-                        $this->getParameter('cours_picture'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-                $course->setLink($newFilename);
-            }
-
-            $this->entityManager->persist($course);
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Nouveaux cours ajouté !');
-            return $this->redirect($request->getUri());
-        }
-
 
 
         return $this->render('administration/admin/view_all.html.twig', [
@@ -213,13 +111,9 @@ $techno = new ProgrammingLanguage();
             'sessions' => $sessions,
             'calendars' => $calendars,
             'formUser' => $formUser->createView(),
-            'formCalendar' => $formCalendar->createView(),
-            'formSession' => $formSession->createView(),
-            'formCourse' => $formCourse->createView(),
-            'formTechno' => $formTechno->createView(),
-            'courses' => $courses,
+            'course' => $course,
         ]);
-        
+        // Fin add user
     }
 
 
@@ -283,6 +177,62 @@ $techno = new ProgrammingLanguage();
     }
 
     /**
+     * @Route("/admin/view-technologie", name="view-techno")
+     */
+    public function view_technologies(): Response
+    {
+        $technologies = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
+
+        return $this->render('administration/admin/view_technologies.html.twig', [
+            'technologies' => $technologies,
+
+        ]);
+    }
+
+    /**
+     * @Route("/admin/add/technologie", name="add_techno")
+     */
+    public function addTechnoLanguage(Request $request, SluggerInterface $slugger): Response
+    {
+
+        $techno = new ProgrammingLanguage();
+
+        $form = $this->createForm(AddProgrammingLanguageType::class, $techno);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $technoPicture = $form->get('picture')->getData();
+
+            if ($technoPicture) {
+                $originalFilename = pathinfo($technoPicture->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $technoPicture->guessExtension();
+
+                try {
+                    $technoPicture->move(
+                        $this->getParameter('techno_picture'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $techno->setPicture($newFilename);
+            }
+           
+            $this->entityManager->persist($techno);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Nouvelle technologie ajoutée !');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
+            
+        }
+
+        return $this->render('administration/admin/add_technologies.html.twig', [
+            'form' => $form->createView(),
+
+        ]);
+    }
+
+    /**
      * @Route("/admin/edit/technologie/{id}", name="edit_technologie", methods={"GET|POST"})
      */
     public function editTechnologie($id, Request $request, SluggerInterface $slugger): Response
@@ -342,8 +292,47 @@ $techno = new ProgrammingLanguage();
         return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
     }
 
-   
+    /**
+     * @Route("/admin/view-calendar", name="view-calendar")
+     */
+    public function viewCalendar(): Response
+    {
 
+        $calendar = $this->entityManager->getRepository(Calendar::class)->findBy([], ['id' => 'DESC']);
+
+        return $this->render('administration/admin/view-calendar.html.twig', [
+            'calendars' => $calendar,
+
+        ]);
+    }
+
+    /**
+     * @Route("/admin/add/calendar", name="add_calendar")
+     */
+    public function addcalendar(Request $request): Response
+    {
+
+        $calendar = new Calendar();
+
+        $form = $this->createForm(CalendarType::class, $calendar);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $calendar->setCreatedAt(new DateTimeImmutable());
+
+            $this->entityManager->persist($calendar);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Nouvelle date ajoutée !');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
+            
+        }
+
+        return $this->render('administration/admin/add_calendar.html.twig', [
+            'form' => $form->createView(),
+
+        ]);
+    }
 
     /**
      * @Route("/admin/edit/calendar/{id}", name="edit_calendar",methods={"GET|POST"})
@@ -393,10 +382,48 @@ $techno = new ProgrammingLanguage();
 
         $this->addFlash('success', 'La date a été suprimmée');
         return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
-    } 
-  
+    }
+
     /**
-     * @Route("/admin/edit/session/{id}", name="edit-session",methods={"GET|POST"})
+     * @Route("/admin/view-sessions", name="view-sessions")
+     */
+    public function viewSessions(): Response
+    {
+        $session = $this->entityManager->getRepository(Session::class)->findAll();
+
+        return $this->render('administration/admin/view-session.html.twig', [
+            'sessions' => $session,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/add/session", name="add-session")
+     */
+    public function addSession(Request $request): Response
+    {
+
+        $session = new Session();
+
+        $form = $this->createForm(SessionType::class, $session);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $session->setCreatedAt(new DateTimeImmutable());
+
+            $this->entityManager->persist($session);
+            $this->entityManager->flush();
+            return $this->redirect($request->get('redirect') ?? '/admin/view-sessions');
+            $this->addFlash('success', 'Nouvelle session ajoutée !');
+        }
+
+        return $this->render('administration/admin/add-session.html.twig', [
+            'form' =>  $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/session/{id}/edit", name="edit-session",methods={"GET|POST"})
      */
     public function editSession(Session $session, Request $request): Response
     {
@@ -416,14 +443,58 @@ $techno = new ProgrammingLanguage();
     }
 
     /**
-     * @Route("/admin/delete/session/{id}", name="delete-session", methods={"GET"})
+     * @Route("/admin/delete/session/{id}", name="delete-session")
      */
     public function deleteSession(Session $session, Request $request): Response
     {
         $this->entityManager->remove($session);
         $this->entityManager->flush();
-        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+
         $this->addFlash('success', 'La session a été suprimmée');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-sessions');
+    }
+
+    /**
+     * @Route("/admin/add/cours", name="add-cours")
+     */
+    public function addCourse(Request $request, SluggerInterface $slugger): Response
+    {
+
+        $course = new Course();
+
+        $form = $this->createForm(CourseType::class, $course);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $courseFile = $form->get('link')->getData();
+
+            if ($courseFile) {
+                $originalFilename = pathinfo($courseFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $courseFile->guessExtension();
+
+                try {
+                    $courseFile->move(
+                        $this->getParameter('cours_picture'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                $course->setLink($newFilename);
+            }
+
+            $this->entityManager->persist($course);
+            $this->entityManager->flush();
+            return $this->redirect($request->get('redirect') ?? '/admin/view-cours');
+            $this->addFlash('success', 'Nouveaux cours ajouté !');
+        }
+
+        return $this->render('administration/admin/add-cours.html.twig', [
+            'form' =>  $form->createView(),
+        ]);
     }
 
     /**
