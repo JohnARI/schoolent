@@ -45,6 +45,7 @@ View all
 									<div class="tab-pane active" id="users">
 										{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set id = "full-user" %}
 										{% block buttonTitle %}Ajouter un utilisateur{% endblock %}
 										{% block modalTitle %}Ajouter un utilisateur{% endblock %}
 										{% block form %}{% include "administration/admin/add/add_users.html.twig" %}{% endblock %}
@@ -57,6 +58,7 @@ View all
 									<div class="tab-pane" id="sessions">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set id = "full-sessions" %}
 										{% block buttonTitle %}Ajouter une session{% endblock %}
 										{% block modalTitle %}Ajouter une session{% endblock %}
 										{% block form %}{% include "administration/admin/add/add_sessions.html.twig" %}{% endblock %}
@@ -68,6 +70,7 @@ View all
 									<div class="tab-pane" id="calendars">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set id = "full-calendars" %}
 										{% block buttonTitle %}Ajouter un calendrier{% endblock %}
 										{% block modalTitle %}Ajouter un calendrier{% endblock %}
 										{% block form %}{% include "administration/admin/add/add_calendars.html.twig" %}{% endblock %}
@@ -79,6 +82,7 @@ View all
 									<div class="tab-pane" id="technologies">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set id = "full-technologies" %}
 										{% block buttonTitle %}Ajouter une technologie{% endblock %}
 										{% block modalTitle %}Ajouter une technologie{% endblock %}
 										{% block form %}{% include "administration/admin/add/add_programmingLanguages.html.twig" %}{% endblock %}
@@ -90,6 +94,7 @@ View all
 									<div class="tab-pane" id="courses">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set id = "full-courses" %}
 										{% block buttonTitle %}Ajouter un cours{% endblock %}
 										{% block modalTitle %}Ajouter un cours{% endblock %}
 										{% block form %}{% include "administration/admin/add/add_courses.html.twig" %}{% endblock %}
@@ -106,27 +111,5 @@ View all
 		</div>
 	</div>
 </div>
-
-<script>
-	$(".nav-tabs").find("li a").last().click();
-
-	var url = document.URL;
-	var hash = url.substring(url.indexOf('#'));
-
-	$(".nav-tabs").find("li a").each(function (key, val) {
-
-		if (hash == $(val).attr('href')) {
-
-			$(val).click();
-
-		}
-		$(val).click(function (ky, vl) {
-
-			console.log($(this).attr('href'));
-			location.hash = $(this).attr('href');
-		});
-
-	});
-</script>
 
 {% endblock %}
