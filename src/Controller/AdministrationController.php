@@ -417,7 +417,7 @@ class AdministrationController extends AbstractController
             $this->addFlash('success', 'Nouvelle session ajoutée !');
         }
 
-        return $this->render('administration/admin/add-session.html.twig', [
+        return $this->render('administration/admin/add-sessions.html.twig', [
             'form' =>  $form->createView(),
         ]);
     }
