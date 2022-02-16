@@ -41,7 +41,8 @@ Dashboard admin
                                             <div class="col-lg-12 col-md-12">
                                                 <div class="row">
                                                     <div class="panel profile-cover">
-                                                        <div class="profile-cover__action bg-img"></div>
+                                                        <div class="profile-cover__action bg-img" >
+                                                        </div>
                                                         <div class="profile-cover__img">
                                                             <div class="profile-img-1">
                                                                 <img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="img">
@@ -134,7 +135,7 @@ Dashboard admin
                             </div>
                         </div>
                         {# Fin utilisateurs #}
-
+                    <div class="row">       
                         <div class="col-lg-6 col-md-12">
                                 <div class="card">
                                     <div class="card-header">
@@ -142,18 +143,29 @@ Dashboard admin
                                     </div>
                                     <div class="card-body">
                                         <div class="chart-container">
-                                            <canvas id="chartBar1" class="h-275"></canvas>
+                                            <canvas id="chartBar1" class="h-250"></canvas>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Donut Chart</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="chart-donut" class="chartsh"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>      
                         {# AJOUTER LES WIDGETS #}
 
                        
 
-                    </div>
+                    
                     {# Fin container #}
                 </div>
             </div>
