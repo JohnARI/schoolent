@@ -264,10 +264,10 @@ $techno = new ProgrammingLanguage();
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            return $this->redirect($request->get('redirect') ?? '/admin/view-users');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
-        return $this->render('administration/admin/edit_users.html.twig', [
+        return $this->render('administration/admin/edit/edit_user.html.twig', [
 
             'form' => $form->createView()
         ]);
@@ -281,7 +281,7 @@ $techno = new ProgrammingLanguage();
         $this->entityManager->remove($user);
         $this->entityManager->flush();
 
-        return $this->redirect($request->get('redirect') ?? '/admin/view-users');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
 
     /**
@@ -323,7 +323,7 @@ $techno = new ProgrammingLanguage();
             $this->entityManager->persist($technologie);
             $this->entityManager->flush();
             $this->addFlash('success', 'Nouvelle technologie modifiée !');
-            return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
         return $this->render('administration/admin/edit_technologies.html.twig', [
@@ -352,9 +352,11 @@ $techno = new ProgrammingLanguage();
      */
     public function editCalendar($id, Request $request): Response
     {
-
+        $student = new User();
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
-        $student = $this->entityManager->getRepository(User::class)->findBy([], ['role' => 'ROLE_USER']);
+        $student = $this->entityManager->getRepository(Session::class)->findBySession('ROLE_USER', 'N° 001');
+        
+        
 
         $form = $this->createForm(EditCalendarType::class, $calendar[0]);
         $form->handleRequest($request);
@@ -367,7 +369,7 @@ $techno = new ProgrammingLanguage();
             $newTechnologie = $form->get('category')->getData()->getName();
             $newStart = $form->get('start')->getData();
             $newSession = $form->get('session')->getData()->getName();
-            $student = $form->get('session')->getData();
+            // $student = $form->get('session')->getData()->getUser();
             $newEnd = $form->get('end')->getData();
 
             // dd($student);
@@ -377,10 +379,10 @@ $techno = new ProgrammingLanguage();
             $this->mailjet->sendEmail($user, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Numero de session " . $newSession . ".");
             $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Avec le formateur ");
             $this->addFlash('success', 'Calendrier modifié !');
-            return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
-        return $this->render('administration/admin/edit-calendar.html.twig', [
+        return $this->render('administration/admin/edit/edit_calendar.html.twig', [
             'form' => $form->createView(),
         ]);
     }
