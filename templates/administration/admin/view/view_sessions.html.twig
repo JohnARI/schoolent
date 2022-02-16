@@ -1,47 +1,47 @@
 {% block sessions %}
 
 <div class="table-responsive">
-												<table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
-													<thead>
-														<tr>
-															<th class="wd-15p border-bottom-0">Intitulé</th>
-															<th class="wd-15p border-bottom-0">Date de début</th>
-															<th class="wd-15p border-bottom-0">Date de fin</th>
-															<th class="wd-20p border-bottom-0">Date de création</th>
-															<th class="wd-10p border-bottom-0">Actions</th>
+	<table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+		<thead>
+			<tr>
+				<th class="wd-15p border-bottom-0">Intitulé</th>
+				<th class="wd-15p border-bottom-0">Date de début</th>
+				<th class="wd-15p border-bottom-0">Date de fin</th>
+				<th class="wd-20p border-bottom-0">Date de création</th>
+				<th class="wd-10p border-bottom-0">Actions</th>
 
-														</tr>
-													</thead>
-													<tbody>
-														{% for session in sessions %}
-															<tr>
-																
-																<td>{{ session.name }}</td>
-																<td>{{ session.startSession|date("d/m/Y") }}</td>
-																<td>{{ session.endSession|date("d/m/Y") }}</td>
-																<td>{{ session.createdAt|date("m/d/Y") }}</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for session in sessions %}
+				<tr>
+					
+					<td>{{ session.name }}</td>
+					<td>{{ session.startSession|date("d/m/Y") }}</td>
+					<td>{{ session.endSession|date("d/m/Y") }}</td>
+					<td>{{ session.createdAt|date("m/d/Y") }}</td>
 
-																<td name="bstable-actions">
-																	<div
-																		class="btn-list">
-																		{# Bouton modifier #}
-																		<a href="{# {{path('edit_user',{'id': user.id})}} #}" id="bEdit" type="button" class="btn btn-sm btn-primary">
-																			<span class="fe fe-edit"></span>
-																		</a>
-																		{# fin bouton modifier #}
+					<td name="bstable-actions">
+						<div
+							class="btn-list">
+							{# Bouton modifier #}
+							<a href="{{path('edit-session', {'id': session.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+								<span class="fe fe-edit"></span>
+							</a>
+							{# fin bouton modifier #}
 
-																		{# Bouton supprimer #}
-																		<a href="{# {{path('delete_user',{'id': user.id})}} #}" id="bDel" type="button" class="btn btn-sm btn-danger">
-																			<span class="fe fe-trash-2"></span>
-																		</a>
-																		{# fin bouton supprimer #}
-																	</div>
-																</td>
-															</tr>
-														{% endfor %}
+							{# Bouton supprimer #}
+							<a href="{{ path('delete-session', {'id': session.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
+								<span class="fe fe-trash-2"></span>
+							</a>
+							{# fin bouton supprimer #}
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
 
-													</tbody>
-												</table>
-											</div>
+		</tbody>
+	</table>
+</div>
 
-                                            {% endblock %}
+{% endblock %}

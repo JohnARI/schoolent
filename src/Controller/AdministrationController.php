@@ -3,18 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Course;
 use DateTimeImmutable;
 use App\Entity\Session;
 use App\Entity\Calendar;
-use App\Entity\Course;
+use App\Form\CourseType;
 use App\Service\Mailjet;
+use App\Form\SessionType;
 use App\Form\CalendarType;
 use App\Form\EditUserType;
 use App\Form\RegisterType;
+use App\Form\EditSessionType;
 use App\Form\EditCalendarType;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
-use App\Form\AddProgrammingLanguageType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EditProgrammingLanguageType;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,6 +62,7 @@ class AdministrationController extends AbstractController
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
         $calendars= $this->entityManager->getRepository(Calendar::class)->findAll();
+        $course= $this->entityManager->getRepository(Course::class)->findAll();
         // Fin tableaux
 
         // Add user
@@ -110,6 +113,7 @@ class AdministrationController extends AbstractController
             'sessions' => $sessions,
             'calendars' => $calendars,
             'formUser' => $formUser->createView(),
+            'course' => $course,
         ]);
         // Fin add user
     }
@@ -450,18 +454,6 @@ class AdministrationController extends AbstractController
 
         $this->addFlash('success', 'La session a été suprimmée');
         return $this->redirect($request->get('redirect') ?? '/admin/view-sessions');
-    }
-
-    /**
-     * @Route("/admin/view-cours", name="view-cours")
-     */
-    public function viewCours(): Response
-    {
-        $course = $this->entityManager->getRepository(Course::class)->findBy([], ['id' => 'DESC']);
-
-        return $this->render('administration/admin/view-cours.html.twig', [
-            'course' => $course,
-        ]);
     }
 
     /**
