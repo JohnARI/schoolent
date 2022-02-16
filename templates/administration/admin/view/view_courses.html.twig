@@ -1,0 +1,49 @@
+{% block courses %}
+
+	<div class="table-responsive">
+		<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
+			<thead>
+				<tr>
+					<th class="wd-15p border-bottom-0">Id</th>
+					<th class="wd-15p border-bottom-0">Intitulé</th>
+					<th class="wd-15p border-bottom-0">Lien</th>
+					<th class="wd-20p border-bottom-0">Description</th>
+					<th class="wd-10p border-bottom-0">Language</th>
+					<th class="wd-10p border-bottom-0">Actions</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				{% for course in courses %}
+					<tr>
+
+						<td>{{ course.id }}</td>
+						<td>{{ course.name }}</td>
+						<td>{{ course.link }}</td>
+						<td>{{ course.description }}</td>
+						<td>{{ course.category.name}}</td>
+
+						<td name="bstable-actions">
+							<div
+								class="btn-list">
+								{# Bouton upload #}
+								<a href="{{ asset('uploads/cours/' ~ cours.link )}}" download="{{ cours.name }}" class="btn btn-sm btn-light">
+									<i class="fe fe-download text-success"></i>
+								</a>
+								{# fin bouton upload #}
+
+								{# Bouton supprimer #}
+								<a href="{{ path('delete-cours', {'id': cours.id })}}" id="bDel" type="button" class="btn btn-sm btn-danger">
+									<span class="fe fe-trash-2"></span>
+								</a>
+								{# fin bouton supprimer #}
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+
+			</tbody>
+		</table>
+	</div>
+
+{% endblock %}
