@@ -19,14 +19,14 @@
 				<td name="bstable-actions">
 					<div class="btn-list">
 						{# Bouton modifier #}
-						<a href="{# {{path('edit_user',{'id': user.id})}} #}" id="bEdit" type="button"
+						<a href="{{path('edit_technologie',{'id': programmingLanguage.id})}}" id="bEdit" type="button"
 							class="btn btn-sm btn-primary">
 							<span class="fe fe-edit"></span>
 						</a>
 						{# fin bouton modifier #}
 
 						{# Bouton supprimer #}
-						<a href="{# {{path('delete_user',{'id': user.id})}} #}" id="bDel" type="button"
+						<a href="{{path('delete_technologie',{'id': programmingLanguage.id})}}" id="bDel" type="button"
 							class="btn btn-sm btn-danger">
 							<span class="fe fe-trash-2"></span>
 						</a>

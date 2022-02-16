@@ -15,6 +15,7 @@ use App\Form\EditUserType;
 use App\Form\RegisterType;
 use App\Form\EditSessionType;
 use App\Form\EditCalendarType;
+use App\Repository\UserRepository;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
 use App\Form\AddProgrammingLanguageType;
@@ -339,9 +340,8 @@ $techno = new ProgrammingLanguage();
     {
         $this->entityManager->remove($technologie);
         $this->entityManager->flush();
-
+        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La technologie a été suprimmée !');
-        return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
     }
 
    
@@ -350,7 +350,7 @@ $techno = new ProgrammingLanguage();
     /**
      * @Route("/admin/edit/calendar/{id}", name="edit_calendar",methods={"GET|POST"})
      */
-    public function editCalendar($id, Request $request): Response
+    public function editCalendar($id, Request $request, UserRepository $userRepository): Response
     {
         $student = new User();
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
@@ -395,8 +395,8 @@ $techno = new ProgrammingLanguage();
         $this->entityManager->remove($calendar);
         $this->entityManager->flush();
 
+        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La date a été suprimmée');
-        return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
     } 
   
     /**
@@ -438,6 +438,6 @@ $techno = new ProgrammingLanguage();
         $this->entityManager->remove($Course);
         $this->entityManager->flush();
 
-        return $this->redirect($request->get('redirect') ?? '/admin/view-cours');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
 }
