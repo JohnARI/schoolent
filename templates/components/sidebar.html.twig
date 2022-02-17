@@ -24,14 +24,20 @@
                             <li class="sub-category">
                                 <h3>Utilisateurs</h3>
                             </li>
+                            {% if app.user and app.user.role == 'Administrateur'%}
                             <li class="slide">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-all')}}"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">Espace administrateur</span></a>
                             </li>
+                            
                             <li class="slide">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-teachers')}}"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">Professeurs</span></a>
                             </li>
                             <li class="slide">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-admins')}}"><i class="side-menu__icon fe fe-user-check"></i><span class="side-menu__label">Administrateurs</span></a>
+                            </li>
+                            {% endif %}
+                            <li class="slide">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-students')}}"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">Elèves</span></a>
                             </li>
                 
                             <li class="slide">
