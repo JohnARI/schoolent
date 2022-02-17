@@ -60,11 +60,14 @@ class SecurityController extends AbstractController
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
         $temporaryPassword = $passwordGenerator->passwordAleatoire(10);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $email = $form->get('email')->getData();
             $user = $userRepository->findByEmail($email);
+
+            // dd($user);
 
             if ($user) {
                 $user[0]->setPassword(

@@ -159,16 +159,38 @@ $techno = new ProgrammingLanguage();
         // Add Calendar
 
         $calendar = new Calendar();
+        $student = new User();
 
         $formCalendar = $this->createForm(CalendarType::class, $calendar);
+        
+        // dd($students);
+
         $formCalendar->handleRequest($request);
 
         if ($formCalendar->isSubmitted() && $formCalendar->isValid()) {
+
+            $session = $formCalendar->get('session')->getData();
+            $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
+
+            $teacher = $formCalendar->get('teacher')->getData();
+            $cours = $formCalendar->get('name')->getData();
+            $programmingLanguages = $formCalendar->get('category')->getData()->getName();
+            $dateStart = $formCalendar->get('start')->getData();
+            $dateEnd = $formCalendar->get('end')->getData();
+            $nameSession = $formCalendar->get('session')->getData()->getName();
+            
 
             $calendar->setCreatedAt(new DateTimeImmutable());
 
             $this->entityManager->persist($calendar);
             $this->entityManager->flush();
+
+            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
+
+            foreach ($students as $student) { 
+                $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours ." " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+            }
+            
             $this->addFlash('success', 'Nouvelle date ajoutée !');
             return $this->redirect($request->getUri());
             
@@ -223,8 +245,6 @@ $techno = new ProgrammingLanguage();
         ]);
         
     }
-
-
 
      /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
@@ -341,49 +361,50 @@ $techno = new ProgrammingLanguage();
         $this->entityManager->flush();
 
         $this->addFlash('success', 'La technologie a été suprimmée !');
-        return $this->redirect($request->get('redirect') ?? '/admin/view-technologie');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
-
-   
-
 
     /**
      * @Route("/admin/edit/calendar/{id}", name="edit_calendar",methods={"GET|POST"})
      */
     public function editCalendar($id, Request $request): Response
     {
-        $student = new User();
+        $students = new User();
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
-        $student = $this->entityManager->getRepository(Session::class)->findBySession('ROLE_USER', 'N° 001');
         
-        
-
-        $form = $this->createForm(EditCalendarType::class, $calendar[0]);
-        $form->handleRequest($request);
+        $formCalendar = $this->createForm(EditCalendarType::class, $calendar[0]);
+        $formCalendar->handleRequest($request);
 
         // dd($calendar);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formCalendar->isSubmitted() && $formCalendar->isValid()) {
 
-            $user = $form->get('teacher')->getData();
-            $newTechnologie = $form->get('category')->getData()->getName();
-            $newStart = $form->get('start')->getData();
-            $newSession = $form->get('session')->getData()->getName();
-            // $student = $form->get('session')->getData()->getUser();
-            $newEnd = $form->get('end')->getData();
+            $session = $formCalendar->get('session')->getData();
+            $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
+
+            $teacher = $formCalendar->get('teacher')->getData();
+            $cours = $formCalendar->get('name')->getData();
+            $programmingLanguages = $formCalendar->get('category')->getData()->getName();
+            $dateStart = $formCalendar->get('start')->getData();
+            $dateEnd = $formCalendar->get('end')->getData();
+            $nameSession = $formCalendar->get('session')->getData()->getName();
 
             // dd($student);
 
             $this->entityManager->persist($calendar[0]);
             $this->entityManager->flush();
-            $this->mailjet->sendEmail($user, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Numero de session " . $newSession . ".");
-            $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $newTechnologie . " du : " . date_format($newStart, 'd-m-y') . " Au " . date_format($newEnd, 'd-m-y.') . " Avec le formateur ");
+            $this->mailjet->sendEmail($teacher, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Numero de session " . $nameSession . ".");
+
+            foreach ($students as $student) { 
+                $this->mailjet->sendEmail($student, "Voici votre convocation vient d'étre à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+            }
+           
             $this->addFlash('success', 'Calendrier modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
         return $this->render('administration/admin/edit/edit_calendar.html.twig', [
-            'form' => $form->createView(),
+            'form' => $formCalendar->createView(),
         ]);
     }
 
@@ -396,7 +417,7 @@ $techno = new ProgrammingLanguage();
         $this->entityManager->flush();
 
         $this->addFlash('success', 'La date a été suprimmée');
-        return $this->redirect($request->get('redirect') ?? '/admin/view-calendar');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     } 
   
     /**
@@ -410,7 +431,7 @@ $techno = new ProgrammingLanguage();
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($session);
             $this->entityManager->flush();
-            return $this->redirect($request->get('redirect') ?? '/admin/view-sessions');
+            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
             $this->addFlash('success', 'La session a été modifiée !');
         }
 
@@ -438,6 +459,6 @@ $techno = new ProgrammingLanguage();
         $this->entityManager->remove($Course);
         $this->entityManager->flush();
 
-        return $this->redirect($request->get('redirect') ?? '/admin/view-cours');
+        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
 }
