@@ -177,6 +177,6 @@ class Session
 
     // public function __toString()
     // {
-    //     return $this->getName() . ' ' . $this->getUser();
+    //     return $this->name;
     // }
 }
