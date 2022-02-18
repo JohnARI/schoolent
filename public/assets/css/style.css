@@ -18834,10 +18834,11 @@ ul.inbox-pagination li {
 }
 
 .profile-cover__action {
+    margin-bottom: 5px;
     display: -ms-flexbox;
     display: -webkit-box;
     display: flex;
-    padding: 252px 30px 10px 185px;
+    padding: 252px 32px 10px 187px;
     border-radius: 5px;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -18845,11 +18846,12 @@ ul.inbox-pagination li {
     -webkit-box-pack: end;
     justify-content: flex-end;
     overflow: hidden;
-    background: url(../images/media/profile-background1.jpg) no-repeat;
+    background: url(../images/media/admin.png) no-repeat center;
     background-size: cover;
 }
 
 .profile-cover__img {
+    margin-top: 20px;
     display: flex;
     border-radius: 11px;
     color: #fff;
@@ -18869,7 +18871,7 @@ ul.inbox-pagination li {
 }
 
 .profile-cover__img .profile-img-content {
-    margin-top: 100px;
+    margin-top: 80px;
     display: flex;
     margin-left: 10px;
 }
