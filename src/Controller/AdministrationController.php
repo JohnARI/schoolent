@@ -299,6 +299,16 @@ $techno = new ProgrammingLanguage();
      */
     public function deleteUser(User $user, Request $request): Response
     {
+
+        $pictures = $user->getPicture();
+        if ($pictures) {
+
+                $pictureName = $this->getParameter("user_picture") . '/' . $pictures;
+                dd($pictureName);
+     
+        }
+
+
         $this->entityManager->remove($user);
         $this->entityManager->flush();
 
