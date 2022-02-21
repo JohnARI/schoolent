@@ -34,10 +34,12 @@ class ProfilController extends AbstractController
         $editUserForm->handleRequest($request);
 
         if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
+            $this->addFlash('success', 'Utilisateur mis à jour avec succès');
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            return $this->redirect($request->get('redirect') ?? 'student/dashboard');
+            
+            return $this->redirect($request->getUri());
         }
 
         return $this->render('profil/profil.html.twig', [
