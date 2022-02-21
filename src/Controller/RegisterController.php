@@ -19,9 +19,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class RegisterController extends AbstractController
 {
     private $mailjet;
-    
-
-
 
     public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet )
     {
@@ -31,27 +28,11 @@ class RegisterController extends AbstractController
         $this->mailjet = $mailjet;
         
     }
-    /**
-     * @Route("administration/admin/add-user", name="addUser")
-     */
+    
     public function register(Request $request, UserRepository $userRepository, PasswordGenerator $passwordGenerator, SluggerInterface $slugger): Response
     {
-        $roles = $this->getUser()->getRole();
         $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
-        switch ($roles) {
-            case "Formateur":
-                return $this->redirectToRoute('login');
-                break;
 
-            case "Eleve":
-                return $this->redirectToRoute('login');
-                break;
-
-            case $this->isGranted('ROLE_USER') == false:
-                return $this->redirectToRoute('login');
-                break;
-                
-            case "Administrateur":
                 $admins =   $userRepository->findByRole('ROLE_ADMIN');
                 $teachers = $userRepository->findByRole('ROLE_TEACHER');
                 $students = $userRepository->findByRole('ROLE_USER');
@@ -76,7 +57,7 @@ class RegisterController extends AbstractController
                             $file->move($this->getParameter('user_picture'), $newFilename);      
                             $user->setPicture($newFilename);
                         } catch (FileException $exception) {
-                            // Code à executer si une erreur est attrapée
+                        // Code à executer si une erreur est attrapée
                         }
                                
                     } else { 
@@ -94,16 +75,17 @@ class RegisterController extends AbstractController
                     return $this->redirectToRoute('dashboard');
                 }
 
-                return $this->render('administration/admin/add_users.html.twig', [
+                return $this->render('administration/admin/view_all.html.twig', [
                     'form' => $form->createView(),
                     'admins' => $admins,
                     'teachers' => $teachers,
                     'students' => $students,
                 ]);
                 
-                break;
-        }
 
-        return $this->redirectToRoute('login');
-    }
+        
+
+        return $this->redirectToRoute('view-all');
+    
+}
 }

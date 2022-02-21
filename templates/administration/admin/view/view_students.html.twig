@@ -4,15 +4,6 @@
 Administrator
 {% endblock %}
 
-{% block stylesheet %}
-    <style>
-    #calendrier{
-        width:80%;
-        margin:auto;
-    }
-    </style>
-{% endblock %}
-
 {% block body %}
     <!-- PAGE -->
     <div class="page">
@@ -20,8 +11,7 @@ Administrator
 <!--app-content open-->
             <div class="main-content app-content mt-0">
                 <div class="side-app">
-                    
-                    <div id="calendrier"></div>
+
                     
 
                         <!-- Row -->
@@ -29,32 +19,36 @@ Administrator
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3 class="card-title">Utilisateur</h3>
+                                        <h3 class="card-title">Formateur</h3>
                                     </div>
                                     <div class="card-body">
-                                    <a href="{{path('addUser')}}" id="table2-new-row-button" class="btn btn-primary mb-4"> Ajouter un nouvel utilisateur</a>
+                                    {% if app.user.role == 'ROLE_ADMIN'%}
+                                    <a href="{{path('view-all')}}" id="table2-new-row-button" class="btn btn-primary mb-4"> Ajouter un nouveau formateur</a>
+                                    {% endif %}
                                         <div class="table-responsive">
                                             <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                                                 <thead>
                                                     <tr>
+                                                        <th class="wd-15p border-bottom-0">Photo</th>
                                                         <th class="wd-15p border-bottom-0">Prénom</th>
                                                         <th class="wd-15p border-bottom-0">Nom</th>
                                                         <th class="wd-20p border-bottom-0">Role</th>
-                                                        <th class="wd-15p border-bottom-0">Numéro</th>
                                                         <th class="wd-10p border-bottom-0">Email</th>
+                                                        {% if app.user.role == 'ROLE_ADMIN'%}
                                                         <th class="wd-10p border-bottom-0">Actions</th>
+                                                        {% endif %}
                                                         
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 {% for user in users %}
                                                     <tr>
+                                                    <td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ user.picture)}}" alt=""></td>
                                                         <td>{{ user.firstname }}</td>
                                                         <td>{{ user.lastname }}</td>
                                                         <td>{{ user.role }}</td>
-                                                        <td>0{{ user.phone }}</td>
                                                         <td>{{ user.email }}</td>
-                                                        
+                                                        {% if app.user.role == 'ROLE_ADMIN'%}
                                                         <td name="bstable-actions">
                                                             <div class="btn-list">
                                                             {# Bouton modifier #}
@@ -72,6 +66,7 @@ Administrator
                                                                 {# fin bouton supprimer #}
                                                             </div>
                                                         </td>
+                                                        {% endif %}
                                                     </tr>
                                                     {% endfor %}
                                                     
@@ -96,4 +91,3 @@ Administrator
     
 
         {% endblock %}
-        

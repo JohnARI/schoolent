@@ -19,13 +19,13 @@
 
 				<!-- CONTAINER OPEN -->
 					<div class="col col-login mx-auto mt-7"> <div class="text-center">
-						<img src="../assets/images/brand/logo-white.png" class="header-brand-img m-0" alt="">
+						<img src="../assets/images/brand/school.png" class="header-brand-img m-0" alt="">
 					</div>
 				</div>
 				<div class="container-login100">
 					<div class="wrap-login100 p-6 row">
 						<span class="login100-form-title">
-							Formulaire de Contact
+							Formulaire de contact
 						</span>
 						<div class="col">
 							{{form_start(form)}}
@@ -47,7 +47,7 @@
 							{% endfor %}
 							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
 								<a href="#" class="input-group-text bg-white text-muted">
-									<i class="mdi mdi-account" aria-hidden="true"></i>
+									<i class="mdi mdi-account" aria-hidden="true" ></i>
 								</a>
 								{{form_widget(form.name)}}
 							</div>
@@ -64,21 +64,19 @@
 								{{form_widget(form.phone)}}
 							</div>
 						</div>
-
 						<div class="form-group col-md-6">
-							{{form_row(form.objet)}}
+							{{form_row(form.objet, {"label":"Objet de la demande : "})}}
 						</div>
 						<div class="form-group col-md-12">
-							{{form_row(form.message, {"label":"Your message : "})}}
+							{{form_row(form.message, {"label":"Votre message : "})}}
 						</div>
 
-
 						<div class="col-md-12">
-							<button class="btn btn-fill-out">{{ button_label|default('Envoyer le Message') }}</button>
+							<button type="submit"> <a href="" class="login100-form-btn btn-primary">{{ button_label|default('Envoyer le message') }}</a></button>
 						</div>
 						{{form_end(form)}}
 						<div class="text-center pt-3">
-							<p class="text-dark mb-0">Already have account?<a href="{{path('login')}}" class="text-primary ms-1">Sign In</a>
+							<p class="text-dark mb-0">Vous avez déjà un compte?<a href="{{path('login')}}" class="text-primary ms-1">Connexion</a>
 							</p>
 						</div>
 					</div>

@@ -18,11 +18,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class ContactController extends AbstractController
 {
-
-
     /**
      * @Route("/", name="contact_new", methods={"GET", "POST"})
-     */
+    */
     public function new(Request $request, EntityManagerInterface $entityManager, EmailSender $emailSender): Response
     {
         $contact = new Contact();
@@ -53,7 +51,7 @@ class ContactController extends AbstractController
 
             $contact = new Contact();
             $form = $this->createForm(ContactType::class, $contact);
-            $this->addFlash('contact_success', 'Votre message a bien été envoye, Un administrateur va vous repondre très bientôt!');
+            $this->addFlash('contact_success', 'Votre message a bien été envoyé, Un administrateur va vous répondre très bientôt!');
             //Message de succès
         }
 

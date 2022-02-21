@@ -1,0 +1,49 @@
+{% block calendars %}
+
+	<div class="table-responsive">
+		<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
+			<thead>
+				<tr>
+					<th class="wd-15p border-bottom-0">Technologie</th>
+					<th class="wd-15p border-bottom-0">Session</th>
+					<th class="wd-15p border-bottom-0">Professeur</th>
+					<th class="wd-20p border-bottom-0">Date de début</th>
+					<th class="wd-10p border-bottom-0">Date de fin</th>
+					<th class="wd-10p border-bottom-0">Actions</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				{% for calendar in calendars %}
+					<tr>
+
+						<td>{{ calendar.name }}</td>
+						<td>{{ calendar.session }}</td>
+						<td>{{ calendar.teacher }}</td>
+						<td>{{ calendar.start|date("d/m/Y") }}</td>
+						<td>{{ calendar.end|date("d/m/Y") }}</td>
+
+						<td name="bstable-actions">
+							<div
+								class="btn-list">
+								{# Bouton modifier #}
+								<a href="{{path('edit_calendar',{'id': calendar.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+									<span class="fe fe-edit"></span>
+								</a>
+								{# fin bouton modifier #}
+
+								{# Bouton supprimer #}
+								<a href="{# {{path('delete_user',{'id': user.id})}} #}" id="bDel" type="button" class="btn btn-sm btn-danger">
+									<span class="fe fe-trash-2"></span>
+								</a>
+								{# fin bouton supprimer #}
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+
+			</tbody>
+		</table>
+	</div>
+
+{% endblock %}

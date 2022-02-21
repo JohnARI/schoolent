@@ -18867,7 +18867,7 @@ ul.inbox-pagination li {
   border-radius: 40% 0 40% 0;
 }
 
-.profile-cover__action {
+ .profile-cover__action {
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
@@ -18879,8 +18879,12 @@ ul.inbox-pagination li {
   -webkit-box-pack: end;
   justify-content: flex-end;
   overflow: hidden;
-  background: url(../images/media/profile-background1.jpg) no-repeat;
+  background: url(../images/media/admin.png) no-repeat;
   background-size: cover;
+} 
+
+#z {
+  background: url(../images/media/admin.png);
 }
 
 .profile-cover__img {

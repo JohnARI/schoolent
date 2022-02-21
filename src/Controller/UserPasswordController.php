@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPasswordController extends AbstractController
@@ -29,8 +30,12 @@ class UserPasswordController extends AbstractController
         
         if($form->isSubmitted() && $form->isValid()){  
             
+            // $oldPswd = 
             $newPswd = $form->get('password')->getData(); 
-            $user->setPassword( 
+
+            // if ($newPswd->isPasswordValid($user, $oldPswd)) {
+
+            $user->setPassword(
                 $this->passwordHasher->hashPassword($user, $newPswd) 
             );
 
@@ -40,7 +45,10 @@ class UserPasswordController extends AbstractController
 
             $this->addFlash('success',' votre mot passe a été modifié!');
             return $this->redirectToRoute('login');
-        }
+        // } else {
+        //     $form->addError(new FormError('Ancien mot de passe incorrect'));
+        // }
+    }
 
         return $this->render('student/user_password.html.twig', [
             'form' => $form->createView(),  

@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+View all
+{% endblock %}
+
+{% block body %}
+
+{# app-content-app #}
+<div class="main-content app-content mt-0">
+	<div class="side-app">
+
+		{# Container #}
+		<div class="main-container container-fluid">
+
+			<div class="col">
+				<div class="card">
+					<div class="card-header">
+						<h3 class="card-title">CRUD A FAIRE !!!!</h3>
+					</div>
+					<div class="card-body">
+
+						<div class="panel panel-primary">
+							<div class="tab-menu-heading">
+								<div class="tabs-menu">
+									{# Tabs #}
+									<ul class="nav panel-tabs panel-info">
+										<li><a href="#users" class="active" data-bs-toggle="tab"><span><i
+														class="fe fe-user me-1"></i></span>Utilisateurs</a></li>
+										<li><a href="#sessions" data-bs-toggle="tab"><span><i
+														class="fe fe-calendar me-1"></i></span>Sessions</a></li>
+										<li><a href="#calendars" data-bs-toggle="tab"><span><i
+														class="fe fe-settings me-1"></i></span>Calendrier</a></li>
+										<li><a href="#technologies" data-bs-toggle="tab"><span><i
+														class="fe fe-bell me-1"></i></span>Technologies</a></li>
+										<li><a href="#courses" data-bs-toggle="tab"><span><i
+														class="fe fe-bell me-1"></i></span>Cours</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="panel-body tabs-menu-body">
+								<div class="tab-content">
+
+
+									<div class="tab-pane active" id="users">
+										{# Modal #}
+										{% embed "components/modal.html.twig" %}
+										{% set id = "full-user" %}
+										{% block buttonTitle %}Ajouter un utilisateur{% endblock %}
+										{% block modalTitle %}Ajouter un utilisateur{% endblock %}
+										{% block form %}{% include "administration/admin/add/add_users.html.twig" %}{% endblock %}
+										{% endembed %}
+										{# Fin modal #}
+
+										
+										{% include "administration/admin/view/view_users.html.twig" %}
+									</div>
+									<div class="tab-pane" id="sessions">
+									{# Modal #}
+										{% embed "components/modal.html.twig" %}
+										{% set id = "full-sessions" %}
+										{% block buttonTitle %}Ajouter une session{% endblock %}
+										{% block modalTitle %}Ajouter une session{% endblock %}
+										{% block form %}{% include "administration/admin/add/add_sessions.html.twig" %}{% endblock %}
+										{% endembed %}
+										{# Fin modal #}
+
+										{% include "administration/admin/view/view_sessions.html.twig" %}
+									</div>
+									<div class="tab-pane" id="calendars">
+									{# Modal #}
+										{% embed "components/modal.html.twig" %}
+										{% set id = "full-calendars" %}
+										{% block buttonTitle %}Ajouter un calendrier{% endblock %}
+										{% block modalTitle %}Ajouter un calendrier{% endblock %}
+										{% block form %}{% include "administration/admin/add/add_calendars.html.twig" %}{% endblock %}
+										{% endembed %}
+										{# Fin modal #}
+
+										{% include "administration/admin/view/view_calendars.html.twig" %}
+									</div>
+									<div class="tab-pane" id="technologies">
+									{# Modal #}
+										{% embed "components/modal.html.twig" %}
+										{% set id = "full-technologies" %}
+										{% block buttonTitle %}Ajouter une technologie{% endblock %}
+										{% block modalTitle %}Ajouter une technologie{% endblock %}
+										{% block form %}{% include "administration/admin/add/add_programmingLanguages.html.twig" %}{% endblock %}
+										{% endembed %}
+										{# Fin modal #}
+
+										{% include "administration/admin/view/view_programmingLanguages.html.twig" %}
+									</div>
+									<div class="tab-pane" id="courses">
+									{# Modal #}
+										{% embed "components/modal.html.twig" %}
+										{% set id = "full-courses" %}
+										{% block buttonTitle %}Ajouter un cours{% endblock %}
+										{% block modalTitle %}Ajouter un cours{% endblock %}
+										{% block form %}{% include "administration/admin/add/add_courses.html.twig" %}{% endblock %}
+										{% endembed %}
+										{# Fin modal #}
+										{% include "administration/admin/view/view_courses.html.twig" %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

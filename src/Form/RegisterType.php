@@ -93,15 +93,12 @@ class RegisterType extends AbstractType
                         'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
                     ])
                 ]
-
-
-
             ])
 
             
 
             ->add('submit', SubmitType::class, [
-                'label' => "S'inscrire",
+                'label' => "Ajouter",
                 'attr' => [
                     'class' => 'login100-form-btn btn-primary',
                     'type' => 'submit',

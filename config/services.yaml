@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     user_picture: '%kernel.project_dir%/public/uploads/user'
+    techno_picture: '%kernel.project_dir%/public/uploads/techno'
+    cours_picture: '%kernel.project_dir%/public/uploads/cours'
 
 services:
     # default configuration for services in *this* file

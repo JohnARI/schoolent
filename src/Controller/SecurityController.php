@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use App\Service\Mailjet;
+use App\Service\PasswordGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,20 +51,23 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-       /**
+    /**
      * @Route("/reset-password", name="reset-password")
-     */
-    public function resetPassword(Request $request, UserRepository $userRepository): Response
+    */
+    public function resetPassword(Request $request, UserRepository $userRepository, PasswordGenerator $passwordGenerator): Response
     {
 
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
-        $temporaryPassword = $this->passwordAleatory(10);
+        $temporaryPassword = $passwordGenerator->passwordAleatoire(10);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $email = $form->get('email')->getData();
             $user = $userRepository->findByEmail($email);
+
+            // dd($user);
 
             if ($user) {
                 $user[0]->setPassword(
@@ -86,21 +90,21 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    function passwordAleatory($nbChar)
-    {
-        $chaine = "mnoTUzS5678kVvwxy9WXYZRNCDEFrslq41GtuaHIJKpOPQA23LcdefghiBMbj0";
-        srand((float)microtime() * 1000000);
-        $pass = '';
-        for ($i = 0; $i < $nbChar; $i++) {
-            $pass .= $chaine[rand() % strlen($chaine)];
-        }
-        return $pass;
-    }
+    // function passwordAleatory($nbChar)
+    // {
+    //     $chaine = "mnoTUzS5678kVvwxy9WXYZRNCDEFrslq41GtuaHIJKpOPQA23LcdefghiBMbj0";
+    //     srand((float)microtime() * 1000000);
+    //     $pass = '';
+    //     for ($i = 0; $i < $nbChar; $i++) {
+    //         $pass .= $chaine[rand() % strlen($chaine)];
+    //     }
+    //     return $pass;
+    // }
 
-    function passgen2($nbChar)
-    {
-        return substr(str_shuffle(
-            'abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        ), 1, $nbChar);
-    }
+    // function passgen2($nbChar)
+    // {
+    //     return substr(str_shuffle(
+    //         'abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    //     ), 1, $nbChar);
+    // }
 }

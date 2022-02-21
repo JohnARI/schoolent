@@ -1,0 +1,43 @@
+{% block programmingLanguages %}
+
+<div class="table-responsive">
+		<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
+		<thead>
+			<tr>
+				<th class="wd-15p border-bottom-0">Photo</th>
+				<th class="wd-15p border-bottom-0">Technologie</th>
+				<th class="wd-10p border-bottom-0">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for programmingLanguage in programmingLanguages %}
+			<tr>
+				<td><img style="height:100px;width:100px;"
+						src="{{ asset('uploads/techno/' ~ programmingLanguage.picture)}}" alt=""></td>
+				<td>{{ programmingLanguage.name }}</td>
+
+				<td name="bstable-actions">
+					<div class="btn-list">
+						{# Bouton modifier #}
+						<a href="{{path('edit_technologie',{'id': programmingLanguage.id})}}" id="bEdit" type="button"
+							class="btn btn-sm btn-primary">
+							<span class="fe fe-edit"></span>
+						</a>
+						{# fin bouton modifier #}
+
+						{# Bouton supprimer #}
+						<a href="{{path('delete_technologie',{'id': programmingLanguage.id})}}" id="bDel" type="button"
+							class="btn btn-sm btn-danger">
+							<span class="fe fe-trash-2"></span>
+						</a>
+						{# fin bouton supprimer #}
+					</div>
+				</td>
+			</tr>
+			{% endfor %}
+
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
