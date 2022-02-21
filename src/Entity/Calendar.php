@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\CalendarRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CalendarRepository;
 
 /**
  * @ORM\Entity(repositoryClass=CalendarRepository::class)
@@ -17,11 +19,6 @@ class Calendar
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="calendars")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Category;
 
     /**
      * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="calendars")
@@ -29,7 +26,7 @@ class Calendar
     private $session;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
@@ -43,15 +40,32 @@ class Calendar
      */
     private $end;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $name;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
      */
     private $teacher;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $Description;
+
+    /**
+     * @ORM\Column(type="string", length=7)
+     */
+    private $BackgroundColor;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime();
+    }
+
 
     public function getId(): ?int
     {
@@ -82,50 +96,38 @@ class Calendar
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getStart(): ?\DateTimeInterface
+    public function getStart(): ?\DateTime
     {
         return $this->start;
     }
 
-    public function setStart(\DateTimeInterface $start): self
+    public function setStart(\DateTime $start): self
     {
         $this->start = $start;
 
         return $this;
     }
 
-    public function getEnd(): ?\DateTimeInterface
+    public function getEnd(): ?\DateTime
     {
         return $this->end;
     }
 
-    public function setEnd(\DateTimeInterface $end): self
+    public function setEnd(\DateTime $end): self
     {
         $this->end = $end;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): self
-    {
-        $this->name = $name;
 
         return $this;
     }
@@ -135,10 +137,50 @@ class Calendar
         return $this->teacher;
     }
 
-    public function setTeacher(?User $teacher): self
+    public function setTeacher(?User $teacher, string $teachers): self
     {
         $this->teacher = $teacher;
 
+     
         return $this;
     }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(?string $Description): self
+    {
+        $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getBackgroundColor(): ?string
+    {
+        return $this->BackgroundColor;
+    }
+
+    public function setBackgroundColor(string $BackgroundColor): self
+    {
+        $this->BackgroundColor = $BackgroundColor;
+
+        return $this;
+    }
+
+   
+    
 }

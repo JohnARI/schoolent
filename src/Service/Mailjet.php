@@ -39,7 +39,7 @@ class Mailjet
             'Messages' => [
                 [
                     'From' => [
-                        'Email' => "paul.gaultier76@yahoo.com",
+                        'Email' => "a.takabait@gmail.com",
                         'Name' => "School"
                     ],
                     

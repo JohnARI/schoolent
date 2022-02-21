@@ -1,5 +1,12 @@
+<?php 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+?>
+
+
 <!DOCTYPE html>
 <html>
+
 
 <head>
 	<meta charset="UTF-8">
@@ -19,7 +26,10 @@
 	<link rel="icon"
 		href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 	{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css" 
+	integrity="sha256-5veQuRbWaECuYxwap/IOE/DAwNxgm4ikX7nrgsqYp88=" crossorigin="anonymous">
+	<link rel="stylesheet" href="fullcalendar/core/main.css">
+	<link rel="stylesheet" href="fullcalendar/day/main.css">
 	{% block stylesheets %}
 	{% include 'components/stylesheets.html.twig' %}
 	{% endblock %}
@@ -51,7 +61,10 @@
 
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js" 
+integrity="sha256-YicH/8aE660iEnJtgll3vT54dJApy3XkYmqNfGVFEzA=" crossorigin="anonymous"></script>
+<script src="fullcalendar/core/main.js"></script>
+<script src="fullcalendar/daygrid/main.js"></script>
 {% block javascripts %}
 {% include 'components/javascripts.html.twig' %}
 {% endblock %}

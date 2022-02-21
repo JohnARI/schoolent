@@ -4,6 +4,15 @@
 Administrator
 {% endblock %}
 
+{% block stylesheet %}
+    <style>
+    #calendrier{
+        width:80%;
+        margin:auto;
+    }
+    </style>
+{% endblock %}
+
 {% block body %}
     <!-- PAGE -->
     <div class="page">
@@ -11,7 +20,8 @@ Administrator
 <!--app-content open-->
             <div class="main-content app-content mt-0">
                 <div class="side-app">
-
+                    
+                    <div id="calendrier"></div>
                     
 
                         <!-- Row -->
@@ -86,3 +96,4 @@ Administrator
     
 
         {% endblock %}
+        
