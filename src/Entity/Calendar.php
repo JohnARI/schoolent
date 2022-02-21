@@ -61,6 +61,11 @@ class Calendar
      */
     private $BackgroundColor;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
@@ -177,6 +182,18 @@ class Calendar
     public function setBackgroundColor(string $BackgroundColor): self
     {
         $this->BackgroundColor = $BackgroundColor;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

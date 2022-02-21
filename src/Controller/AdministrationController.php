@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\User;
 use App\Entity\Course;
 use DateTimeImmutable;
@@ -21,9 +22,9 @@ use App\Entity\ProgrammingLanguage;
 use App\Form\AddProgrammingLanguageType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EditProgrammingLanguageType;
-use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +40,7 @@ class AdministrationController extends AbstractController
         $this->passwordHasher = $passwordHasher;
         $this->mailjet = $mailjet;
     }
-    
+
 
     /**
      * @Route("/admin/view-users", name="view-users")
@@ -64,12 +65,13 @@ class AdministrationController extends AbstractController
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
-        $calendars= $this->entityManager->getRepository(Calendar::class)->findAll();
-        $courses= $this->entityManager->getRepository(Course::class)->findAll();
+        $calendars = $this->entityManager->getRepository(Calendar::class)->findAll();
+        $courses = $this->entityManager->getRepository(Course::class)->findAll();
+
         // Fin tableaux
 
         // Add user
-        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
+        $temporaryPassword = $passwordGenerator->passwordAleatoire(20);
         $user = new User();
         $formUser = $this->createForm(RegisterType::class, $user);
         $formUser->handleRequest($request);
@@ -78,6 +80,8 @@ class AdministrationController extends AbstractController
 
             $user = $formUser->getData();
             $file = $formUser->get('picture')->getData();
+
+
             // Ajout de photo
             if ($file) {
                 $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -85,33 +89,48 @@ class AdministrationController extends AbstractController
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . $extension;
 
+                dd($newFilename);
+
                 try {
-                   
-                    $file->move($this->getParameter('user_picture'), $newFilename);      
+
+                    $file->move($this->getParameter('user_picture'), $newFilename);
                     $user->setPicture($newFilename);
                 } catch (FileException $exception) {
                     // Code à executer si une erreur est attrapée
                 }
-                       
-            } else { 
-            $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
-            return $this->redirectToRoute('register'); 
-        } 
-        // Fin ajout photo
+            } elseif (is_null($file)) {
 
-    $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
-    $this->entityManager->persist($user);
-    $this->entityManager->flush();
+                $defaultAvatar = new File('../public/assets/images/avatar/default_avatar.png');
+                $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
+                $extension = '.' . $defaultAvatar->guessExtension();
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . $extension;
+                try {
 
-    $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
-    $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
-    //Message de succès
-    return $this->redirect($request->getUri());
-}
-// Fin add user
-// Add techno
+                    $defaultAvatar->move($this->getParameter('user_picture'), $newFilename);
+                    $user->setPicture($newFilename);
+                } catch (FileException $exception) {
+                    // Code à executer si une erreur est attrapée
+                }
+            } else {
+                $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/);
+                return $this->redirectToRoute('register');
+            }
+            // Fin ajout photo
 
-$techno = new ProgrammingLanguage();
+            $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   . $temporaryPassword);
+            $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
+            //Message de succès
+            return $this->redirect($request->getUri());
+        }
+        // Fin add user
+        // Add techno
+
+        $techno = new ProgrammingLanguage();
 
         $formTechno = $this->createForm(AddProgrammingLanguageType::class, $techno);
         $formTechno->handleRequest($request);
@@ -134,7 +153,7 @@ $techno = new ProgrammingLanguage();
                 }
                 $techno->setPicture($newFilename);
             }
-           
+
             $this->entityManager->persist($techno);
             $this->entityManager->flush();
             $this->addFlash('success', 'Nouvelle technologie ajoutée !');
@@ -164,7 +183,7 @@ $techno = new ProgrammingLanguage();
         $student = new User();
 
         $formCalendar = $this->createForm(CalendarType::class, $calendar);
-        
+
         // dd($students);
 
         $formCalendar->handleRequest($request);
@@ -180,22 +199,21 @@ $techno = new ProgrammingLanguage();
             $dateStart = $formCalendar->get('start')->getData();
             $dateEnd = $formCalendar->get('end')->getData();
             $nameSession = $formCalendar->get('session')->getData()->getName();
-            
+
 
             $calendar->setCreatedAt(new DateTime());
 
             $this->entityManager->persist($calendar);
             $this->entityManager->flush();
 
-            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
+            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . "intervention sur " . $cours . " " . $programmingLanguages . " Numero de session " . $nameSession . ".");
 
-            foreach ($students as $student) { 
-                $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours ." " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+            foreach ($students as $student) {
+                $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours . " " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
             }
-            
+
             $this->addFlash('success', 'Nouvelle date ajoutée !');
             return $this->redirect($request->getUri());
-            
         }
         // Fin add calendar
 
@@ -245,10 +263,9 @@ $techno = new ProgrammingLanguage();
             'formTechno' => $formTechno->createView(),
             'courses' => $courses,
         ]);
-        
     }
 
-     /**
+    /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
     public function editUser($id, Request $request, SluggerInterface $slugger): Response
@@ -270,17 +287,16 @@ $techno = new ProgrammingLanguage();
                 $newFilename = $safeFilename . '-' . uniqid() . $extension;
 
                 try {
-                   
-                    $file->move($this->getParameter('user_picture'), $newFilename);      
+
+                    $file->move($this->getParameter('user_picture'), $newFilename);
                     $user->setPicture($newFilename);
                 } catch (FileException $exception) {
                     // Code à executer si une erreur est attrapée
                 }
-                       
-            } else { 
-                    $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
-                    return $this->redirectToRoute('addUser'); 
-                }
+            } else {
+                $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/);
+                return $this->redirectToRoute('addUser');
+            }
 
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
@@ -339,7 +355,6 @@ $techno = new ProgrammingLanguage();
                 if ($form->get('picture')->getData()) {
                     $technologie->setPicture($newFilename);
                 }
-                
             }
 
             $this->entityManager->persist($technologie);
@@ -372,7 +387,7 @@ $techno = new ProgrammingLanguage();
     {
         $students = new User();
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
-        
+
         $formCalendar = $this->createForm(EditCalendarType::class, $calendar[0]);
         $formCalendar->handleRequest($request);
 
@@ -396,10 +411,10 @@ $techno = new ProgrammingLanguage();
             $this->entityManager->flush();
             $this->mailjet->sendEmail($teacher, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Numero de session " . $nameSession . ".");
 
-            foreach ($students as $student) { 
+            foreach ($students as $student) {
                 $this->mailjet->sendEmail($student, "Voici votre convocation vient d'étre à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
             }
-           
+
             $this->addFlash('success', 'Calendrier modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
@@ -419,8 +434,8 @@ $techno = new ProgrammingLanguage();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La date a été suprimmée');
-    } 
-  
+    }
+
     /**
      * @Route("/admin/edit/session/{id}", name="edit-session",methods={"GET|POST"})
      */
