@@ -4,9 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    user_picture: '%kernel.project_dir%/public/uploads/user'
-    techno_picture: '%kernel.project_dir%/public/uploads/techno'
-    cours_picture: '%kernel.project_dir%/public/uploads/cours'
+    directory: '%kernel.project_dir%/public/uploads'
+    # techno_picture: '%kernel.project_dir%/public/uploads/techno'
+    # cours_picture: '%kernel.project_dir%/public/uploads/cours'
 
 services:
     # default configuration for services in *this* file
@@ -27,6 +27,9 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%directory%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -22773,13 +22773,20 @@ list-style6 ul {
 }
 
 .tabs-menu ul li a {
+    margin: 0 12px;
     padding: 10px 12px 11px 13px;
     display: block;
     color: #282f53;
+    border-radius: 6px;
 }
 
 .tabs-menu ul li .active {
     color: var(--primary-bg-color);
+}
+
+.tabs-menu ul li a:hover {
+    background-color: #6c5ffc;
+    color: white !important;
 }
 
 .tabs-menu1 ul li a {
@@ -22795,8 +22802,8 @@ list-style6 ul {
 .tab-menu-heading {
     padding: 0px;
     border-bottom: 1px solid #e9edf4 !important;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .tab_wrapper .content_wrapper .tab_content.active p:last-child {

@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Session;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -52,20 +54,29 @@ class RegisterType extends AbstractType
                     'class' => 'input100 form-control',
                 ],
             ])
+                    // Choice session
+            ->add('session', EntityType::class, [
+                'attr' => [
+                    'class' => 'input100 form-control',
+                ],
+                'placeholder' => 'Session',
+                'required' => false,
+                // 'multiple' => false,
+                // 'expanded' => false,
+                'class' => Session::class,
+            ])
       
                     // Choix du sexe
             ->add('sexe', ChoiceType::class, [
                 'attr' => [
                     'class' => 'input100 form-control',
                 ],
-                'label' => 'Sexe',
+                'placeholder' => 'Sexe',
                 'required' => true,
                 'multiple' => false,
-                'expanded' => false,
                 'choices'  => [
                     'Homme' => 0,
                     'Femme' => 1,
-
                 ]
             ])
                     // Choix du rôle
