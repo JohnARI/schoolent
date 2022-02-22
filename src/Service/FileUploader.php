@@ -28,6 +28,22 @@ class FileUploader
         
         return $fileName;
     }
+
+    public function uploadAvatar($file, $path)
+    {
+        $originalFilename = pathinfo($file, PATHINFO_FILENAME);
+        $safeFilename = $this->slugger->slug($originalFilename);
+        $fileName = $safeFilename.'-'.uniqid(). '.'. $file->guessExtension();
+        try {
+            $file->move($this->getTargetDirectory() . $path, $fileName);
+        } catch (FileException $e) {
+            // ... handle exception if something happens during file upload
+            return null; // for example
+        }
+        
+        
+        return $fileName;
+    }
     public function getTargetDirectory()
     {
         return $this->targetDirectory;

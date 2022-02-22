@@ -19,7 +19,6 @@ class Calendar
      */
     private $id;
 
-
     /**
      * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="calendars")
      */
