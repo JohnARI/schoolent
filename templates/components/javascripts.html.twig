@@ -137,3 +137,12 @@
 integrity="sha256-YicH/8aE660iEnJtgll3vT54dJApy3XkYmqNfGVFEzA=" crossorigin="anonymous"></script>
 <script src="{{asset('fullcalendar/core/main.js')}}"></script>
 <script src="{{asset('fullcalendar/daygrid/main.js')}}"></script>
+
+{# DataTable #}
+<script>
+$('#data-table-users ,#data-table-sessions, #data-table-calendars, #data-table-technologies, #data-table-courses').DataTable({
+language: {
+url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json'
+}
+});
+</script>

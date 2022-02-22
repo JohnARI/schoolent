@@ -38,8 +38,6 @@ View all
 														class="fe fe-user me-1"></i></span>Utilisateurs</a></li>
 										<li><a href="#sessions" data-bs-toggle="tab"><span><i
 														class="fe fe-calendar me-1"></i></span>Sessions</a></li>
-										<li><a href="#calendars" data-bs-toggle="tab"><span><i
-														class="fe fe-settings me-1"></i></span>Calendrier</a></li>
 										<li><a href="#technologies" data-bs-toggle="tab"><span><i
 														class="fe fe-bell me-1"></i></span>Technologies</a></li>
 										<li><a href="#courses" data-bs-toggle="tab"><span><i
@@ -78,18 +76,18 @@ View all
 
 										{% include "administration/admin/view/view_sessions.html.twig" %}
 									</div>
-									<div class="tab-pane" id="calendars">
-									{# Modal #}
+									{# <div class="tab-pane" id="calendars">
+								
 										{% embed "components/modal.html.twig" %}
 										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-calendars" %}
 										{% block buttonTitle %}Ajouter un calendrier{% endblock %}
 										{% block modalTitle %}Ajouter un calendrier{% endblock %}
-										{% endembed %} #}
-										{# Fin modal #}
+										{% block dashboard %}{% include "administration/admin/view/view_calendars.html.twig" %}{% endblock %}
+										{% endembed %}
+										
 
-										{# {% include "administration/admin/view/view_calendars.html.twig" %} #}
-									</div>
+									</div> #}
 									<div class="tab-pane" id="technologies">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
