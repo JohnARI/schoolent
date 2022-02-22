@@ -96,7 +96,7 @@ class RegisterType extends AbstractType
             ])
 
             ->add('picture', FileType::class, [    
-                'required' => true,
+                'required' => false,
                 'constraints'=> [
 
                     new Image([

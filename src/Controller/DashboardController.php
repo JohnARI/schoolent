@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Session;
-use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,7 +52,8 @@ class DashboardController extends AbstractController
     /**
      * @Route("admin/teachers", name="view-teachers")
      */
-    public function showTeacher($role = 'ROLE_TEACHER'): Response {
+    public function showTeacher($role = 'ROLE_TEACHER'): Response
+    {
 
         $users = $this->entityManager->getRepository(User::class)->findByRole($role);
 
@@ -63,32 +65,45 @@ class DashboardController extends AbstractController
     /**
      * @Route("admin/admins", name="view-admins")
      */
-    public function showAdmin($role = 'ROLE_ADMIN'): Response {
+    public function showAdmin($role = 'ROLE_ADMIN'): Response
+    {
 
         $users = $this->entityManager->getRepository(User::class)->findByRole($role);
 
-        
-        return $this->render("administration/admin/view/view_admin.html.twig",[
+
+        return $this->render("administration/admin/view/view_admin.html.twig", [
             'users' => $users,
         ]);
-    } 
+    }
+
+    /**
+     * @Route("teacher/students", name="view-students")
+     */
+    public function showUser(UserRepository $userRepository): Response
+    {
+
+        $users = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
+        
+
+        
+
+        return $this->render("administration/admin/view/view_students.html.twig", [
+            'users' => $users,
+        ]);
+    }
 
     /**
      * @Route("admin/contact", name="view-contact")
      */
-    public function showContact(): Response {
+    public function showContact(): Response
+    {
 
 
 
         $contacts = $this->entityManager->getRepository(Contact::class)->findAll();
-        
+
         return $this->render("administration/admin/view/view_contact.html.twig", [
             'contacts' => $contacts,
         ]);
-    } 
-    
-
-
-
-
+    }
 }

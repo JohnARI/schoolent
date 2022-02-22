@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\User;
 use App\Entity\Course;
 use DateTimeImmutable;
@@ -24,6 +25,7 @@ use App\Form\EditProgrammingLanguageType;
 use App\Service\FileUploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,7 +43,7 @@ class AdministrationController extends AbstractController
         $this->mailjet = $mailjet;
         $this->fileUploader = $fileUploader;
     }
-    
+
 
     /**
      * @Route("/admin/view-users", name="view-users")
@@ -50,7 +52,7 @@ class AdministrationController extends AbstractController
     {
         $users = $this->entityManager->getRepository(User::class)->findAll();
 
-        return $this->render('administration/admin/view_user.html.twig', [
+        return $this->render('administration/admin/view_users.html.twig', [
             'users' => $users,
         ]);
     }
@@ -58,18 +60,19 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(Request $request, PasswordGenerator $passwordGenerator): Response
+    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator, string $projectDir): Response
     {
         // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
-        $calendars= $this->entityManager->getRepository(Calendar::class)->findAll();
-        $courses= $this->entityManager->getRepository(Course::class)->findAll();
+        $calendars = $this->entityManager->getRepository(Calendar::class)->findAll();
+        $courses = $this->entityManager->getRepository(Course::class)->findAll();
+
         // Fin tableaux
 
         // Add user
-        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
+        $temporaryPassword = $passwordGenerator->passwordAleatoire(20);
         $user = new User();
         $formUser = $this->createForm(RegisterType::class, $user);
         $formUser->handleRequest($request);
@@ -78,25 +81,43 @@ class AdministrationController extends AbstractController
 
             $file = $formUser->get('picture')->getData();
 
+
             // Ajout de photo
-            if ($file != null) {
+            if ($file) {
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
-            } 
+            }  elseif (is_null($file)) {
+
+                $defaultAvatar = new File($projectDir . '/public/uploads/user/default_avatar.png');
+                $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
+                $extension = '.' . $defaultAvatar->guessExtension();
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . $extension;
+                try {
+
+                    $defaultAvatar->move($this->getParameter('user_picture'), $newFilename);
+                    $user->setPicture($newFilename);
+                } catch (FileException $exception) {
+                    // Code à executer si une erreur est attrapée
+                }
+            } else {
+                $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/);
+                return $this->redirectToRoute('register');
+            }
+            // Fin ajout photo
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
-            $this->addFlash('success', 'Votre ajout a bien été pris en compte, un mail a été envoyé à l\'étudiant!');
+            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   . $temporaryPassword);
+            $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
             //Message de succès
             return $this->redirect($request->getUri());
         }
         // Fin add user
-
-
         // Add techno
+
         $techno = new ProgrammingLanguage();
 
         $formTechno = $this->createForm(AddProgrammingLanguageType::class, $techno);
@@ -109,7 +130,7 @@ class AdministrationController extends AbstractController
                 $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
                 $techno->setPicture($newFilename);
             }
-           
+
             $this->entityManager->persist($techno);
             $this->entityManager->flush();
             $this->addFlash('success', 'Un nouveau programme a été ajouté !');
@@ -157,9 +178,9 @@ class AdministrationController extends AbstractController
             $dateStart = $formCalendar->get('start')->getData();
             $dateEnd = $formCalendar->get('end')->getData();
             $nameSession = $formCalendar->get('session')->getData()->getName();
-            
 
-            $calendar->setCreatedAt(new DateTimeImmutable());
+
+            $calendar->setCreatedAt(new DateTime());
 
             $this->entityManager->persist($calendar);
             $this->entityManager->flush();
@@ -172,7 +193,6 @@ class AdministrationController extends AbstractController
             
             $this->addFlash('success', 'Une nouvelle a été date ajoutée !');
             return $this->redirect($request->getUri());
-            
         }
         // Fin add calendar
 
@@ -209,15 +229,13 @@ class AdministrationController extends AbstractController
             'formTechno' => $formTechno->createView(),
             'courses' => $courses,
         ]);
-        
     }
 
-     /**
+    /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
-    public function editUser($id, Request $request, SluggerInterface $slugger): Response
+    public function editUser($id, Request $request, SluggerInterface $slugger, string $projectDir): Response
     {
-
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
         $form = $this->createForm(EditUserType::class, $user);
@@ -227,11 +245,28 @@ class AdministrationController extends AbstractController
 
             $file = $form->get('picture')->getData();
 
-            if ($file != null) {
+            if ($file) {
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
+            } elseif (is_null($file)) {
+                $defaultAvatar = new File($projectDir . '/public/uploads/user/default_avatar.png');
+                $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
+                $extension = '.' . $defaultAvatar->guessExtension();
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . $extension;
+                try {
+                    $defaultAvatar->move($this->getParameter('user_picture'), $newFilename);
+                    $user->setPicture($newFilename);
+                } catch (FileException $exception) {
+                    // Code à executer si une erreur est attrapée
+                }
+            } else {
+                $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/);
+                return $this->redirectToRoute('addUser');
             }
 
+
+            $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             $this->addFlash('success', 'L\'utilistauer a été modifié !');
@@ -324,7 +359,7 @@ class AdministrationController extends AbstractController
     {
         $students = new User();
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
-        
+
         $formCalendar = $this->createForm(EditCalendarType::class, $calendar[0]);
         $formCalendar->handleRequest($request);
 
@@ -371,8 +406,8 @@ class AdministrationController extends AbstractController
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La date a été suprimmée');
-    } 
-  
+    }
+
     /**
      * @Route("/admin/edit/session/{id}", name="edit-session",methods={"GET|POST"})
      */
