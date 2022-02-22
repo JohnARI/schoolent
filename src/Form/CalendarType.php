@@ -16,7 +16,8 @@ class CalendarType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('teacher', IntegerType::class, array('attr' => array('style' => 'display:none')))
+            ->add('teacher_id', TextType::class, array('attr' => array('style' => 'display:none')))
+            ->add('teacher_name', TextType::class, array('attr' => array('style' => 'display:none')))
             ->add('title', TextType::class, array('attr' => array('style' => 'display:none')))
             ->add('start', DateTimeType::class, [
                 'date_widget' => 'single_text'

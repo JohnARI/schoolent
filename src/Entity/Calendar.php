@@ -41,13 +41,6 @@ class Calendar
      */
     private $end;
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
-     * @ORM\Column(type="string")
-     */
-    private $teacherId;
-
     /**
      * @ORM\Column(type="string", length=100)
      */
@@ -62,6 +55,16 @@ class Calendar
      * @ORM\Column(type="string", length=7)
      */
     private $BackgroundColor;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $teacher_name;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $teacher_id;
 
     public function __construct()
     {
@@ -134,18 +137,6 @@ class Calendar
         return $this;
     }
 
-    public function getTeacherId(): ?string
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacherId(string $teacher): self
-    {
-        $this->teacher = $teacher;
-        
-     
-        return $this;
-    }
 
     public function getTitle(): ?string
     {
@@ -183,7 +174,27 @@ class Calendar
         return $this;
     }
 
-   
-   
-    
+    public function getTeacherName(): ?string
+    {
+        return $this->teacher_name;
+    }
+
+    public function setTeacherName(string $teacher_name): self
+    {
+        $this->teacher_name = $teacher_name;
+
+        return $this;
+    }
+
+    public function getTeacherId(): ?int
+    {
+        return $this->teacher_id;
+    }
+
+    public function setTeacherId(int $teacher_id): self
+    {
+        $this->teacher_id = $teacher_id;
+
+        return $this;
+    }
 }

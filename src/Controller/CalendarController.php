@@ -47,6 +47,8 @@ class CalendarController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // dd($calendar);
             $entityManager->persist($calendar);
             $entityManager->flush();
 
@@ -76,7 +78,7 @@ class CalendarController extends AbstractController
 
                
 
-            $events = $calendar->findByTeacher(['teacher_id'=>$id_user]);
+            $events = $calendar->findByTeacherId(['teacher_id'=>$id_user]);
 
             // dd($events);
 
@@ -96,6 +98,32 @@ class CalendarController extends AbstractController
 
 
             $data = json_encode($booking);
+
+        }
+        
+        if($user->getRoles('ROLE_ADMIN')){
+
+            $events = $calendar->findBy(['id'=>$id]);
+
+            // dd($events);
+
+            $booking = [];
+            foreach ($events as $event) {
+
+                $booking[] = [
+                    'id' => $event->getId(),
+                    'start' => $event->getStart()->format('Y-m-d'),
+                    'end' => $event->getEnd()->format('Y-m-d'),
+                    'title' => $event->getTitle(),
+                    'description' => $event->getDescription(),
+                    'session' => $event->getSession(),
+                    'backgroundColor' => $event->getBackgroundColor(),
+                ];
+            }
+
+
+            $data = json_encode($booking);
+
         }
 
         return $this->render('calendar/show.html.twig', compact('data'));

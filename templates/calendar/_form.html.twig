@@ -27,7 +27,10 @@
 									{{form_row(form.title, {'attr': {'value': 'Indisponible' }})}}
 							</div>
                             <div class="form-group col-md-6" style="display:none;">
-									{{form_row(form.teacher, {'attr': {'value': app.user.id }})}}
+									{{form_row(form.teacher_id, {'attr': {'value': app.user.id }})}}
+							</div>
+                            <div class="form-group col-md-6" style="display:none;">
+									{{form_row(form.teacher_name, {'attr': {'value': app.user.fullname }})}}
 							</div>
 							<div class="form-group col-md-6">
 								{{form_row(form.start)}}
