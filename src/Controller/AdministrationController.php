@@ -57,7 +57,7 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator): Response
+    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator, string $projectDir): Response
     {
 
 
@@ -100,7 +100,7 @@ class AdministrationController extends AbstractController
                 }
             } elseif (is_null($file)) {
 
-                $defaultAvatar = new File('../public/assets/images/avatar/default_avatar.png');
+                $defaultAvatar = new File($projectDir . '/public/uploads/user/default_avatar.png');
                 $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
                 $extension = '.' . $defaultAvatar->guessExtension();
                 $safeFilename = $slugger->slug($originalFilename);
@@ -268,9 +268,8 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
-    public function editUser($id, Request $request, SluggerInterface $slugger): Response
+    public function editUser($id, Request $request, SluggerInterface $slugger, string $projectDir): Response
     {
-
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
         $form = $this->createForm(EditUserType::class, $user);
@@ -289,6 +288,18 @@ class AdministrationController extends AbstractController
                 try {
 
                     $file->move($this->getParameter('user_picture'), $newFilename);
+                    $user->setPicture($newFilename);
+                } catch (FileException $exception) {
+                    // Code à executer si une erreur est attrapée
+                }
+            } elseif (is_null($file)) {
+                $defaultAvatar = new File($projectDir . '/public/uploads/user/default_avatar.png');
+                $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
+                $extension = '.' . $defaultAvatar->guessExtension();
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . $extension;
+                try {
+                    $defaultAvatar->move($this->getParameter('user_picture'), $newFilename);
                     $user->setPicture($newFilename);
                 } catch (FileException $exception) {
                     // Code à executer si une erreur est attrapée

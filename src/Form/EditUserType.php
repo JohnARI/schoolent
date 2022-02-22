@@ -108,7 +108,7 @@ class EditUserType extends AbstractType
             ])
 
             ->add('picture', FileType::class, [    
-                'required' => true,
+                'required' => false,
                 'data_class' => null,
                 'constraints'=> [
 
@@ -120,14 +120,6 @@ class EditUserType extends AbstractType
 
 
 
-            ])
-
-            ->add('submitPassword', SubmitType::class, [
-                'label' => "Modifier",
-                'attr' => [
-                    'class' => 'login100-form-btn btn-primary',
-                    'type' => 'submit',
-                ]
             ])
 
             ->add('submit', SubmitType::class, [
