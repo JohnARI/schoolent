@@ -1,9 +1,11 @@
 {% block modal %}
+{% block button %}
 	<button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#{{id}}">
+	{% endblock %}
 		{% block buttonTitle %}{% endblock %}
 	</button>
 	<div class="modal fade" id="{{id}}" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-fullscreen" role="document">
+        <div class="modal-dialog {{modalType}}" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">
@@ -15,6 +17,7 @@
 				</div>
 				<div class="modal-body">
 					{% block form %}{% endblock %}
+					{% block dashboard %}{% endblock %}
 				</div>
 			</div>
 		</div>

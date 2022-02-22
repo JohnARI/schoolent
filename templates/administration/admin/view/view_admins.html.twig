@@ -1,4 +1,4 @@
-{% block users %}
+{% block admin %}
 
 <div class="table-responsive">
 	<table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
@@ -9,39 +9,39 @@
 				<th class="wd-15p border-bottom-0">Nom</th>
 				<th class="wd-20p border-bottom-0">Role</th>
 				<th class="wd-10p border-bottom-0">Email</th>
-				{% if app.user and app.user.role == 'Administrateur'%}
+                {% if app.user and app.user.role == 'Administrateur'%}
 				<th class="wd-10p border-bottom-0">Actions</th>
-				{% endif %}
+                {% endif %}
 
 			</tr>
 		</thead>
 		<tbody>
-			{% for user in users %}
+			{% for admin in admins %}
 				<tr>
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ user.picture)}}" alt=""></td>
-					<td>{{ user.firstname }}</td>
-					<td>{{ user.lastname }}</td>
-					<td>{{ user.role }}</td>
-					<td>{{ user.email }}</td>
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ admin.picture)}}" alt="Photo de profil"></td>
+					<td>{{ admin.firstname }}</td>
+					<td>{{ admin.lastname }}</td>
+					<td>{{ admin.role }}</td>
+					<td>{{ admin.email }}</td>
 
-					{% if app.user and app.user.role == 'Administrateur'%}
+                   {% if app.user and app.user.role == 'Administrateur'%}
 					<td name="bstable-actions">
 						<div
 							class="btn-list">
 							{# Bouton modifier #}
-							<a href="{{path('edit_user',{'id': user.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+							<a href="{{path('edit_user',{'id': admin.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
 								<span class="fe fe-edit"></span>
 							</a>
 							{# fin bouton modifier #}
 
 							{# Bouton supprimer #}
-							<a href="{{path('delete_user',{'id': user.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
+							<a href="{{path('delete_user',{'id': admin.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
 								<span class="fe fe-trash-2"></span>
 							</a>
 							{# fin bouton supprimer #}
 						</div>
 					</td>
-					{% endif %}
+                    {% endif %}
 				</tr>
 			{% endfor %}
 

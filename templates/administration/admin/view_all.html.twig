@@ -54,10 +54,11 @@ View all
 									<div class="tab-pane active" id="users">
 										{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-user" %}
 										{% block buttonTitle %}Ajouter un utilisateur{% endblock %}
 										{% block modalTitle %}Ajouter un utilisateur{% endblock %}
-										{% block form %}{% include "administration/admin/add/add_users.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include "administration/admin/add/add_users.html.twig" %}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 
@@ -67,10 +68,11 @@ View all
 									<div class="tab-pane" id="sessions">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-sessions" %}
 										{% block buttonTitle %}Ajouter une session{% endblock %}
 										{% block modalTitle %}Ajouter une session{% endblock %}
-										{% block form %}{% include "administration/admin/add/add_sessions.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include "administration/admin/add/add_sessions.html.twig" %}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 
@@ -78,7 +80,8 @@ View all
 									</div>
 									<div class="tab-pane" id="calendars">
 									{# Modal #}
-										{# {% embed "components/modal.html.twig" %}
+										{% embed "components/modal.html.twig" %}
+										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-calendars" %}
 										{% block buttonTitle %}Ajouter un calendrier{% endblock %}
 										{% block modalTitle %}Ajouter un calendrier{% endblock %}
@@ -90,10 +93,11 @@ View all
 									<div class="tab-pane" id="technologies">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-technologies" %}
 										{% block buttonTitle %}Ajouter une technologie{% endblock %}
 										{% block modalTitle %}Ajouter une technologie{% endblock %}
-										{% block form %}{% include "administration/admin/add/add_programmingLanguages.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include "administration/admin/add/add_programmingLanguages.html.twig" %}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 
@@ -102,10 +106,11 @@ View all
 									<div class="tab-pane" id="courses">
 									{# Modal #}
 										{% embed "components/modal.html.twig" %}
+										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-courses" %}
 										{% block buttonTitle %}Ajouter un cours{% endblock %}
 										{% block modalTitle %}Ajouter un cours{% endblock %}
-										{% block form %}{% include "administration/admin/add/add_courses.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include "administration/admin/add/add_courses.html.twig" %}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 										{% include "administration/admin/view/view_courses.html.twig" %}

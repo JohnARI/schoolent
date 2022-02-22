@@ -57,7 +57,7 @@ class DashboardController extends AbstractController
 
         $users = $this->entityManager->getRepository(User::class)->findByRole($role);
 
-        return $this->render("administration/admin/view/view_teacher.html.twig",[
+        return $this->render("administration/admin/view/view_teachers.html.twig",[
             'users' => $users,
         ]);
     }
@@ -71,7 +71,7 @@ class DashboardController extends AbstractController
         $users = $this->entityManager->getRepository(User::class)->findByRole($role);
 
 
-        return $this->render("administration/admin/view/view_admin.html.twig", [
+        return $this->render("administration/admin/view/view_admins.html.twig", [
             'users' => $users,
         ]);
     }

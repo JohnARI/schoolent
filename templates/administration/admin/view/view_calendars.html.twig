@@ -9,7 +9,9 @@
 					<th class="wd-15p border-bottom-0">Professeur</th>
 					<th class="wd-20p border-bottom-0">Date de début</th>
 					<th class="wd-10p border-bottom-0">Date de fin</th>
+					{% if app.user and app.user.role == 'Administrateur'%}
 					<th class="wd-10p border-bottom-0">Actions</th>
+					{% endif %}
 
 				</tr>
 			</thead>
@@ -23,6 +25,7 @@
 						<td>{{ calendar.start|date("d/m/Y") }}</td>
 						<td>{{ calendar.end|date("d/m/Y") }}</td>
 
+						{% if app.user and app.user.role == 'Administrateur'%}
 						<td name="bstable-actions">
 							<div
 								class="btn-list">
@@ -39,6 +42,7 @@
 								{# fin bouton supprimer #}
 							</div>
 						</td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 

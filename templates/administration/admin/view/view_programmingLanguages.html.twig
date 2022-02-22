@@ -6,7 +6,9 @@
 			<tr>
 				<th class="wd-15p border-bottom-0">Photo</th>
 				<th class="wd-15p border-bottom-0">Technologie</th>
+				{% if app.user and app.user.role == 'Administrateur'%}
 				<th class="wd-10p border-bottom-0">Actions</th>
+				{% endif %}
 			</tr>
 		</thead>
 		<tbody>
@@ -16,6 +18,7 @@
 						src="{{ asset('uploads/techno/' ~ programmingLanguage.picture)}}" alt=""></td>
 				<td>{{ programmingLanguage.name }}</td>
 
+				{% if app.user and app.user.role == 'Administrateur'%}
 				<td name="bstable-actions">
 					<div class="btn-list">
 						{# Bouton modifier #}
@@ -33,6 +36,7 @@
 						{# fin bouton supprimer #}
 					</div>
 				</td>
+				{% endif %}
 			</tr>
 			{% endfor %}
 
