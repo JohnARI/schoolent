@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CalendarRepository;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity(repositoryClass=CalendarRepository::class)
@@ -43,8 +44,9 @@ class Calendar
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
+     * @ORM\Column(type="string")
      */
-    private $teacher;
+    private $teacherId;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -132,15 +134,15 @@ class Calendar
         return $this;
     }
 
-    public function getTeacher(): ?User
+    public function getTeacherId(): ?string
     {
         return $this->teacher;
     }
 
-    public function setTeacher(?User $teacher, string $teachers): self
+    public function setTeacherId(string $teacher): self
     {
         $this->teacher = $teacher;
-
+        
      
         return $this;
     }
@@ -181,6 +183,7 @@ class Calendar
         return $this;
     }
 
+   
    
     
 }
