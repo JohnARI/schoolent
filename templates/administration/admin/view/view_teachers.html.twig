@@ -1,7 +1,7 @@
-{% block students %}
+{% block teacher %}
 
 <div class="table-responsive">
-	<table class="table table-bordered text-nowrap border-bottom" id="data-table-students">
+	<table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
 		<thead>
 			<tr>
 				<th class="wd-15p border-bottom-0">Photo</th>
@@ -16,26 +16,26 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for student in students %}
+			{% for teacher in teachers %}
 				<tr>
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
-					<td>{{ student.firstname }}</td>
-					<td>{{ student.lastname }}</td>
-					<td>{{ student.role }}</td>
-					<td>{{ student.email }}</td>
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ teacher.picture)}}" alt="Photo de profil"></td>
+					<td>{{ teacher.firstname }}</td>
+					<td>{{ teacher.lastname }}</td>
+					<td>{{ teacher.role }}</td>
+					<td>{{ teacher.email }}</td>
 
                     {% if app.user and app.user.role == 'Administrateur'%}
 					<td name="bstable-actions">
 						<div
 							class="btn-list">
 							{# Bouton modifier #}
-							<a href="{{path('edit_user',{'id': student.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+							<a href="{{path('edit_user',{'id': teacher.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
 								<span class="fe fe-edit"></span>
 							</a>
 							{# fin bouton modifier #}
 
 							{# Bouton supprimer #}
-							<a href="{{path('delete_user',{'id': student.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
+							<a href="{{path('delete_user',{'id': teacher.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
 								<span class="fe fe-trash-2"></span>
 							</a>
 							{# fin bouton supprimer #}

@@ -1,14 +1,16 @@
 {% block sessions %}
 
 	<div class="table-responsive">
-		<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
+		<table class="table table-bordered text-nowrap border-bottom" id="data-table-sessions">
 			<thead>
 				<tr>
 					<th class="wd-15p border-bottom-0">Intitulé</th>
 					<th class="wd-15p border-bottom-0">Date de début</th>
 					<th class="wd-15p border-bottom-0">Date de fin</th>
 					<th class="wd-20p border-bottom-0">Date de création</th>
+					{% if app.user and app.user.role == 'Administrateur'%}
 					<th class="wd-10p border-bottom-0">Actions</th>
+					{% endif %}
 
 				</tr>
 			</thead>
@@ -21,6 +23,7 @@
 						<td>{{ session.endSession|date("d/m/Y") }}</td>
 						<td>{{ session.createdAt|date("d/m/Y") }}</td>
 
+						{% if app.user and app.user.role == 'Administrateur'%}
 						<td name="bstable-actions">
 							<div
 								class="btn-list">
@@ -37,6 +40,7 @@
 								{# fin bouton supprimer #}
 							</div>
 						</td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 

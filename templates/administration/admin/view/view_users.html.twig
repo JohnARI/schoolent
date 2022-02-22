@@ -1,7 +1,7 @@
 {% block users %}
 
 <div class="table-responsive">
-	<table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+	<table class="table table-bordered text-nowrap border-bottom" id="data-table-users">
 		<thead>
 			<tr>
 				<th class="wd-15p border-bottom-0">Photo</th>
@@ -9,7 +9,9 @@
 				<th class="wd-15p border-bottom-0">Nom</th>
 				<th class="wd-20p border-bottom-0">Role</th>
 				<th class="wd-10p border-bottom-0">Email</th>
+				{% if app.user and app.user.role == 'Administrateur'%}
 				<th class="wd-10p border-bottom-0">Actions</th>
+				{% endif %}
 
 			</tr>
 		</thead>
@@ -22,6 +24,7 @@
 					<td>{{ user.role }}</td>
 					<td>{{ user.email }}</td>
 
+					{% if app.user and app.user.role == 'Administrateur'%}
 					<td name="bstable-actions">
 						<div
 							class="btn-list">
@@ -38,6 +41,7 @@
 							{# fin bouton supprimer #}
 						</div>
 					</td>
+					{% endif %}
 				</tr>
 			{% endfor %}
 

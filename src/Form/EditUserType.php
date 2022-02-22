@@ -108,26 +108,18 @@ class EditUserType extends AbstractType
             ])
 
             ->add('picture', FileType::class, [    
-                'required' => true,
+                'required' => false,
                 'data_class' => null,
-                'constraints'=> [
+                // 'constraints'=> [
 
-                    new Image([
-                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
-                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
-                    ])
-                ]
+                //     new Image([
+                //         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
+                //         'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
+                //     ])
+                // ]
 
 
 
-            ])
-
-            ->add('submitPassword', SubmitType::class, [
-                'label' => "Modifier",
-                'attr' => [
-                    'class' => 'login100-form-btn btn-primary',
-                    'type' => 'submit',
-                ]
             ])
 
             ->add('submit', SubmitType::class, [
