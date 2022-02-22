@@ -9,7 +9,9 @@
 					<th class="wd-15p border-bottom-0">Lien</th>
 					<th class="wd-20p border-bottom-0">Description</th>
 					<th class="wd-10p border-bottom-0">Language</th>
+					{% if app.user and app.user.role == 'Administrateur'%}
 					<th class="wd-10p border-bottom-0">Actions</th>
+					{% endif %}
 
 				</tr>
 			</thead>
@@ -23,6 +25,7 @@
 						<td>{{ course.description }}</td>
 						<td>{{ course.category.name}}</td>
 
+						{% if app.user and app.user.role == 'Administrateur'%}
 						<td name="bstable-actions">
 							<div
 								class="btn-list">
@@ -39,6 +42,7 @@
 								{# fin bouton supprimer #}
 							</div>
 						</td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 
