@@ -45,14 +45,11 @@ Dashboard admin
                                                 </div>
                                                 <span class="text-muted fs-13"><i class="fa fa-users  text-secondary"></i>
                                                     {% embed "components/modal.html.twig" %}
-                                                    {% set modalType = "modal-xl effect-flip-vertical show" %}
+                                                    {% set modalType = "modal-xl effect-flip-verticalshow" %}
                                                     {% set id = "full-students" %}
                                                     {% block button %}<button href="" class="text-secondary" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous les étudiants</button>{% endblock %}
-                                                    {% block buttonTitle %}{% endblock %}
                                                     {% block modalTitle %}Tous les étudiants{% endblock %}
-                                                    {% block form %}{% embed "/administration/admin/view/view_students.html.twig" %}
-                                                    {% block adminControl %}{% endblock %}
-                                                    {% endembed %}
+                                                    {% block dashboard %}{% include "/administration/admin/view/view_students.html.twig" %}
                                                     {% endblock %}
                                                     {% endembed %}</span>
                                             </div>
@@ -79,7 +76,7 @@ Dashboard admin
                                                     {% block button %}<button href="" class="text-pink" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous les formateurs</button>{% endblock %}
                                                     {% block buttonTitle %}{% endblock %}
                                                     {% block modalTitle %}Tous les formateurs{% endblock %}
-                                                    {% block form %}{% include "/administration/admin/view/view_teachers.html.twig" %}{% endblock %}
+                                                    {% block dashboard %}{% include "/administration/admin/view/view_teachers.html.twig" %}{% endblock %}
                                                     {% endembed %}</span>
                                             </div>
                                         </div>
@@ -105,7 +102,7 @@ Dashboard admin
                                                     {% block button %}<button href="" class="text-green" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous les admins</button>{% endblock %}
                                                     {% block buttonTitle %}{% endblock %}
                                                     {% block modalTitle %}Tous les administrateurs{% endblock %}
-                                                    {% block form %}{% include "/administration/admin/view/view_admins.html.twig" %}{% endblock %}
+                                                    {% block dashboard %}{% include "/administration/admin/view/view_admins.html.twig" %}{% endblock %}
                                                     {% endembed %}</span>
                                             </div>
                                         </div>
@@ -130,15 +127,15 @@ Dashboard admin
                                                     {% block button %}<button href="" class="text-cyan" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir toutes les sessions</button>{% endblock %}
                                                     {% block buttonTitle %}{% endblock %}
                                                     {% block modalTitle %}Tous les administrateurs{% endblock %}
-                                                    {% block form %}{% include "/administration/admin/view/view_sessions.html.twig" %}{% endblock %}
-                                                    {% endembed %}</span>
+                                                    {% block dashboard %}{% include "/administration/admin/view/view_sessions.html.twig" %}{% endblock %}
+                                                    {% endembed %}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     {# Header #}
                     <div class="page-header">
                         <h1 class="page-title">Administration</h1>

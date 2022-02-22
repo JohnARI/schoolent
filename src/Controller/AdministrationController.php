@@ -78,20 +78,14 @@ class AdministrationController extends AbstractController
         $formUser->handleRequest($request);
 
         if ($formUser->isSubmitted() && $formUser->isValid()) {
-
-            $file = $formUser->get('picture')->getData();
-            $defaultAvatar = new File($projectDir . '/public/uploads/user/avatar.jpg');
-
+            
             // Ajout de photo
-            if ($file) {
+            $file = $formUser->get('picture')->getData();
+            
+            if ($file != null) {
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
-            }  elseif (is_null($file)) {
-                
-                $newFilename = $this->fileUploader->uploadAvatar($defaultAvatar, '/user');
-                $user->setPicture($newFilename);
-            }
-
+            } 
             $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
