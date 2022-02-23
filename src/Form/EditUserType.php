@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -14,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class EditUserType extends AbstractType
 {
@@ -25,7 +27,7 @@ class EditUserType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Prénom',
-                    'class' => 'input100 form-control',
+                    'class' => 'form-control',
                 ]
             ])
                     // Choix du nom de famille
@@ -33,7 +35,7 @@ class EditUserType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Nom',
-                    'class' => 'input100 form-control',
+                    'class' => 'form-control',
                 ]
             ])
                     // Choix de l'email
@@ -41,16 +43,31 @@ class EditUserType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Email',
-                    'class' => 'input100 form-control',
+                    'class' => 'form-control',
                 ]
             ])
 
-            ->add('password', PasswordType::class, [
+            ->add('password', RepeatedType::class, [
+                'constraints' => new Length([
+                    'min' => 4,
+                    'max' => 180,
+                ]),
+                'type' => PasswordType::class,
                 'required' => true,
-                'attr' => [
-                    'class' => 'input100 form-control',
-                    'placeholder' => 'Mot de passe'
-                ]
+                'invalid_message' => 'les deux mots de passe doivent être identiques',
+                'first_options' => [ 
+                    'label' => 'Nouveau mot de passe',
+                    'attr' => ['placeholder' => 'Entrez votre nouveau mot de passe',
+                    'class' => 'input100 form-control'                    
+                    ]
+                ],
+                'second_options' => [
+                    'label' => 'Confirmer le nouveau mot de passe',
+                    'attr' => ['placeholder' => 'Confirmez votre Nouveau mot de passe',
+                    'class' => 'input100 form-control'
+                    
+                    ]
+                ],
             ])
                     // Choix du numéro
             ->add('phone', TelType::class, [
@@ -91,24 +108,22 @@ class EditUserType extends AbstractType
             ])
 
             ->add('picture', FileType::class, [    
-                'required' => true,
+                'required' => false,
                 'data_class' => null,
-                'constraints'=> [
+                // 'constraints'=> [
 
-                    new Image([
-                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
-                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
-                    ])
-                ]
+                //     new Image([
+                //         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
+                //         'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
+                //     ])
+                // ]
 
 
 
             ])
 
-            
-
             ->add('submit', SubmitType::class, [
-                'label' => "S'inscrire",
+                'label' => "Modifier",
                 'attr' => [
                     'class' => 'login100-form-btn btn-primary',
                     'type' => 'submit',

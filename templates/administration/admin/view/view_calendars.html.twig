@@ -1,7 +1,7 @@
 {% block calendars %}
 
 	<div class="table-responsive">
-		<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
+		<table class="table table-bordered text-nowrap border-bottom" id="data-table-calendars">
 			<thead>
 				<tr>
 					<th class="wd-15p border-bottom-0">Technologie</th>
@@ -9,7 +9,9 @@
 					<th class="wd-15p border-bottom-0">Professeur</th>
 					<th class="wd-20p border-bottom-0">Date de début</th>
 					<th class="wd-10p border-bottom-0">Date de fin</th>
+					{% if app.user and app.user.role == 'Administrateur'%}
 					<th class="wd-10p border-bottom-0">Actions</th>
+					{% endif %}
 
 				</tr>
 			</thead>
@@ -23,6 +25,7 @@
 						<td>{{ calendar.start|date("d/m/Y") }}</td>
 						<td>{{ calendar.end|date("d/m/Y") }}</td>
 
+						{% if app.user and app.user.role == 'Administrateur'%}
 						<td name="bstable-actions">
 							<div
 								class="btn-list">
@@ -33,12 +36,13 @@
 								{# fin bouton modifier #}
 
 								{# Bouton supprimer #}
-								<a href="{# {{path('delete_user',{'id': user.id})}} #}" id="bDel" type="button" class="btn btn-sm btn-danger">
+								<a href="{{path('delete_calendar',{'id': calendar.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
 									<span class="fe fe-trash-2"></span>
 								</a>
 								{# fin bouton supprimer #}
 							</div>
 						</td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 

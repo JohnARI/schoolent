@@ -96,6 +96,8 @@
 
 <!-- CHART-DONUT JS -->
 <script src="{{asset('assets/js/charts.js')}}"></script>
+<script src="{{asset('assets/js/chart.js')}}"></script>
+<script src="{{asset('assets/js/echarts.js')}}"></script>
 
 <!-- INTERNAL Flot JS -->
 <script src="{{asset('assets/plugins/flot/jquery.flot.js')}}"></script>
@@ -115,6 +117,7 @@
 <script src="{{asset('assets/plugins/tabs/tab-content.js')}}"></script>
 
 <!-- INTERNAL INDEX JS -->
+<script src="{{asset('assets/js/index.js')}}"></script>
 <script src="{{asset('assets/js/index1.js')}}"></script>
 
 <!-- Color Theme js -->
@@ -125,3 +128,21 @@
 
 <!-- CUSTOM JS -->
 <script src="{{asset('assets/js/custom.js')}}"></script>
+
+<!-- WIDGET JS -->
+<script src="{{asset('assets/js/widget.js')}}"></script>
+
+<!-- Full calendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js" 
+integrity="sha256-YicH/8aE660iEnJtgll3vT54dJApy3XkYmqNfGVFEzA=" crossorigin="anonymous"></script>
+<script src="{{asset('fullcalendar/core/main.js')}}"></script>
+<script src="{{asset('fullcalendar/daygrid/main.js')}}"></script>
+
+{# DataTable #}
+<script>
+$('#data-table-users ,#data-table-sessions, #data-table-calendars, #data-table-technologies, #data-table-courses, #data-table-admins, #data-table-students').DataTable({
+language: {
+url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json'
+}
+});
+</script>

@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CalendarRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CalendarRepository;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity(repositoryClass=CalendarRepository::class)
@@ -18,18 +21,12 @@ class Calendar
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="calendars")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Category;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="calendars")
      */
     private $session;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
@@ -44,14 +41,35 @@ class Calendar
     private $end;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=100)
      */
-    private $name;
+    private $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $teacher;
+    private $Description;
+
+    /**
+     * @ORM\Column(type="string", length=7)
+     */
+    private $BackgroundColor;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $teacher_name;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $teacher_id;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime();
+    }
+
 
     public function getId(): ?int
     {
@@ -82,62 +100,99 @@ class Calendar
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getStart(): ?\DateTimeInterface
+    public function getStart(): ?\DateTime
     {
         return $this->start;
     }
 
-    public function setStart(\DateTimeInterface $start): self
+    public function setStart(\DateTime $start): self
     {
         $this->start = $start;
 
         return $this;
     }
 
-    public function getEnd(): ?\DateTimeInterface
+    public function getEnd(): ?\DateTime
     {
         return $this->end;
     }
 
-    public function setEnd(\DateTimeInterface $end): self
+    public function setEnd(\DateTime $end): self
     {
         $this->end = $end;
 
         return $this;
     }
 
-    public function getName(): ?string
+
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(?string $name): self
+    public function setTitle(string $title): self
     {
-        $this->name = $name;
+        $this->title = $title;
 
         return $this;
     }
 
-    public function getTeacher(): ?User
+    public function getDescription(): ?string
     {
-        return $this->teacher;
+        return $this->Description;
     }
 
-    public function setTeacher(?User $teacher): self
+    public function setDescription(?string $Description): self
     {
-        $this->teacher = $teacher;
+        $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getBackgroundColor(): ?string
+    {
+        return $this->BackgroundColor;
+    }
+
+    public function setBackgroundColor(string $BackgroundColor): self
+    {
+        $this->BackgroundColor = $BackgroundColor;
+
+        return $this;
+    }
+
+    public function getTeacherName(): ?string
+    {
+        return $this->teacher_name;
+    }
+
+    public function setTeacherName(string $teacher_name): self
+    {
+        $this->teacher_name = $teacher_name;
+
+        return $this;
+    }
+
+    public function getTeacherId(): ?int
+    {
+        return $this->teacher_id;
+    }
+
+    public function setTeacherId(int $teacher_id): self
+    {
+        $this->teacher_id = $teacher_id;
 
         return $this;
     }

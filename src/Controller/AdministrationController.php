@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\User;
 use App\Entity\Course;
 use DateTimeImmutable;
@@ -10,7 +11,6 @@ use App\Entity\Calendar;
 use App\Form\CourseType;
 use App\Service\Mailjet;
 use App\Form\SessionType;
-use App\Form\CalendarType;
 use App\Form\EditUserType;
 use App\Form\RegisterType;
 use App\Form\EditSessionType;
@@ -19,26 +19,31 @@ use App\Repository\UserRepository;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
 use App\Form\AddProgrammingLanguageType;
+use App\Form\CalendarAdminType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EditProgrammingLanguageType;
+use App\Service\FileUploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AdministrationController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet, FileUploader $fileUploader)
     {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
         $this->mailjet = $mailjet;
+        $this->fileUploader = $fileUploader;
     }
-    
+
 
     /**
      * @Route("/admin/view-users", name="view-users")
@@ -55,62 +60,45 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator): Response
+    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator, string $projectDir): Response
     {
-
-
         // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
-        $calendars= $this->entityManager->getRepository(Calendar::class)->findAll();
-        $courses= $this->entityManager->getRepository(Course::class)->findAll();
+        $calendars = $this->entityManager->getRepository(Calendar::class)->findAll();
+        $courses = $this->entityManager->getRepository(Course::class)->findAll();
+
         // Fin tableaux
 
         // Add user
-        $temporaryPassword= $passwordGenerator->passwordAleatoire(20);
+        $temporaryPassword = $passwordGenerator->passwordAleatoire(20);
         $user = new User();
         $formUser = $this->createForm(RegisterType::class, $user);
         $formUser->handleRequest($request);
 
         if ($formUser->isSubmitted() && $formUser->isValid()) {
-
-            $user = $formUser->getData();
-            $file = $formUser->get('picture')->getData();
+            
             // Ajout de photo
-            if ($file) {
-                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = '.' . $file->guessExtension();
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . $extension;
+            $file = $formUser->get('picture')->getData();
+            
+            if ($file != null) {
+                $newFilename = $this->fileUploader->upload($file, '/user');
+                $user->setPicture($newFilename);
+            } 
+            $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-                try {
-                   
-                    $file->move($this->getParameter('user_picture'), $newFilename);      
-                    $user->setPicture($newFilename);
-                } catch (FileException $exception) {
-                    // Code à executer si une erreur est attrapée
-                }
-                       
-            } else { 
-            $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
-            return $this->redirectToRoute('register'); 
-        } 
-        // Fin ajout photo
+            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   . $temporaryPassword);
+            $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
+            //Message de succès
+            return $this->redirect($request->getUri());
+        }
+        // Fin add user
+        // Add techno
 
-    $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
-    $this->entityManager->persist($user);
-    $this->entityManager->flush();
-
-    $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   .$temporaryPassword);
-    $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
-    //Message de succès
-    return $this->redirect($request->getUri());
-}
-// Fin add user
-// Add techno
-
-$techno = new ProgrammingLanguage();
+        $techno = new ProgrammingLanguage();
 
         $formTechno = $this->createForm(AddProgrammingLanguageType::class, $techno);
         $formTechno->handleRequest($request);
@@ -118,28 +106,18 @@ $techno = new ProgrammingLanguage();
         if ($formTechno->isSubmitted() && $formTechno->isValid()) {
             $technoPicture = $formTechno->get('picture')->getData();
 
-            if ($technoPicture) {
-                $originalFilename = pathinfo($technoPicture->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $technoPicture->guessExtension();
-
-                try {
-                    $technoPicture->move(
-                        $this->getParameter('techno_picture'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
+            if ($technoPicture != null) {
+                $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
                 $techno->setPicture($newFilename);
             }
-           
+
             $this->entityManager->persist($techno);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Nouvelle technologie ajoutée !');
+            $this->addFlash('success', 'Un nouveau programme a été ajouté !');
             return $this->redirect($request->getUri());
         }
         // Fin add techno
+        
         // Add session
 
         $session = new Session();
@@ -154,50 +132,52 @@ $techno = new ProgrammingLanguage();
             $this->entityManager->persist($session);
             $this->entityManager->flush();
             return $this->redirect($request->getUri());
-            $this->addFlash('success', 'Nouvelle session ajoutée !');
+            $this->addFlash('success', 'Une nouvelle a été session ajoutée !');
         }
         // Fin add session
+
         // Add Calendar
 
-        $calendar = new Calendar();
-        $student = new User();
+        // $calendar = new Calendar();
+        // $student = new User();
 
-        $formCalendar = $this->createForm(CalendarType::class, $calendar);
+        // $formCalendar = $this->createForm(CalendarAdminType::class, $calendar);
         
         // dd($students);
 
-        $formCalendar->handleRequest($request);
+        // $formCalendar->handleRequest($request);
 
-        if ($formCalendar->isSubmitted() && $formCalendar->isValid()) {
+        // if ($formCalendar->isSubmitted() && $formCalendar->isValid()) {
 
-            $session = $formCalendar->get('session')->getData();
-            $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
+        //     $session = $formCalendar->get('session')->getData();
+        //     $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
 
-            $teacher = $formCalendar->get('teacher')->getData();
-            $cours = $formCalendar->get('name')->getData();
-            $programmingLanguages = $formCalendar->get('category')->getData()->getName();
-            $dateStart = $formCalendar->get('start')->getData();
-            $dateEnd = $formCalendar->get('end')->getData();
-            $nameSession = $formCalendar->get('session')->getData()->getName();
+        //     $teacher = $formCalendar->get('teacher')->getData();
+        //     $cours = $formCalendar->get('name')->getData();
+        //     $programmingLanguages = $formCalendar->get('category')->getData()->getName();
+        //     $dateStart = $formCalendar->get('start')->getData();
+        //     $dateEnd = $formCalendar->get('end')->getData();
+        //     $nameSession = $formCalendar->get('session')->getData()->getName();
+
+
+        //     $calendar->setCreatedAt(new DateTime());
+
+        //     $this->entityManager->persist($calendar);
+        //     $this->entityManager->flush();
+
+        //     $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
+        //     if($student){
+        //     foreach ($students as $student) { 
+        //         $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours ." " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+        //     }}
             
-
-            $calendar->setCreatedAt(new DateTimeImmutable());
-
-            $this->entityManager->persist($calendar);
-            $this->entityManager->flush();
-
-            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
-
-            foreach ($students as $student) { 
-                $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours ." " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
-            }
-            
-            $this->addFlash('success', 'Nouvelle date ajoutée !');
-            return $this->redirect($request->getUri());
-            
-        }
+        //     $this->addFlash('success', 'Une nouvelle a été date ajoutée !');
+        //     return $this->redirect($request->getUri());
+        // }
         // Fin add calendar
 
+
+        // Add cours
         $course = new Course();
 
         $formCourse = $this->createForm(CourseType::class, $course);
@@ -207,52 +187,35 @@ $techno = new ProgrammingLanguage();
             $courseFile = $formCourse->get('link')->getData();
 
             if ($courseFile) {
-                $originalFilename = pathinfo($courseFile->getClientOriginalName(), PATHINFO_FILENAME);
-
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $courseFile->guessExtension();
-
-                try {
-                    $courseFile->move(
-                        $this->getParameter('cours_picture'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
+                $newFilename = $this->fileUploader->upload($courseFile, '/cours');
                 $course->setLink($newFilename);
             }
 
             $this->entityManager->persist($course);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Nouveaux cours ajouté !');
+            $this->addFlash('success', 'Un nouveaux cours ajouté !');
             return $this->redirect($request->getUri());
         }
-
-
 
         return $this->render('administration/admin/view_all.html.twig', [
             'users' => $users,
             'programmingLanguages' => $programmingLanguages,
             'sessions' => $sessions,
-            'calendars' => $calendars,
+            // 'calendars' => $calendars,
             'formUser' => $formUser->createView(),
-            'formCalendar' => $formCalendar->createView(),
+            // 'formCalendar' => $formCalendar->createView(),
             'formSession' => $formSession->createView(),
             'formCourse' => $formCourse->createView(),
             'formTechno' => $formTechno->createView(),
             'courses' => $courses,
         ]);
-        
     }
 
-     /**
+    /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
-    public function editUser($id, Request $request, SluggerInterface $slugger): Response
+    public function editUser($id, Request $request, SluggerInterface $slugger, string $projectDir): Response
     {
-
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
         $form = $this->createForm(EditUserType::class, $user);
@@ -263,28 +226,30 @@ $techno = new ProgrammingLanguage();
             $file = $form->get('picture')->getData();
 
             if ($file) {
-                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = '.' . $file->guessExtension();
+                $newFilename = $this->fileUploader->upload($file, '/user');
+                $user->setPicture($newFilename);
+            } elseif (is_null($file)) {
+                $defaultAvatar = new File($projectDir . '/public/uploads/user/default_avatar.png');
+                $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
+                $extension = '.' . $defaultAvatar->guessExtension();
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . $extension;
-
                 try {
-                   
-                    $file->move($this->getParameter('user_picture'), $newFilename);      
+                    $defaultAvatar->move($this->getParameter('user_picture'), $newFilename);
                     $user->setPicture($newFilename);
                 } catch (FileException $exception) {
                     // Code à executer si une erreur est attrapée
                 }
-                       
-            } else { 
-                    $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/); 
-                    return $this->redirectToRoute('addUser'); 
-                }
+            } else {
+                $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/);
+                return $this->redirectToRoute('addUser');
+            }
 
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+            $this->addFlash('success', 'L\'utilistauer a été modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
@@ -295,23 +260,21 @@ $techno = new ProgrammingLanguage();
     }
 
     /**
-     * @Route("/admin/delete/user/{id}", name="delete_user")
-     */
-    public function deleteUser(User $user, Request $request): Response
+    * @Route("/admin/delete/user/{id}", name="delete_user")
+    */
+    public function deleteUser(User $user, Request $request, string $projectDir): Response
     {
+        $fileName = $user->getPicture();
 
-        $pictures = $user->getPicture();
-        if ($pictures) {
-
-                $pictureName = $this->getParameter("user_picture") . '/' . $pictures;
-                dd($pictureName);
-     
+        // suppression de la photo user
+        if($fileName != null) {
+            $filesystem = new Filesystem();
+            $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
         }
-
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-
+        $this->addFlash('success', 'L\'utilistauer a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
 
@@ -331,33 +294,17 @@ $techno = new ProgrammingLanguage();
             $technoPicture = $form->get('picture')->getData();
 
             if ($technoPicture) {
-                $originalFilename = pathinfo($technoPicture->getClientOriginalName(), PATHINFO_FILENAME);
-
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $technoPicture->guessExtension();
-
-                // Move the file to the directory where avatars are stored
-                try {
-                    $technoPicture->move(
-                        $this->getParameter('techno_picture'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                if ($form->get('picture')->getData()) {
-                    $technologie->setPicture($newFilename);
-                }
-                
+                $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
+                $technologie->setPicture($newFilename);
             }
 
             $this->entityManager->persist($technologie);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Nouvelle technologie modifiée !');
+            $this->addFlash('success', 'Le programme a été modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
-        return $this->render('administration/admin/edit_technologies.html.twig', [
+        return $this->render('administration/admin/edit/edit_technologies.html.twig', [
 
             'form' => $form->createView()
         ]);
@@ -368,10 +315,20 @@ $techno = new ProgrammingLanguage();
      */
     public function deleteTehnologie(ProgrammingLanguage $technologie, Request $request): Response
     {
+        $fileName = $technologie->getPicture();
+
+        // suppression de la photo technologie
+        if($fileName != null) {
+            $filesystem = new Filesystem();
+            $projectDir = $this->getParameter('kernel.project_dir');
+            $filesystem->remove($projectDir . '/public/uploads/techno/' . $fileName);
+        }
+
         $this->entityManager->remove($technologie);
         $this->entityManager->flush();
+
+        $this->addFlash('success', 'Le programme a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
-        $this->addFlash('success', 'La technologie a été suprimmée !');
     }
 
     /**
@@ -381,7 +338,7 @@ $techno = new ProgrammingLanguage();
     {
         $students = new User();
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
-        
+
         $formCalendar = $this->createForm(EditCalendarType::class, $calendar[0]);
         $formCalendar->handleRequest($request);
 
@@ -406,10 +363,10 @@ $techno = new ProgrammingLanguage();
             $this->mailjet->sendEmail($teacher, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Numero de session " . $nameSession . ".");
 
             foreach ($students as $student) { 
-                $this->mailjet->sendEmail($student, "Voici votre convocation vient d'étre à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+                $this->mailjet->sendEmail($student, "votre convocation vient d'étre à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
             }
            
-            $this->addFlash('success', 'Calendrier modifié !');
+            $this->addFlash('success', 'La date a été modifiée !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
@@ -428,8 +385,8 @@ $techno = new ProgrammingLanguage();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La date a été suprimmée');
-    } 
-  
+    }
+
     /**
      * @Route("/admin/edit/session/{id}", name="edit-session",methods={"GET|POST"})
      */
@@ -464,11 +421,20 @@ $techno = new ProgrammingLanguage();
     /**
      * @Route("/admin/delete/cours/{id}", name="delete-cours",methods={"GET"})
      */
-    public function clearCourse(Course $Course, Request $request): Response
+    public function clearCourse(Course $course, Request $request): Response
     {
-        $this->entityManager->remove($Course);
+        $fileName = $course->getLink();
+        // suppression de la photo technologie
+        if($fileName != null) {
+            $filesystem = new Filesystem();
+            $projectDir = $this->getParameter('kernel.project_dir');
+            $filesystem->remove($projectDir . '/public/uploads/cours/' . $fileName);
+        }
+        
+        $this->entityManager->remove($course);
         $this->entityManager->flush();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+        $this->addFlash('success', 'Le cours a été suprimmé');
     }
 }
