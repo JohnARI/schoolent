@@ -23,16 +23,15 @@ class EditProgrammingLanguageType extends AbstractType
                     'class' => 'input100 form-control',
                 ]
             ])
-            ->add('picture', FileType::class, [    
+            ->add('picture', TextType::class, [    
                 'required' => true,
-                'data_class' => null,
-                'constraints'=> [
+                // 'constraints'=> [
 
-                    new Image([
-                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
-                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
-                    ])
-                ]
+                //     new Image([
+                //         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
+                //         'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
+                //     ])
+                // ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => "Modifier",

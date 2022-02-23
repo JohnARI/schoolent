@@ -22,14 +22,30 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("teacher/dashboard", name="dashboard")
+     * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
+     * @Route("admin/dashboard", name="dashboard")
      */
     public function index(): Response
     {
+        
         $users = $this->entityManager->getRepository(User::class)->findAll();
+        $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
+        $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
+        $admins = $this->entityManager->getRepository(User::class)->findByRole('ROLE_ADMIN');
+        $sessions = $this->entityManager->getRepository(Session::class)->findAll();
+        $studentsWoman = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 1);
+        $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 0);
+        // dd($students);
+        // dd($sexe);
+  
         return $this->render('dashboard/admins-dashboard.html.twig', [
-            'controller_name' => 'DashboardController',
-            'users' => $users
+            'users' => $users,
+            'students' => $students,
+            'teachers' => $teachers,
+            'admins' => $admins,
+            'sessions' => $sessions,
+            'studentsWoman' => $studentsWoman,
+            'studentsMan' => $studentsMan,
         ]);
     }
 
@@ -41,8 +57,7 @@ class DashboardController extends AbstractController
 
         $users = $this->entityManager->getRepository(User::class)->findByRole($role);
 
-
-        return $this->render("administration/admin/view/view_teacher.html.twig", [
+        return $this->render("administration/admin/view/view_teachers.html.twig",[
             'users' => $users,
         ]);
     }
@@ -56,7 +71,7 @@ class DashboardController extends AbstractController
         $users = $this->entityManager->getRepository(User::class)->findByRole($role);
 
 
-        return $this->render("administration/admin/view/view_admin.html.twig", [
+        return $this->render("administration/admin/view/view_admins.html.twig", [
             'users' => $users,
         ]);
     }

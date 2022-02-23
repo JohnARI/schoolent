@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CalendarRepository;
 use App\Service\PasswordGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,8 +13,30 @@ class TestController extends AbstractController
     /**
      * @Route("/test", name="test")
      */
-    public function index(PasswordGenerator $passwordgenerator): Response
+    public function index(CalendarRepository $calendar): Response
     {
-        dd($passwordgenerator->passwordAleatoire(20));
+        $events = $calendar->findAll();
+
+        // dd($events);
+
+        $booking = [];
+        foreach($events as $event){
+
+            $booking[] = [
+            'id' => $event->getId(),
+            'start' => $event->getStart()->format('Y-m-d'),
+            'end' => $event->getEnd()->format('Y-m-d'),
+            'title' => $event->getTitle(),
+            'description' => $event->getDescription(),
+            'session' => $event->getSession(),
+            'backgroundColor' =>$event->getBackgroundColor(),
+            ];
+        }
+
+        $data = json_encode($booking);
+
+        return $this->render('test/index.html.twig', compact('data'));
+        
     }
+
 }
