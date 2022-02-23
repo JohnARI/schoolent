@@ -189,10 +189,22 @@
                                         </div>
                                         
                                         <!-- SIDE-MENU -->
+                                        
                                         <div class="dropdown d-flex profile-1">
-                                            <a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+                                        {% if app.user.picture is not null %}
+										<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
                                                 <img src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="profile-user" class="avatar profile-user brround cover-image">
                                             </a>
+									{% elseif app.user.sexe == 0 %}
+										<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+                                                <img src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="profile-user" class="avatar profile-user brround cover-image">
+                                            </a>
+									{% elseif app.user.sexe == 1 %}
+										<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+                                                <img src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="profile-user" class="avatar profile-user brround cover-image">
+                                            </a>
+									{% endif %}
+                                            
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                                 <div class="drop-heading">
                                                     <div class="text-center">
