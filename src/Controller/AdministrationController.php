@@ -82,7 +82,7 @@ class AdministrationController extends AbstractController
             // Ajout de photo
             $file = $formUser->get('picture')->getData();
             
-            if ($file != null) {
+            if ($file) {
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
             } 
@@ -106,7 +106,7 @@ class AdministrationController extends AbstractController
         if ($formTechno->isSubmitted() && $formTechno->isValid()) {
             $technoPicture = $formTechno->get('picture')->getData();
 
-            if ($technoPicture != null) {
+            if ($technoPicture) {
                 $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
                 $techno->setPicture($newFilename);
             }
@@ -267,14 +267,14 @@ class AdministrationController extends AbstractController
         $fileName = $user->getPicture();
 
         // suppression de la photo user
-        if($fileName != null) {
+        if($fileName) {
             $filesystem = new Filesystem();
             $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
         }
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-        $this->addFlash('success', 'L\'utilistauer a été suprimmé !');
+        $this->addFlash('success', 'L\'utilisateur a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
 
@@ -318,7 +318,7 @@ class AdministrationController extends AbstractController
         $fileName = $technologie->getPicture();
 
         // suppression de la photo technologie
-        if($fileName != null) {
+        if($fileName) {
             $filesystem = new Filesystem();
             $projectDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($projectDir . '/public/uploads/techno/' . $fileName);
@@ -425,7 +425,7 @@ class AdministrationController extends AbstractController
     {
         $fileName = $course->getLink();
         // suppression de la photo technologie
-        if($fileName != null) {
+        if($fileName) {
             $filesystem = new Filesystem();
             $projectDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($projectDir . '/public/uploads/cours/' . $fileName);

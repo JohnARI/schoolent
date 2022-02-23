@@ -89,7 +89,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $checking;
 
     /**
-     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="teacher", orphanRemoval=true)
+     * (le mapped a été modifié de teacher a session)
+     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="session", orphanRemoval=true)
      */
     private $calendars;
 
