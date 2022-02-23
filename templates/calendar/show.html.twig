@@ -10,61 +10,74 @@
 
 
 {% block body %}
-<div id="calendrier"></div>
+	{# Debut Calendrier #}
+	<div class="row row-sm">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Basic Datatable</h3>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
+							<div id="calendrier"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{# Fin calendrier #}
 
 
+			<script>
+				window.onload = () => {
+
+let calendarElt = document.querySelector("#calendrier")
+
+let calendar = new FullCalendar.Calendar(calendarElt, {
+
+initialView: 'dayGridMonth',
+locale: 'fr',
+timeZone: 'Europe/Paris',
+headerToolbar: {
+start: 'prev,next today',
+center: 'title',
+end: 'dayGridMonth'
+},
+selectable: true,
+events: {{ data|raw }},
+selectable: true,
+editable: true,
+eventResizableFromStart: true
+})
+
+calendar.on('eventChange', (e) => {
+console.log(e.event.end);
 
 
+let url = `/api/${
+e.event.id
+}/edit`
+let donnees = {
+"title": e.event.title,
+"start": e.event.start,
+"end": e.event.end,
+"description": e.event.extendedProps.description,
+"backgroundColor": e.event.backgroundColor
 
 
-<script>
-	window.onload = () => {
-		
-	let calendarElt = document.querySelector("#calendrier")
-
-	let calendar = new FullCalendar.Calendar(calendarElt, {
-
-			initialView: 'dayGridMonth',
-			locale: 'fr',
-			timeZone: 'Europe/Paris',
-			headerToolbar: {
-				start: 'prev,next today',
-				center: 'title',
-				end: 'dayGridMonth'
-			},
-			selectable: true,
-			events: {{data|raw}},
-			editable: true,
-			eventResizableFromStart: true
-	})
-
-		calendar.on('eventChange', (e) => {
-         console.log(e.event.end);
+}
 
 
+let xhr = new XMLHttpRequest
 
-			let url = `/api/${e.event.id}/edit`
-			let donnees = {
-				"title": e.event.title,
-				"start": e.event.start,
-				"end": e.event.end,
-				"description": e.event.extendedProps.description,
-				"backgroundColor": e.event.backgroundColor
-				
+xhr.open("PUT", url)
+xhr.send(JSON.stringify(donnees))
 
-			}	
-			
+})
 
-			let xhr = new XMLHttpRequest
+calendar.render()
 
-			xhr.open("PUT", url)
-			xhr.send(JSON.stringify(donnees))
-			
-			})
-
-		calendar.render()
-
-	}
-
-</script>
-{% endblock %}
+}
+			</script>
+		{% endblock %}

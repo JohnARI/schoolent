@@ -28,6 +28,7 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         
+        
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
@@ -37,7 +38,9 @@ class DashboardController extends AbstractController
         $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 0);
         // dd($students);
         // dd($sexe);
-  
+        
+        $this->addFlash('message_error', 'Vous ne pouvez selectionner une date de fin antérieure à la date de début');
+
         return $this->render('dashboard/admins-dashboard.html.twig', [
             'users' => $users,
             'students' => $students,

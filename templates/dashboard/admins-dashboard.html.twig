@@ -1,3 +1,4 @@
+
 {% extends 'base.html.twig' %}
 
 {% block title %}
@@ -203,16 +204,25 @@ Dashboard admin
                                     </div>
                                 </div>
                             </div>
-                            {# Fin profil #}
+                    {# Fin profil #}
 
-                            {# Calendrier #}
-                            <div class="">
+                    {# Debut Calendrier #}
+                    <div class="row row-sm">
+                            <div class="col-lg-12">
                                 <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Basic Datatable</h3>
+                                    </div>
                                     <div class="card-body">
-                                        <div class="cal1"></div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered text-nowrap border-bottom"
+                                                id="basic-datatable">
+                                                    <div id="calendrier"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                       
                             {# Fin calendrier #}
 
 
@@ -286,7 +296,34 @@ Dashboard admin
                 </div>
             </div>
             {# Fin app-content #}
+<script>
+	window.onload = () => {
+		
+	let calendarElt = document.querySelector("#calendrier")
 
+	let calendar = new FullCalendar.Calendar(calendarElt, {
+
+
+			initialView: 'dayGridMonth',
+			locale: 'fr',
+			timeZone: 'Europe/Paris',
+			headerToolbar: {
+				start: 'prev,next today',
+				center: 'title',
+				end: 'dayGridMonth'
+            },
+            
+			editable: true,
+            selectable: true,
+			eventResizableFromStart: true
+	})
+
+
+		calendar.render()
+
+	}
+
+</script>
 
 
                     {% endblock %}

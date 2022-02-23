@@ -52,6 +52,8 @@ class CalendarController extends AbstractController
             $entityManager->persist($calendar);
             $entityManager->flush();
 
+            $this->addFlash('message_succès', 'Votre évènement a bien été enrégistré');
+
             return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -74,11 +76,11 @@ class CalendarController extends AbstractController
         $id_user = $this->getUser('id');
         
 
-        if ($user->getRoles('ROLE_TEACHER')) {
+        if ($this->isGranted('ROLE_TEACHER')) {
 
                
-
-            $events = $calendar->findByTeacherId(['teacher_id'=>$id_user]);
+            
+            $events = $calendar->findBy(['teacher_id'=>$id_user]);
 
             // dd($events);
 
@@ -99,10 +101,7 @@ class CalendarController extends AbstractController
 
             $data = json_encode($booking);
 
-        }
-        
-        if($user->getRoles('ROLE_ADMIN')){
-
+        } else {
             $events = $calendar->findBy(['id'=>$id]);
 
             // dd($events);
