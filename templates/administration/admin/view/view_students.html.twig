@@ -1,8 +1,4 @@
-{% extends 'base.html.twig' %}
-{% block title %}
-View students
-{% endblock %}
-{% block body %}
+{% block students %}
 
 <div class="table-responsive">
 	<table class="table table-bordered text-nowrap border-bottom" id="data-table-students">
@@ -22,7 +18,13 @@ View students
 		<tbody>
 			{% for student in students %}
 				<tr>
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
+				{% if student.picture %}
+						<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
+					{% elseif student.sexe == 0 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
+					{% elseif student.sexe == 1 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+					{% endif %}
 					<td>{{ student.firstname }}</td>
 					<td>{{ student.lastname }}</td>
 					<td>{{ student.role }}</td>

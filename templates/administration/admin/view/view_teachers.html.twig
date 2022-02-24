@@ -1,4 +1,4 @@
-{% block body %}
+{% block teacher %}
 
 <div class="table-responsive">
 	<table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
@@ -18,7 +18,14 @@
 		<tbody>
 			{% for teacher in teachers %}
 				<tr>
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ teacher.picture)}}" alt="Photo de profil"></td>
+				{% if teacher.picture %}
+						<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ teacher.picture)}}" alt="Photo de profil"></td>
+					{% elseif teacher.sexe == 0 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
+					{% elseif teacher.sexe == 1 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+					{% endif %}
+					
 					<td>{{ teacher.firstname }}</td>
 					<td>{{ teacher.lastname }}</td>
 					<td>{{ teacher.role }}</td>

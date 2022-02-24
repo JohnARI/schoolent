@@ -65,7 +65,13 @@
 										<a href="#" class="input-group-text bg-white text-muted">
 											<i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
 										</a>
-										{{form_widget(editUserForm.password)}}
+										{{form_widget(editUserForm.password.first)}}
+									</div>
+									<div class="wrap-input100 validate-input input-group" id="Password-toggle1">
+										<a href="#" class="input-group-text bg-white text-muted">
+											<i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+										</a>
+										{{form_widget(editUserForm.password.second)}}
 									</div>
 
 

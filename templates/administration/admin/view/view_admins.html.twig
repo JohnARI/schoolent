@@ -1,4 +1,4 @@
-{% block body %}
+{% block admin %}
 
 <div class="table-responsive">
 	<table class="table table-bordered text-nowrap border-bottom" id="data-table-admins">
@@ -18,7 +18,13 @@
 		<tbody>
 			{% for admin in admins %}
 				<tr>
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ admin.picture)}}" alt="Photo de profil"></td>
+				{% if admin.picture %}
+						<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ admin.picture)}}" alt="Photo de profil"></td>
+					{% elseif admin.sexe == 0 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
+					{% elseif admin.sexe == 1 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+					{% endif %}
 					<td>{{ admin.firstname }}</td>
 					<td>{{ admin.lastname }}</td>
 					<td>{{ admin.role }}</td>
