@@ -162,7 +162,13 @@ Dashboard admin
                                                         </div>
                                                         <div class="profile-cover__img">
                                                             <div class="profile-img-1">
-                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="img">
+                                                            {% if app.user.picture %}
+                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="avatar">
+                                                            {% elseif app.user.sexe == 0 %}
+                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="avatar">
+                                                            {% elseif app.user.sexe == 1 %}
+                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="avatar">
+                                                            {% endif %}  
                                                             </div>
                                                             <div class="profile-img-content text-dark text-start">
                                                                 <div class="text-dark">

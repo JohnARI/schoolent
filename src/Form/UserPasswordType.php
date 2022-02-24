@@ -20,11 +20,11 @@ class UserPasswordType extends AbstractType
 
             ->add('firstname', TextType::class, [
                 'disabled' => true,
-                'label'=>'Nom',
+
             ])
             ->add('lastname', TextType::class, [
                 'disabled' => true,
-                'label'=>'Prénom',
+
             ])
             ->add('password', RepeatedType::class, [
                 'constraints' => new Length([
@@ -34,7 +34,9 @@ class UserPasswordType extends AbstractType
                 'type' => PasswordType::class,
                 'required' => true,
                 'invalid_message' => 'les deux mots de passe doivent être identiques',
+                
                 'first_options' => [ 
+
                     'attr' => ['placeholder' => 'Entrez votre nouveau mot de passe']
                 ],
                 'second_options' => [
