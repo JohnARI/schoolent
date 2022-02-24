@@ -9,6 +9,7 @@
 				<th class="wd-15p border-bottom-0">Nom</th>
 				<th class="wd-20p border-bottom-0">Role</th>
 				<th class="wd-10p border-bottom-0">Email</th>
+				<th class="wd-10p border-bottom-0">Session</th>
                 {% if app.user and app.user.role == 'Administrateur'%}
 				<th class="wd-10p border-bottom-0">Actions</th>
                 {% endif %}
@@ -18,11 +19,18 @@
 		<tbody>
 			{% for student in students %}
 				<tr>
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
+				{% if student.picture %}
+						<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
+					{% elseif student.sexe == 0 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
+					{% elseif student.sexe == 1 %}
+					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+					{% endif %}
 					<td>{{ student.firstname }}</td>
 					<td>{{ student.lastname }}</td>
 					<td>{{ student.role }}</td>
 					<td>{{ student.email }}</td>
+					<td>{{ student.session }}</td>
 
                     {% if app.user and app.user.role == 'Administrateur'%}
 					<td name="bstable-actions">

@@ -14,8 +14,17 @@
 		<tbody>
 			{% for programmingLanguage in programmingLanguages %}
 			<tr>
-				<td><img style="height:50px;width:50px;"
+			{% if programmingLanguage.picture %}
+						<td><img style="height:50px;width:50px;"
 						src="{{ asset('uploads/techno/' ~ programmingLanguage.picture)}}" alt=""></td>
+					{% elseif programmingLanguage.sexe == 0 %}
+					<td><img style="height:50px;width:50px;"
+						src="{{ asset('uploads/avatar/avatarMen.png')}}" alt=""></td>
+					{% elseif programmingLanguage.sexe == 1 %}
+					<td><img style="height:50px;width:50px;"
+						src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt=""></td>
+					{% endif %}
+				
 				<td>{{ programmingLanguage.name }}</td>
 
 				{% if app.user and app.user.role == 'Administrateur'%}

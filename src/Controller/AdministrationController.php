@@ -220,7 +220,7 @@ class AdministrationController extends AbstractController
 
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
-
+        $fileName = $user->getPicture();
         if ($form->isSubmitted() && $form->isValid()) {
 
             $file = $form->get('picture')->getData();
@@ -229,22 +229,9 @@ class AdministrationController extends AbstractController
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
             } elseif (is_null($file)) {
-                $defaultAvatar = new File($projectDir . '/public/uploads/user/default_avatar.png');
-                $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
-                $extension = '.' . $defaultAvatar->guessExtension();
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . $extension;
-                try {
-                    $defaultAvatar->move($this->getParameter('user_picture'), $newFilename);
-                    $user->setPicture($newFilename);
-                } catch (FileException $exception) {
-                    // Code à executer si une erreur est attrapée
-                }
-            } else {
-                $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/);
-                return $this->redirectToRoute('addUser');
+                $filesystem = new Filesystem();
+                $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
             }
-
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
