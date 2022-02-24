@@ -9,6 +9,7 @@
 				<th class="wd-15p border-bottom-0">Nom</th>
 				<th class="wd-20p border-bottom-0">Role</th>
 				<th class="wd-10p border-bottom-0">Email</th>
+				<th class="wd-10p border-bottom-0">Session</th>
                 {% if app.user and app.user.role == 'Administrateur'%}
 				<th class="wd-10p border-bottom-0">Actions</th>
                 {% endif %}
@@ -30,6 +31,7 @@
 					<td>{{ teacher.lastname }}</td>
 					<td>{{ teacher.role }}</td>
 					<td>{{ teacher.email }}</td>
+					<td>{{ teacher.session }}</td>
 
                     {% if app.user and app.user.role == 'Administrateur'%}
 					<td name="bstable-actions">

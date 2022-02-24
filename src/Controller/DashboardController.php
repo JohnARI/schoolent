@@ -23,11 +23,11 @@ class DashboardController extends AbstractController
 
     /**
      * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
-     * @Route("teacher/dashboard", name="dashboard-admin")
+     * @Route("admin/dashboard", name="dashboard-admin")
      */
     public function admin(): Response
     {
-        
+
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
@@ -37,7 +37,7 @@ class DashboardController extends AbstractController
         $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 0);
         // dd($students);
         // dd($sexe);
-  
+
         return $this->render('dashboard/admins-dashboard.html.twig', [
             'users' => $users,
             'students' => $students,
@@ -49,32 +49,31 @@ class DashboardController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
-     * @Route("teacher/todo/dashboard", name="dashboard-teacher")
+     * @Route("teacher/dashboard", name="dashboard-teacher")
      */
     public function teacher(UserRepository $userRepository): Response
     {
-        
+        $session = $this->entityManager->getRepository(Session::class)->findAll();
         $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
-        $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
-  
+        $sessions = $this->getUser()->getSession($session);
         return $this->render('dashboard/teachers-dashboard.html.twig', [
             'students' => $students,
-            'teachers' => $teachers,
+            'sessions' => $sessions,
         ]);
     }
 
-     /**
+    /**
      * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
      * @Route("/dashboard", name="dashboard-student")
      */
     public function student(UserRepository $userRepository): Response
     {
-        
+
         $teachers = $userRepository->findBySession('ROLE_TEACHER', $this->getUser()->getSession());
         $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
-  
+
         return $this->render('dashboard/students-dashboard.html.twig', [
             'teachers' => $teachers,
             'students' => $students,
@@ -85,13 +84,13 @@ class DashboardController extends AbstractController
     /**
      * @Route("admin/teachers", name="view-teachers")
      */
-    public function showTeacher($role = 'ROLE_TEACHER'): Response
+    public function showTeacher(): Response
     {
 
-        $users = $this->entityManager->getRepository(User::class)->findByRole($role);
+        $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
 
-        return $this->render("administration/admin/view/view_teachers.html.twig",[
-            'users' => $users,
+        return $this->render("administration/admin/view/view_teachers.html.twig", [
+            'teachers' => $teachers,
         ]);
     }
 
@@ -116,9 +115,9 @@ class DashboardController extends AbstractController
     {
 
         $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
-        
 
-        
+
+
 
         return $this->render("administration/admin/view/view_students.html.twig", [
             'students' => $students,
