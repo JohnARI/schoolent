@@ -14,7 +14,7 @@
 				{% endif %}
 
 			</tr>
-		</thead>
+		</thead>  
 		<tbody>
 			{% for user in users %}
 				<tr>
@@ -25,7 +25,7 @@
 					{% elseif user.sexe == 1 %}
 						<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt=""></td>
 					{% endif %}
-					
+
 					<td>{{ user.firstname }}</td>
 					<td>{{ user.lastname }}</td>
 					<td>{{ user.role }}</td>
