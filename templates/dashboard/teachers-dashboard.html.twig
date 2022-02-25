@@ -15,9 +15,12 @@ Dashboard Professeur
 
                 {# Container #}
                 <div class="main-container container-fluid">
+
+                {# Tableaux et modal #}
                     <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
                                 <div class="row">
+                                    {# Mes élèves #}
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
                                         <div class="card overflow-hidden">
                                             <div class="card-body">
@@ -45,7 +48,8 @@ Dashboard Professeur
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                    {# Fin mes élèves #}
+                                    {# Session #}
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
                                         <div class="card overflow-hidden">
                                             <div class="card-body">
@@ -63,22 +67,32 @@ Dashboard Professeur
                                                 <span class="text-muted fs-13">
                                                 
                                                         <p><i class="fa fa-address-card text-cyan"></i> du <strong>{{ app.user.session.startSession | date("d/m/Y")}}</strong> au <strong>{{ app.user.session.endSession | date("d/m/Y")}}</strong></p>
-                                                {# 
-                                                  {% embed "components/modal.html.twig" %}
-                                                    {% set modalType = "modal-xl" %}
-                                                    {% set id = "full-session" %}
-                                                    {% block button %}<button href="" class="text-cyan" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir toutes les sessions</button>{% endblock %}
-                                                    {% block buttonTitle %}{% endblock %}
-                                                    {% block modalTitle %}Tous les administrateurs{% endblock %}
-                                                    {% block dashboard %}{% include "/administration/admin/view/view_sessions.html.twig" %}{% endblock %}
-                                                    {% endembed %} #}
+                                                
                                                 </span>
+                                                
                                             </div>
                                         </div>
                                     </div>
+                                    {# Fin ma session #}
+                                    {# Rémunération #}
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="mt-2 me-4">
+                                                        <h6 class="">Rémunération</h6>
+                                                        <h2 class="mb-0 number-font">{{app.user.payment}} €/jour</h2>
+                                                    </div>
+                                                   
+                                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {# Fin rémunération #}
                                 </div>
                             </div>
                         </div>
+                        {# Fin tableaux et modal #}
                     {# Header #}
                     <div class="page-header">
                         <h1 class="page-title">Administration</h1>
