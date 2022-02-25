@@ -15,27 +15,27 @@ class TestController extends AbstractController
      */
     public function index(CalendarRepository $calendar): Response
     {
-        // $events = $calendar->findAll();
+        $events = $calendar->findAll();
 
-        // // dd($events);
+        // dd($events);
 
-        // $booking = [];
-        // foreach($events as $event){
+        $booking = [];
+        foreach($events as $event){
 
-        //     $booking[] = [
-        //     'id' => $event->getId(),
-        //     'start' => $event->getStart()->format('Y-m-d'),
-        //     'end' => $event->getEnd()->format('Y-m-d'),
-        //     'title' => $event->getTitle(),
-        //     'description' => $event->getDescription(),
-        //     'session' => $event->getSession(),
-        //     'backgroundColor' =>$event->getBackgroundColor(),
-        //     ];
-        // }
+            $booking[] = [
+            'id' => $event->getId(),
+            'start' => $event->getStart()->format('Y-m-d'),
+            'end' => $event->getEnd()->format('Y-m-d'),
+            'title' => $event->getTitle(),
+            'description' => $event->getDescription(),
+            'session' => $event->getSession(),
+            'backgroundColor' =>$event->getBackgroundColor(),
+            ];
+        }
 
-        // $data = json_encode($booking);
+        $data = json_encode($booking);
 
-        return $this->render('test/test.html.twig');
+        return $this->render('test/index.html.twig', compact('data'));
         
     }
 

@@ -21,7 +21,17 @@ Calendar
 			<div class="card-body">
 				<div class="table-responsive">
 					<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
-						<div id="calendrier"></div>
+						<div id="calendrier">
+						{% embed "components/modal.html.twig" %}
+						
+						{% set modalType = "modal-scrolling" %}
+						{% set id = "scroll-calendar" %}
+						{% block buttonTitle %}{% endblock %}
+						{% endembed %}
+						<button class="d-none" >Supprimer</button>
+						
+						
+						</div>
 				</div>
 			</div>
 		</div>
@@ -30,15 +40,7 @@ Calendar
 	{# Fin calendrier #}
 
 	<!-- The Modal -->
-<div id="myModal" class="modal">
 
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Under Construction</p>
-  </div>
-
-</div>
 
 
 	<script>
@@ -47,6 +49,10 @@ Calendar
 			let calendarElt = document.querySelector("#calendrier")
 
 			let xmlhttp = new XMLHttpRequest();
+
+
+
+
 
 			
 
@@ -63,32 +69,24 @@ Calendar
 					end: 'dayGridMonth,listMonth',
 				},
 				selectable: true,
-				events: [{{ data| raw }}
-				],
+				events:{{ data| raw }},
 				selectable: true,
 				editable: true,
 				eventResizableFromStart: true,
-				eventClick: function(calEvent, jsEvent, event){
-					if(!confirm("Etes vous sûr de vouloir supprimer cet évènement?")){
+				eventClick: function(event){
+					
 
 						
-					var event = calendar.getEventById(event.id);
-
-						event.remove();
-								
+				
+								return document.querySelector(".d-none").removeClass("d-none");
 
 							
-					}
+					
 					
 					
 				//... your code here ...
 				},
 
-				{# eventDrop: function(event, delta) {
-				alert(event.title + ' was moved ' + delta + ' days\n' +
-				'(should probably update your database)');
-				},
-			 #}
 			
 
 							
