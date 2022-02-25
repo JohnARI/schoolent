@@ -12,7 +12,7 @@ class DefaultController extends AbstractController
 
     /**
      * Dashboard Redirect.
-     * @Route("/")
+     * @Route("/", name="default")
      */
     public function index(): Response
     
