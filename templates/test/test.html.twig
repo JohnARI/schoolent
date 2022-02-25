@@ -1,0 +1,46 @@
+<html>
+	<title>Ajax Calls</title>
+	<head>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/fullcalendar.css">
+	</head>
+	<body>
+		<div class="container" id="calendar"></div>
+		<script src="scripts/jquery.min.js"></script>
+		<script src="scripts/fullcalendar.min.js"></script>
+	</body>
+	<script>
+	$(document).ready(function(){
+		$.ajax({
+			url: 'Ajax_calendar.php',
+			type: 'POST',
+			success:function(response)
+			{
+				json_events = response;
+				$("#calendar").fullCalendar({
+					dayClick: function( date, allDay, jsEvent, view ) {
+						$("#calendar").fullCalendar('changeView', 'agendaDay')
+									.fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
+					},
+					header:{
+						left:'prev,next today',
+						center: 'title',
+						right: 'month, agendaWeek,angendaDay'
+					},
+					buttonText:{
+						today: 'TODAY',
+						month: 'MONTH',
+						week: 'WEEK',
+						day: 'day'
+					},
+					events: json_events
+				});
+			}
+		});
+	});
+	</script>
+</html>
+
+
+  

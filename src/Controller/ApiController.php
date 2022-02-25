@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\Calendar;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use PDOException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,6 +23,8 @@ class ApiController extends AbstractController
 
         //On Récupère les données
         $donnees = json_decode($request->getContent());
+
+
 
         if (
             isset($donnees->title) && !empty($donnees->title) &&
@@ -56,6 +59,8 @@ class ApiController extends AbstractController
             $em->persist($calendar);
             $em->flush();
 
+            
+
             //On retourne le code
             return new Response('Ok', $code);
 
@@ -66,4 +71,4 @@ class ApiController extends AbstractController
 
         return $this->render('test/index.html.twig');
     }
-}
+};
