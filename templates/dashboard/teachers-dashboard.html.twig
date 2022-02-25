@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-Dashboard admin
+Dashboard Professeur
 {% endblock %}
 
 {% block body %}
@@ -15,28 +15,21 @@ Dashboard admin
 
                 {# Container #}
                 <div class="main-container container-fluid">
+
+                {# Tableaux et modal #}
                     <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
                                 <div class="row">
+                                    {# Mes élèves #}
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
                                         <div class="card overflow-hidden">
                                             <div class="card-body">
-                                                <div class="d-flex align-items-center">
+                                                <div class="d-flex">
                                                     <div class="mt-2 me-4">
-                                                        <h6 class="">Etudiants</h6>
+                                                        <h6 class="">Mes élèves</h6>
                                                         <h2 class="mb-0 number-font">{{ students | length }}</h2>
                                                     </div>
-                                                    <div class="d-flex">
-                                                        <div>
-                                                            <h6 class="me-4">Homme</h6>
-                                                            
-                                                            <h4 class="mb-0 number-font">{{ studentsMan | length }}</h4>
-                                                        </div>
-                                                        <div>
-                                                            <h6 class="me-4">Femme</h6>
-                                                            <h4 class="mb-0 number-font">{{ studentsWoman | length }}</h4>
-                                                        </div>
-                                                    </div>
+                                                   
                                                     <div class="ms-auto">
                                                         <div class="chart-wrapper mt-1">
                                                             <canvas id="saleschart" class="h-8 w-9 chart-dropshadow"></canvas>
@@ -45,26 +38,25 @@ Dashboard admin
                                                 </div>
                                                 <span class="text-muted fs-13"><i class="fa fa-users  text-secondary"></i>
                                                     {% embed "components/modal.html.twig" %}
-                                                    {% set modalType = "modal-xl effect-flip-vertical show" %}
+                                                    {% set modalType = "modal-xl effect-flip-verticalshow" %}
                                                     {% set id = "full-students" %}
-                                                    {% block button %}<button href="" class="text-secondary" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous les étudiants</button>{% endblock %}
-                                                    {% block buttonTitle %}{% endblock %}
+                                                    {% block button %}<button href="" class="text-secondary" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous mes élèves</button>{% endblock %}
                                                     {% block modalTitle %}Tous les étudiants{% endblock %}
-                                                    {% block form %}{% embed "/administration/admin/view/view_students.html.twig" %}
-                                                    {% block adminControl %}{% endblock %}
-                                                    {% endembed %}
+                                                    {% block dashboard %}{% include "/administration/admin/view/view_students.html.twig" %}
                                                     {% endblock %}
                                                     {% endembed %}</span>
                                             </div>
                                         </div>
                                     </div>
+                                    {# Fin mes élèves #}
+                                    {# Session #}
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
                                         <div class="card overflow-hidden">
                                             <div class="card-body">
                                                 <div class="d-flex">
                                                     <div class="mt-2">
-                                                        <h6 class="">Sessions</h6>
-                                                        <h2 class="mb-0 number-font">{{ sessions | length }}</h2>
+                                                        <h6 class="">Ma session</h6>
+                                                        <h2 class="mb-0 number-font">{{ app.user.session}}</h2>
                                                     </div>
                                                     <div class="ms-auto">
                                                         <div class="chart-wrapper mt-1">
@@ -72,21 +64,35 @@ Dashboard admin
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span class="text-muted fs-13"><i class="fa fa-address-card text-cyan"></i>  {% embed "components/modal.html.twig" %}
-                                                    {% set modalType = "modal-xl" %}
-                                                    {% set id = "full-session" %}
-                                                    {% block button %}<button href="" class="text-cyan" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir toutes les sessions</button>{% endblock %}
-                                                    {% block buttonTitle %}{% endblock %}
-                                                    {% block modalTitle %}Tous les administrateurs{% endblock %}
-                                                    {% block form %}{% include "/administration/admin/view/view_sessions.html.twig" %}{% endblock %}
-                                                    {% endembed %}</span>
+                                                <span class="text-muted fs-13">
+                                                
+                                                        <p><i class="fa fa-address-card text-cyan"></i> du <strong>{{ app.user.session.startSession | date("d/m/Y")}}</strong> au <strong>{{ app.user.session.endSession | date("d/m/Y")}}</strong></p>
+                                                
+                                                </span>
+                                                
                                             </div>
                                         </div>
                                     </div>
+                                    {# Fin ma session #}
+                                    {# Rémunération #}
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="mt-2 me-4">
+                                                        <h6 class="">Rémunération</h6>
+                                                        <h2 class="mb-0 number-font">{{app.user.payment}} €/jour</h2>
+                                                    </div>
+                                                   
+                                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {# Fin rémunération #}
                                 </div>
                             </div>
                         </div>
-
+                        {# Fin tableaux et modal #}
                     {# Header #}
                     <div class="page-header">
                         <h1 class="page-title">Administration</h1>
@@ -98,8 +104,6 @@ Dashboard admin
                         </div>
                     </div>
                     {# Fin header #}
-
-                    Profil
                     <div class="row" id="user-profile">
                         <div class="col-lg-12">
                             <div class="card">
@@ -113,7 +117,13 @@ Dashboard admin
                                                         </div>
                                                         <div class="profile-cover__img">
                                                             <div class="profile-img-1">
-                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="img">
+                                                            {% if app.user.picture %}
+                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="avatar">
+                                                            {% elseif app.user.sexe == 0 %}
+                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="avatar">
+                                                            {% elseif app.user.sexe == 1 %}
+                                                                <img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="avatar">
+                                                            {% endif %}  
                                                             </div>
                                                             <div class="profile-img-content text-dark text-start">
                                                                 <div class="text-dark">
@@ -153,8 +163,19 @@ Dashboard admin
                             </div>
                             {# Fin profil #}
 
+                            {# Calendrier #}
+                            <div class="">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="cal1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {# Fin calendrier #}
+
+
                         {# Utilisateurs #}
-                        <div class="row row-sm">
+                        {# <div class="row row-sm">
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header">
@@ -174,7 +195,7 @@ Dashboard admin
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for user in users %}
+                                                     {% for user in users %}
                                                     <tr>
                                                         <td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ user.picture)}}" alt=""></td>
                                                         <td>{{ user.firstname }}</td>
@@ -182,7 +203,7 @@ Dashboard admin
                                                         <td>{{ user.role }}</td>
                                                         <td>{{ user.email }}</td>
                                                     </tr>
-                                                    {% endfor %}
+                                                    {% endfor %} 
 
                                                 </tbody>
                                             </table>
@@ -190,7 +211,7 @@ Dashboard admin
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> #}
                         {# Fin utilisateurs #}
                         <div class="row">   
                             <div class="col-lg-6 col-md-12">
@@ -224,4 +245,6 @@ Dashboard admin
             </div>
             {# Fin app-content #}
 
-		{% endblock %}
+
+
+                    {% endblock %}

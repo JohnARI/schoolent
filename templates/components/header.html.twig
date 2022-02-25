@@ -5,8 +5,8 @@
                         <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="#"></a>
                         <!-- sidebar-toggle-->
                         <a class="logo-horizontal " href="index.html">
-                            <img src="../assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">
-                            <img src="../assets/images/brand/logo.png" class="header-brand-img light-logo1" alt="logo">
+                            <img src="{{asset('assets/images/brand/logo.png')}}" class="header-brand-img desktop-logo" alt="logo">
+                            <img src="{{asset('assets/images/brand/logo.png')}}" class="header-brand-img light-logo1" alt="logo">
                         </a>
                         <!-- LOGO -->
                         {# <div class="main-header-center ms-3 d-none d-lg-block">
@@ -189,10 +189,22 @@
                                         </div>
                                         
                                         <!-- SIDE-MENU -->
+                                        
                                         <div class="dropdown d-flex profile-1">
-                                            <a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+                                        {% if app.user.picture is not null %}
+										<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
                                                 <img src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="profile-user" class="avatar profile-user brround cover-image">
                                             </a>
+									{% elseif app.user.sexe == 0 %}
+										<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+                                                <img src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="profile-user" class="avatar profile-user brround cover-image">
+                                            </a>
+									{% elseif app.user.sexe == 1 %}
+										<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+                                                <img src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="profile-user" class="avatar profile-user brround cover-image">
+                                            </a>
+									{% endif %}
+                                            
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                                 <div class="drop-heading">
                                                     <div class="text-center">
@@ -202,14 +214,7 @@
                                                 </div>
                                                 <div class="dropdown-divider m-0"></div>
                                                 <a class="dropdown-item" href="{{path('profil')}}">
-                                                    <i class="dropdown-icon fe fe-user"></i> Profile
-                                                </a>
-                                                <a class="dropdown-item" href="email-inbox.html">
-                                                    <i class="dropdown-icon fe fe-mail"></i> Inbox
-                                                    <span class="badge bg-primary rounded-pill float-end">5</span>
-                                                </a>
-                                                <a class="dropdown-item" href="lockscreen.html">
-                                                    <i class="dropdown-icon fe fe-lock"></i> Lockscreen
+                                                    <i class="dropdown-icon fe fe-user"></i> Profil
                                                 </a>
                                                 <a class="dropdown-item" href="{{path('app_logout')}}">
                                                     <i class="dropdown-icon fe fe-alert-circle"></i> Sign out

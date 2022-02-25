@@ -2,12 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\Session;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Payment;
+use App\Entity\Session;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -93,6 +94,12 @@ class RegisterType extends AbstractType
                     'Formateur' => "ROLE_TEACHER",
                     'Eleve' => "ROLE_USER",
                 ]
+            ])
+
+            ->add('payment', EntityType::class, [
+                'label' => 'Rémuneration',
+                'class' => Payment::class,
+                'choice_label' => 'tarification',
             ])
 
             ->add('picture', FileType::class, [    
