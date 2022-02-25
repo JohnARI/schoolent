@@ -29,6 +29,22 @@
 <!-- INPUT MASK JS-->
 <script src="{{asset('assets/plugins/input-mask/jquery.mask.min.js')}}"></script>
 
+<!-- TIME COUNTER JS-->
+<script src="{{asset('assets/plugins/counters/jquery.missofis-countdown.js')}}"></script>
+<script src="{{asset('assets/plugins/counters/counter.js')}}"></script>
+
+<!-- COUNT-DOWN JS-->
+<script src="{{asset('assets/plugins/counters/count-down.js')}}"></script>
+<script src="{{asset('assets/plugins/countdown/moment.min.js')}}"></script>
+<script src="{{asset('assets/plugins/countdown/moment-timezone.min.js')}}"></script>
+<script src="{{asset('assets/plugins/countdown/moment-timezone-with-data.min.js')}}"></script>
+<script src="{{asset('assets/plugins/countdown/countdowntime.js')}}"></script>
+
+<!-- COUNTERS JS-->
+<script src="{{asset('assets/plugins/counters/counterup.min.js')}}"></script>
+<script src="{{asset('assets/plugins/counters/waypoints.min.js')}}"></script>
+<script src="{{asset('assets/plugins/counters/counters-1.js')}}"></script>
+
 <!-- PIETY CHART JS-->
 <script src="{{asset('assets/plugins/peitychart/jquery.peity.min.js')}}"></script>
 <script src="{{asset('assets/plugins/peitychart/peitychart.init.js')}}"></script>
@@ -132,14 +148,13 @@
 <script src="{{asset('assets/js/widget.js')}}"></script>
 
 <!-- Full calendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js" 
-integrity="sha256-YicH/8aE660iEnJtgll3vT54dJApy3XkYmqNfGVFEzA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js" integrity="sha256-YicH/8aE660iEnJtgll3vT54dJApy3XkYmqNfGVFEzA=" crossorigin="anonymous"></script>
 <script src="{{asset('fullcalendar/core/main.js')}}"></script>
 <script src="{{asset('fullcalendar/daygrid/main.js')}}"></script>
 
 {# DataTable #}
 <script>
-$('#data-table-users ,#data-table-sessions, #data-table-calendars, #data-table-technologies, #data-table-courses, #data-table-admins, #data-table-students').DataTable({
+	$('#data-table-users ,#data-table-sessions, #data-table-calendars, #data-table-technologies, #data-table-courses, #data-table-admins, #data-table-students').DataTable({
 language: {
 url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json'
 }
