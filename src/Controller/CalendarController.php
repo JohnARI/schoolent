@@ -153,11 +153,27 @@ class CalendarController extends AbstractController
      */
     public function delete(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $calendar->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($calendar);
-            $entityManager->flush();
-        }
+            
+        $event = $calendar->getId(2);
+        
+        $entityManager->remove($event);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('test.html.twig');
     }
+
+
+    // /**
+    //  * @Route("/delete/{id}", name="calendar_delete_event", methods={"POST"})
+    //  */
+    // public function deleteEven(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
+    // {
+
+       
+
+    //     $entityManager->remove($calendar);
+    //     $entityManager->flush();
+
+    //     return $this->redirectToRoute('test.html.twig');
+    // }
 }

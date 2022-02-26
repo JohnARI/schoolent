@@ -104,7 +104,7 @@
 						</div>
 						<div class="col-md-12 col-xl-9">
 							<span class="text-center" style="display:none" id="btn-supp">
-								<a href="#" class="btn btn-danger btn-sm">Supprimer</a>
+								<a href="{{path('calendar_delete', {'id':2})}}" class="btn btn-danger btn-sm">Supprimer</a>
 							</span>
 							<div id='calendar2'></div>
 						</div>
@@ -147,13 +147,15 @@ let calendar = new FullCalendar.Calendar(calendarElt, {
 				editable: true,
 				selectable: true,
 				eventResizableFromStart: true,
-				eventClick: function(info) {
+				eventClick: function(event) {
 				
 								
 
-									document.querySelector('#btn-supp').style.display="block";
+						document.querySelector('#btn-supp').style.display="block";
 
+						window.monId = 2;
 
+						alert(monId);
 				
 				}
 				})
