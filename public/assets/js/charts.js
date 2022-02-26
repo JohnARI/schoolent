@@ -327,6 +327,7 @@
      /*chart-area-step*/
      var chart = c3.generate({
          bindto: '#chart-area-step', // id of chart wrapper
+         
          data: {
              columns: [
                  // each columns data
@@ -397,41 +398,7 @@
              top: 0
          },
      });
-     /*chart-bar*/
-     var chart = c3.generate({
-         bindto: '#chart-monthly', // id of chart wrapper
-         data: {
-             columns: [
-                 // each columns data
-                 ['data1', 11, 8, 35, 18, 19, 17, 33, 39, 48, 57, 39, 63]
-             ],
-             type: 'bar', // default type of chart
-             colors: {
-                 data1: '#6c5ffc'
-             },
-             names: {
-                 // name of each serie
-                 'data1': 'Maximum'
-             }
-         },
-         axis: {
-             x: {
-                 type: 'category',
-                 // name of each category
-                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-             },
-         },
-         bar: {
-             width: 30
-         },
-         legend: {
-             show: false, //hide legend
-         },
-         padding: {
-             bottom: 0,
-             top: 0
-         },
-     });
+    
      /*chart-bar-rotated*/
      var chart = c3.generate({
          bindto: '#chart-bar-rotated', // id of chart wrapper
@@ -661,7 +628,7 @@
          data: {
              columns: [
                  // each columns data
-                 ['data1', 78],
+                 ['data1', {{ studentsWoman | length }} ],
                  ['data2', 95],
                  ['data3', 25],
              ],

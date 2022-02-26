@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Calendar;
 use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Session;
@@ -33,10 +34,16 @@ class DashboardController extends AbstractController
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
         $admins = $this->entityManager->getRepository(User::class)->findByRole('ROLE_ADMIN');
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
-        $studentsWoman = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 1);
-        $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 0);
+        $studentsWoman = $this->entityManager->getRepository(User::class)->findBySexeStudent(1);
+        $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeStudent(0);
+        $calendarByMonth = $this->entityManager->getRepository(Calendar::class)->findCalendarForMonth();
+
+        // $calendarByMonth = json_encode($calendarByMonth);
+  
         // dd($students);
         // dd($sexe);
+        // dd($studentsMan);
+        // dd($calendarByMonth);
   
         return $this->render('dashboard/admins-dashboard.html.twig', [
             'users' => $users,
@@ -46,6 +53,7 @@ class DashboardController extends AbstractController
             'sessions' => $sessions,
             'studentsWoman' => $studentsWoman,
             'studentsMan' => $studentsMan,
+            'calendarByMonth' => $calendarByMonth
         ]);
     }
 

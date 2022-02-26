@@ -14,9 +14,6 @@ View all
 		<div class="main-container container-fluid">
 			<div class="col">
 				<div class="card">
-					{# <div class="card-header">
-						<h3 class="card-title">CRUD A FAIRE !!!!</h3>
-					</div> #}
 					<div class="card-header justify-content-center">
 						{% for message in app.flashes('success') %}
 						<div class="col-md-10 alert alert alert-success alert-dismissible fade show" role="alert">
@@ -101,10 +98,10 @@ View all
 										{% endembed %} #}
 										{# Fin modal #}
 
-										{# {% include "administration/admin/view/view_calendars.html.twig" %} #}
+										{% include "administration/admin/view/view_calendars.html.twig" %}
 									</div>
 									<div class="tab-pane" id="technologies">
-									{# Modal #}
+										{# Modal #}
 										{% embed "components/modal.html.twig" %}
 										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-technologies" %}

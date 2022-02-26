@@ -4,6 +4,8 @@
 Dashboard admin
 {% endblock %}
 
+
+
 {% block body %}
 
 {# Page #}
@@ -259,10 +261,10 @@ Dashboard admin
                         </div>
                         {# Fin utilisateurs #}
                         <div class="row">   
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-8 col-md-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3 class="card-title">Single Bar chart </h3>
+                                        <h3 class="card-title">Nombres de jours de formations calculées par mois sur l'année. </h3>
                                     </div>
                                     <div class="card-body">
                                         <div id="chart-monthly" class="chartsh"></div>
@@ -270,13 +272,13 @@ Dashboard admin
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 col-md-12">
-                                <div class="card">
+                            <div class="col-lg-4 col-md-12">
+                                <div class="card" id="chart-sexe">
                                     <div class="card-header">
-                                        <h3 class="card-title">Donut Chart</h3>
+                                        <h3 class="card-title">Etudiants par genre</h3>
                                     </div>
                                     <div class="card-body">
-                                        <div id="chart-donut" class="chartsh"></div>
+                                        <div id="chart-sexe-bar" class="chartsh"></div> 
                                     </div>
                                 </div>
                             </div>
@@ -291,5 +293,7 @@ Dashboard admin
             {# Fin app-content #}
 
 
+{% endblock %}
 
-                    {% endblock %}
+
+

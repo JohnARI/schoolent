@@ -138,42 +138,40 @@ class AdministrationController extends AbstractController
 
         // Add Calendar
 
-        // $calendar = new Calendar();
-        // $student = new User();
+        $calendar = new Calendar();
+        $student = new User();
 
-        // $formCalendar = $this->createForm(CalendarAdminType::class, $calendar);
-        
-        // dd($students);
+        $formCalendar = $this->createForm(CalendarAdminType::class, $calendar);
 
-        // $formCalendar->handleRequest($request);
+        $formCalendar->handleRequest($request);
 
-        // if ($formCalendar->isSubmitted() && $formCalendar->isValid()) {
+        if ($formCalendar->isSubmitted() && $formCalendar->isValid()) {
 
-        //     $session = $formCalendar->get('session')->getData();
-        //     $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
+            $session = $formCalendar->get('session')->getData();
+            $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
 
-        //     $teacher = $formCalendar->get('teacher')->getData();
-        //     $cours = $formCalendar->get('name')->getData();
-        //     $programmingLanguages = $formCalendar->get('category')->getData()->getName();
-        //     $dateStart = $formCalendar->get('start')->getData();
-        //     $dateEnd = $formCalendar->get('end')->getData();
-        //     $nameSession = $formCalendar->get('session')->getData()->getName();
+            $teacher = $formCalendar->get('teacher')->getData();
+            $cours = $formCalendar->get('name')->getData();
+            $programmingLanguages = $formCalendar->get('category')->getData()->getName();
+            $dateStart = $formCalendar->get('start')->getData();
+            $dateEnd = $formCalendar->get('end')->getData();
+            $nameSession = $formCalendar->get('session')->getData()->getName();
 
 
-        //     $calendar->setCreatedAt(new DateTime());
+            $calendar->setCreatedAt(new DateTime());
 
-        //     $this->entityManager->persist($calendar);
-        //     $this->entityManager->flush();
+            $this->entityManager->persist($calendar);
+            $this->entityManager->flush();
 
-        //     $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
-        //     if($student){
-        //     foreach ($students as $student) { 
-        //         $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours ." " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
-        //     }}
+            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
+            if($student){
+            foreach ($students as $student) { 
+                $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours ." " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+            }}
             
-        //     $this->addFlash('success', 'Une nouvelle a été date ajoutée !');
-        //     return $this->redirect($request->getUri());
-        // }
+            $this->addFlash('success', 'Une nouvelle a été date ajoutée !');
+            return $this->redirect($request->getUri());
+        }
         // Fin add calendar
 
 
@@ -201,9 +199,9 @@ class AdministrationController extends AbstractController
             'users' => $users,
             'programmingLanguages' => $programmingLanguages,
             'sessions' => $sessions,
-            // 'calendars' => $calendars,
+            'calendars' => $calendars,
             'formUser' => $formUser->createView(),
-            // 'formCalendar' => $formCalendar->createView(),
+            'formCalendar' => $formCalendar->createView(),
             'formSession' => $formSession->createView(),
             'formCourse' => $formCourse->createView(),
             'formTechno' => $formTechno->createView(),

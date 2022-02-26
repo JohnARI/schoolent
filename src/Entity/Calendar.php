@@ -20,6 +20,12 @@ class Calendar
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="calendars")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $Category;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="calendars")
      */
     private $session;
@@ -112,24 +118,24 @@ class Calendar
         return $this;
     }
 
-    public function getStart(): ?\DateTime
+    public function getStart(): ?\DateTimeInterface
     {
         return $this->start;
     }
 
-    public function setStart(\DateTime $start): self
+    public function setStart(\DateTimeInterface $start): self
     {
         $this->start = $start;
 
         return $this;
     }
 
-    public function getEnd(): ?\DateTime
+    public function getEnd(): ?\DateTimeInterface
     {
         return $this->end;
     }
 
-    public function setEnd(\DateTime $end): self
+    public function setEnd(\DateTimeInterface $end): self
     {
         $this->end = $end;
 
