@@ -22,15 +22,14 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('login');
         } elseif ($user = $this->getUser()) {
             $role = $user->getRoles();
-
-            switch ($role[0]) {
-
+            switch ($role) {
+                
                 case 'ROLE_ADMIN':
 
                     return $this->redirectToRoute('dashboard-admin');
                     break;
 
-                case 'ROLE_TEACHER':
+                case 'ROLE_TEACHER' && 'ROLE_USER':
 
                     return $this->redirectToRoute('dashboard-teacher');
                     break;
