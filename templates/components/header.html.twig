@@ -2,7 +2,11 @@
             <div class="app-header header sticky">
                 <div class="container-fluid main-container">
                     <div class="d-flex">
+                        
+                        
+                    
                         <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="#"></a>
+                        {% block error %}{% endblock %}
                         <!-- sidebar-toggle-->
                         <a class="logo-horizontal " href="index.html">
                             <img src="{{asset('assets/images/brand/logo.png')}}" class="header-brand-img desktop-logo" alt="logo">
@@ -225,7 +229,13 @@
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
+                
             </div>
+
+          
+           
+            
             <!-- /app-Header -->
