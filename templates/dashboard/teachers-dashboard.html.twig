@@ -50,12 +50,14 @@ Dashboard Professeur
                                     </div>
                                     {# Fin mes élèves #}
                                     {# Session #}
+                                    {% if app.user.session %}
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
                                         <div class="card overflow-hidden">
                                             <div class="card-body">
                                                 <div class="d-flex">
                                                     <div class="mt-2">
                                                         <h6 class="">Ma session</h6>
+                                                        
                                                         <h2 class="mb-0 number-font">{{ app.user.session}}</h2>
                                                     </div>
                                                     <div class="ms-auto">
@@ -70,9 +72,35 @@ Dashboard Professeur
                                                 
                                                 </span>
                                                 
+                                                
+                                                
+                                                    
+                                                
                                             </div>
                                         </div>
                                     </div>
+                                    {% else %}
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="mt-2">
+                                                        <h6 class="">Ma session</h6>
+                                                        
+                                                        <h2 class="mb-0 number-font">Aucune session en cours</h2>
+                                                    </div>
+                                                   
+                                                </div>
+                                              
+                                                
+                                                
+                                                
+                                                    
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                     {# Fin ma session #}
                                     {# Rémunération #}
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
