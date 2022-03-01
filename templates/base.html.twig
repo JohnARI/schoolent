@@ -39,38 +39,44 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 			<img src="../assets/images/loader.svg" class="loader-img" alt="Loader">
 		</div>
 		<!-- /GLOBAL-LOADER -->
+		<div class="page">
+			<div class="page-main">
+			{% block header %}
+				{% embed 'components/header.html.twig' %}
 
-		{% block header %}
-			{% embed 'components/header.html.twig' %}
-			
-				{% block error %}
-					{% for label, messages in app.flashes %}
-		
-						{% for message in messages %}
-						<div id="errorMessage" class="d-flex justify-content-center">
-							<div  class="alert alert-{{ label }}">
-								{{ message }}
-							</div>
-							</div>
+					{% block error %}
+						{% for label, messages in app.flashes %}
+
+							{% for message in messages %}
+								<div id="errorMessage" class="d-flex justify-content-center">
+									<div class="alert alert-{{ label }}">
+										{{ message }}
+									</div>
+								</div>
+
+							{% endfor %}
 
 						{% endfor %}
-					
-					{% endfor %}
-					
-				{% endblock %}
-			{% endembed %}
-		{% endblock %}
 
-		{% block sidebar %}
-			{% include 'components/sidebar.html.twig' %}
-		{% endblock %}
+					{% endblock %}
+				{% endembed %}
+			{% endblock %}
 
-		{% block body %}{% endblock %}
+			{% block sidebar %}
+				{% include 'components/sidebar.html.twig' %}
+			{% endblock %}
 
-		{% block footer %}
-			{% include 'components/footer.html.twig' %}
-		{% endblock %}
+			{% block body %}{% endblock %}
+			</div>
 
+			{% block countryModal %}
+				{% include 'components/country_modal.html.twig' %}
+			{% endblock %}
+
+			{% block footer %}
+				{% include 'components/footer.html.twig' %}
+			{% endblock %}
+		</div>
 	</body>
 	{% block javascripts %}
 		{% include 'components/javascripts.html.twig' %}

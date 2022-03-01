@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\EditProfilType;
 use App\Service\Mailjet;
+use App\Form\EditProfilType;
+use App\Form\EditProfilPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,11 +32,22 @@ class ProfilController extends AbstractController
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
         $editUserForm = $this->createForm(EditProfilType::class, $user);
+        $editUserPasswordForm = $this->createForm(EditProfilPasswordType::class, $user);
         $editUserForm->handleRequest($request);
+        $editUserPasswordForm->handleRequest($request);
 
+        if ($editUserPasswordForm->isSubmitted() && $editUserPasswordForm->isValid()) {
+            $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            
+            $this->addFlash('success', 'Utilisateur mis à jour avec succès');
+            return $this->redirect($request->getUri());
+        }
+
+        
         if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
             $this->addFlash('success', 'Utilisateur mis à jour avec succès');
-            $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             
@@ -44,7 +56,9 @@ class ProfilController extends AbstractController
 
         return $this->render('profil/profil.html.twig', [
 
-            'editUserForm' => $editUserForm->createView()
+            'editUserForm' => $editUserForm->createView(),
+            'editUserPasswordForm' => $editUserPasswordForm->createView(),
+            
         ]);
     }
 }
