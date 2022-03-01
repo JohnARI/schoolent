@@ -152,11 +152,18 @@
 <script src="{{asset('fullcalendar/core/main.js')}}"></script>
 <script src="{{asset('fullcalendar/daygrid/main.js')}}"></script>
 
-{# DataTable #}
+
 <script>
+{/* DATATABLE */}
 	$('#data-table-users ,#data-table-sessions, #data-table-calendars, #data-table-technologies, #data-table-courses, #data-table-admins, #data-table-students').DataTable({
 language: {
 url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json'
 }
 });
+{/* ERRORMESSAGE */}
+let error = document.querySelector('#errorMessage');
+console.log(error);
+ setTimeout(function () {
+$(error).remove();
+}, 5000) 
 </script>

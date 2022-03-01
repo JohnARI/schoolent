@@ -1,118 +1,106 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-Login
+	Login
 {% endblock %}
 {% block header %}{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block footer %}{% endblock %}
 {% block body %}
-    <!-- PAGE -->
-    <div class="login-img">
-    <div class="page">
-        <div class="">
-            <!-- Theme-Layout -->
 
-            <!-- CONTAINER OPEN -->
-            <div class="col col-login mx-auto mt-7">
-                <div class="text-center">
-                    <img src="../assets/images/brand/school.png" class="header-brand-img" alt="">
-                </div>
-            </div>
+	<!-- PAGE -->
+	<div class="login-img">
+		<div class="page">
+			<div class="">
+				<!-- Theme-Layout -->
 
-            <div class="container-login100">
-                <div class="wrap-login100 p-6">
-                    <form class="login100-form validate-form" method="post">
+				<!-- CONTAINER OPEN -->
+					<div class="col col-login mx-auto mt-7"> <div class="text-center">
+						<img src="../assets/images/brand/school.png" class="header-brand-img" alt="">
+					</div>
+				</div>
 
-                        {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}
-                        </div>
-                        {% endif %}
+				<div class="container-login100">
+					<div class="wrap-login100 p-6">
+						<form class="login100-form validate-form" method="post">
 
-                        {% if app.user %}
-                        <div class="mb-3">
-                            Vous êtes connecté avec {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
-                        </div>
-                        {% endif %}
-                        <span class="login100-form-title pb-5">
-                            Connexion
-                        </span>
-                        <div class="panel panel-primary">
-                            <div class="tab-menu-heading">
-                                <div class="tabs-menu1">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs">
-                                        <li class="mx-0"><a href="#tab5" class="active" data-bs-toggle="tab">Email</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="panel-body tabs-menu-body p-0 pt-5">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="tab5">
-                                        <div class="wrap-input100 validate-input input-group"
-                                            data-bs-validate="Valid email is required: ex@abc.xyz">
-                                            <a href="#" class="input-group-text bg-white text-muted">
-                                                <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
-                                            </a>
-                                            <input class="input100 form-control" type="email" placeholder="Email"
-                                                value="{{ last_username }}" name="email" id="inputEmail"
-                                                autocomplete="email" required autofocus>
-                                        </div>
-                                        
-                                        <div class="wrap-input100 validate-input input-group" id="Password-toggle">
-                                            <a href="#" class="input-group-text bg-white text-muted">
-                                                <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
-                                            </a>
-                                            <input class="input100 form-control" type="password" placeholder="Password"
-                                                type="password" name="password" id="inputPassword"
-                                                autocomplete="current-password" required>
-                                        </div>
-                                        <input type="hidden" name="_csrf_token"
-                                                value="{{ csrf_token('authenticate') }}">
-                                        <div class="text-end pt-4">
-                                            <p class="mb-0"><a href="{{path("reset-password")}}"
-                                                    class="text-primary ms-1">Mot de passe oublié ?</a></p>
-                                        </div>
-                                        <div class="container-login100-form-btn">
+							{% if error %}
+								<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}
+								</div>
+							{% endif %}
 
-                                            <button type="submit" class="login100-form-btn btn-primary">
-                                                Connexion
-                                            </button>
-                                        </div>
-                                        <div class="text-center pt-3">
-                                            <p class="text-dark mb-0">Pas encore de compte ?<a href="{{path('contact_new')}}"
-                                                    class="text-primary ms-1">Nous contacter</a></p>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
+							{% if app.user %}
+								<div class="mb-3">
+									Vous êtes connecté avec
+									{{ app.user.username }},
+									<a href="{{ path('app_logout') }}">Se déconnecter</a>
+								</div>
+							{% endif %}
+							<span class="login100-form-title pb-5">
+								Connexion
+							</span>
+							<div class="panel panel-primary">
 
-                    </form>
-                </div>
-            </div>
-            <!-- CONTAINER CLOSED -->
-        </div>
-    </div>
-    <!-- End PAGE -->
+								<div class="panel-body tabs-menu-body p-0 pt-5">
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab5">
+											<div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+												<a href="" class="input-group-text bg-white text-muted">
+													<i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
+												</a>
+												<input class="input100 form-control" type="email" placeholder="Email" value="{{ last_username }}" name="email" id="inputEmail" autocomplete="email" required autofocus>
+											</div>
 
-</div>
-<!-- BACKGROUND-IMAGE CLOSED -->
+											<div class="wrap-input100 validate-input input-group" id="Password-toggle">
+												<a href="" class="input-group-text bg-white text-muted">
+													<i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+												</a>
+												<input class="input100 form-control" type="password" placeholder="Password" type="password" name="password" id="inputPassword" autocomplete="current-password" required>
+											</div>
+											<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+											<div class="d-flex justify-content-between pt-4">
+												<label>
+													<input type="checkbox" name="_remember_me">
+													Se souvenir de moi
+												</label>
 
 
+												<p class="mb-0">
+													<a href="{{path("reset-password")}}" class="text-primary ms-1">Mot de passe oublié ?</a>
+												</p>
+											</div>
+											<div class="container-login100-form-btn">
+
+												<button type="submit" class="login100-form-btn btn-primary">
+													Connexion
+												</button>
+											</div>
+											<div class="text-center pt-3">
+												<p class="text-dark mb-0">Pas encore de compte ?<a href="{{path('contact_new')}}" class="text-primary ms-1">Nous contacter</a>
+												</p>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+				<!-- CONTAINER CLOSED -->
+			</div>
+		</div>
+		<!-- End PAGE -->
+
+	</div>
+	<!-- BACKGROUND-IMAGE CLOSED -->
 
 
-
-{#
-Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-See https://symfony.com/doc/current/security/remember_me.html
-
-<div class="checkbox mb-3">
-    <label>
-        <input type="checkbox" name="_remember_me"> Remember me
-    </label>
-</div>
-#}
+	{#
+	Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+	See https://symfony.com/doc/current/security/remember_me.html
+	
+	
+	#}
 {% endblock %}
