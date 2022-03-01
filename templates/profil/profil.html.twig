@@ -1,278 +1,296 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profile de
-	{{app.user.firstname}}
+{% block title %}Profil de
+{{app.user.firstname}}
 {% endblock %}
 
 {% block body %}
 
 
-	<div class="main-content app-content mt-0">
-		<div
-			class="side-app">
+<div class="main-content app-content mt-0">
+	<div class="side-app">
 
-			<!-- CONTAINER -->
-			<div
-				class="main-container container-fluid">
+		<!-- CONTAINER -->
+		<div class="main-container container-fluid">
 
-				<!-- PAGE-HEADER -->
-				<div class="page-header">
-					<h1 class="page-title">Edit Profile</h1>
-					<div>
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item">
-								<a href="#">Pages</a>
-							</li>
-							<li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
-						</ol>
-					</div>
+			<!-- PAGE-HEADER -->
+			<div class="page-header">
+				<h1 class="page-title">Edit Profile</h1>
+				<div>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="#">Pages</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+					</ol>
 				</div>
-				<!-- PAGE-HEADER END -->
-
-				<!-- ROW-1 OPEN -->
-				<div class="row">
-					<div class="col-xl-4">
-						<div class="card">
-							<div class="card-header">
-								<div class="card-title">Edit Password</div>
-							</div>
-							<div class="card-body">
-								<div class="text-center chat-image mb-5">
-
-
-									{% if app.user.picture %}
-										<a class="" href="profile.html"><img alt="avatar" src="{{ asset('uploads/user/' ~ app.user.picture)}}" class="avatar avatar-xxl chat-profile mb-3 brround"></a>
-									{% elseif app.user.sexe == 0 %}
-										<a class="" href="profile.html"><img alt="avatar" src="{{ asset('uploads/avatar/avatarMen.png')}}" class="avatar avatar-xxl chat-profile mb-3 brround"></a>
-									{% elseif app.user.sexe == 1 %}
-										<a class="" href="profile.html"><img alt="avatar" src="{{ asset('uploads/avatar/avatarWoman.png')}}" class="avatar avatar-xxl chat-profile mb-3 brround"></a>
-									{% endif %}
-
-
-									<div class="main-chat-msg-name">
-										<a href="profile.html">
-											<h5 class="mb-1 text-dark fw-semibold">{{app.user.firstname ~ ' ' ~
-                                            app.user.lastname}}</h5>
-										</a>
-										<p class="text-muted mt-0 mb-0 pt-0 fs-13">{{app.user.role}}</p>
-									</div>
-								</div>
-								{{form_start(editUserForm)}}
-
-								<div class="form-group">
-
-									<div class="wrap-input100 validate-input input-group" id="Password-toggle1">
-										<a href="#" class="input-group-text bg-white text-muted">
-											<i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
-										</a>
-										{{form_widget(editUserForm.password.first)}}
-									</div>
-									<div class="wrap-input100 validate-input input-group" id="Password-toggle1">
-										<a href="#" class="input-group-text bg-white text-muted">
-											<i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
-										</a>
-										{{form_widget(editUserForm.password.second)}}
-									</div>
-
-
-								</div>
-
-							</div>
-							<div class="card-footer text-end">
-								{{form_widget(editUserForm.submitPassword)}}
-							</div>
-						</div>
-						<div class="card panel-theme">
-							<div class="card-header">
-								<div class="float-start">
-									<h3 class="card-title">Contact</h3>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="card-body no-padding">
-								<ul class="list-group no-margin">
-									<li class="list-group-item d-flex ps-3">
-										<div class="social social-profile-buttons me-2">
-											<a class="social-icon text-primary" href="">
-												<i class="fe fe-mail"></i>
-											</a>
-										</div>
-										<span class="my-auto">support@demo.com</span>
-									</li>
-									<li class="list-group-item d-flex ps-3">
-										<div class="social social-profile-buttons me-2">
-											<a class="social-icon text-primary" href="">
-												<i class="fe fe-globe"></i>
-											</a>
-										</div>
-										<span class="my-auto">www.abcd.com</span>
-									</li>
-									<li class="list-group-item d-flex ps-3">
-										<div class="social social-profile-buttons me-2">
-											<a class="social-icon text-primary" href="">
-												<i class="fe fe-phone"></i>
-											</a>
-										</div>
-										<span class="my-auto">+125 5826 3658</span>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-8">
-						<div class="card">
-							<div class="card-header">
-								<h3 class="card-title">Edit Profile</h3>
-							</div>
-							<div class="card-body">
-
-								<div class="form-group">
-									<label for="exampleInputEmail1">Email</label>
-									{{form_widget(editUserForm.email)}}
-								</div>
-								<div class="form-group">
-									<label for="exampleInputnumber">Numéro de téléphone</label>
-									{{form_widget(editUserForm.phone)}}
-								</div>
-
-
-							</div>
-							<div class="card-footer text-end">
-								{{form_widget(editUserForm.submit)}}
-							</div>
-							{{form_end(editUserForm)}}
-						</div>
-						<div class="row">
-							<div class="col-lg-6">
-								<div class="card">
-									<div class="card-header">
-										<div class="card-title">Notifications</div>
-									</div>
-									<div class="card-body">
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Updates Automatically</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Allow Location Map</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Show Contacts</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Show Notfication</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Show Tasks Statistics</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Show Email
-													                                                Notification</span>
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-6">
-								<div class="card">
-									<div class="card-header">
-										<div class="card-title">Privacy and Security</div>
-									</div>
-									<div class="card-body">
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Allow Others to see my
-													                                                profile</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Make my profile
-													                                                Public</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Security Alert</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Passcode and Face ID</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Two Step Verification</span>
-											</label>
-										</div>
-										<div class="form-group mg-b-10">
-											<label class="custom-switch ps-0">
-												<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
-												<span class="custom-switch-indicator me-3"></span>
-												<span class="custom-switch-description mg-l-10">Always Sign In</span>
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header">
-								<div class="card-title">Delete Account</div>
-							</div>
-							<div class="card-body">
-								<p>Its Advisable for you to request your data to be sent to your Email.</p>
-								<label class="custom-control custom-checkbox mb-0">
-									<input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked>
-									<span class="custom-control-label">Yes, Send my data to my Email.</span>
-								</label>
-							</div>
-							<div class="card-footer text-end">
-								<a href="#" class="btn btn-primary my-1">Deactivate</a>
-								<a href="#" class="btn btn-danger my-1">Delete Account</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- ROW-1 CLOSED -->
 			</div>
-			<!--CONTAINER CLOSED -->
+			<!-- PAGE-HEADER END -->
 
+			<!-- ROW-1 OPEN -->
+			<div class="row">
+				<div class="col-xl-4">
+					<div class="card">
+						<div class="card-header">
+							<div class="card-title">Edit Password</div>
+						</div>
+						<div class="card-body">
+							<div class="text-center chat-image mb-5">
+
+
+								{% if app.user.picture %}
+								<a class="" href="profile.html"><img alt="avatar"
+										src="{{ asset('uploads/user/' ~ app.user.picture)}}"
+										class="avatar avatar-xxl chat-profile mb-3 brround"></a>
+								{% elseif app.user.sexe == 0 %}
+								<a class="" href="profile.html"><img alt="avatar"
+										src="{{ asset('uploads/avatar/avatarMen.png')}}"
+										class="avatar avatar-xxl chat-profile mb-3 brround"></a>
+								{% elseif app.user.sexe == 1 %}
+								<a class="" href="profile.html"><img alt="avatar"
+										src="{{ asset('uploads/avatar/avatarWoman.png')}}"
+										class="avatar avatar-xxl chat-profile mb-3 brround"></a>
+								{% endif %}
+
+
+								<div class="main-chat-msg-name">
+									<a href="profile.html">
+										<h5 class="mb-1 text-dark fw-semibold">{{app.user.firstname ~ ' ' ~
+											app.user.lastname}}</h5>
+									</a>
+									<p class="text-muted mt-0 mb-0 pt-0 fs-13">{{app.user.role}}</p>
+								</div>
+							</div>
+							{{form_start(editUserPasswordForm)}}
+							<div class="form-group">
+
+
+								<div class="wrap-input100 validate-input input-group" id="Password-toggle1">
+									<a href="#" class="input-group-text bg-white text-muted">
+										<i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+									</a>
+									{{form_widget(editUserPasswordForm.password.first)}}
+								</div>
+								<div class="wrap-input100 validate-input input-group" id="Password-toggle1">
+									<a href="#" class="input-group-text bg-white text-muted">
+										<i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+									</a>
+									{{form_widget(editUserPasswordForm.password.second)}}
+								</div>
+
+
+							</div>
+
+						</div>
+						<div class="card-footer text-end">
+							{{form_widget(editUserPasswordForm.submit)}}
+						</div>
+					</div>
+					{{form_end(editUserPasswordForm)}}
+					<div class="card panel-theme">
+						<div class="card-header">
+							<div class="float-start">
+								<h3 class="card-title">Contact</h3>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="card-body no-padding">
+							<ul class="list-group no-margin">
+								<li class="list-group-item d-flex ps-3">
+									<div class="social social-profile-buttons me-2">
+										<a class="social-icon text-primary" href="">
+											<i class="fe fe-mail"></i>
+										</a>
+									</div>
+									<span class="my-auto">support@demo.com</span>
+								</li>
+								<li class="list-group-item d-flex ps-3">
+									<div class="social social-profile-buttons me-2">
+										<a class="social-icon text-primary" href="">
+											<i class="fe fe-globe"></i>
+										</a>
+									</div>
+									<span class="my-auto">www.abcd.com</span>
+								</li>
+								<li class="list-group-item d-flex ps-3">
+									<div class="social social-profile-buttons me-2">
+										<a class="social-icon text-primary" href="">
+											<i class="fe fe-phone"></i>
+										</a>
+									</div>
+									<span class="my-auto">+125 5826 3658</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-8">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">Edit Profile</h3>
+						</div>
+						<div class="card-body">
+							{{form_start(editUserForm)}}
+							<div class="form-group">
+								<label for="exampleInputEmail1">Email</label>
+								{{form_widget(editUserForm.email)}}
+							</div>
+							<div class="form-group">
+								<label for="exampleInputnumber">Numéro de téléphone</label>
+								{{form_widget(editUserForm.phone)}}
+							</div>
+
+
+						</div>
+						<div class="card-footer text-end">
+							{{form_widget(editUserForm.submit)}}
+						</div>
+						{{form_end(editUserForm)}}
+					</div>
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">Notifications</div>
+								</div>
+								<div class="card-body">
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input" checked="">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Updates Automatically</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Allow Location Map</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input" checked="">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Show Contacts</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input" checked="">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Show Notfication</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Show Tasks Statistics</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input" checked="">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Show Email
+												Notification</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">Privacy and Security</div>
+								</div>
+								<div class="card-body">
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input" checked="">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Allow Others to see my
+												profile</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Make my profile
+												Public</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Security Alert</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input" checked="">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Passcode and Face ID</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Two Step Verification</span>
+										</label>
+									</div>
+									<div class="form-group mg-b-10">
+										<label class="custom-switch ps-0">
+											<input type="checkbox" name="custom-switch-checkbox"
+												class="custom-switch-input" checked="">
+											<span class="custom-switch-indicator me-3"></span>
+											<span class="custom-switch-description mg-l-10">Always Sign In</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header">
+							<div class="card-title">Delete Account</div>
+						</div>
+						<div class="card-body">
+							<p>Its Advisable for you to request your data to be sent to your Email.</p>
+							<label class="custom-control custom-checkbox mb-0">
+								<input type="checkbox" class="custom-control-input" name="example-checkbox1"
+									value="option1" checked>
+								<span class="custom-control-label">Yes, Send my data to my Email.</span>
+							</label>
+						</div>
+						<div class="card-footer text-end">
+							<a href="#" class="btn btn-primary my-1">Deactivate</a>
+							<a href="#" class="btn btn-danger my-1">Delete Account</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- ROW-1 CLOSED -->
 		</div>
+		<!--CONTAINER CLOSED -->
+
 	</div>
+</div>
 
 
 {% endblock %}

@@ -13,23 +13,28 @@ View all
 		{# Container #}
 		<div class="main-container container-fluid">
 			<div class="col">
+				{# Header #}
+		<div class="page-header">
+			<h1 class="page-title">Administration</h1>
+		</div>
+		{# Fin header #}
 				<div class="card">
-					{# <div class="card-header">
-						<h3 class="card-title">CRUD A FAIRE !!!!</h3>
-					</div> #}
+					{% for message in app.flashes('success') %}
 					<div class="card-header justify-content-center">
-						{% for message in app.flashes('success') %}
+
 						<div class="col-md-10 alert alert alert-success alert-dismissible fade show" role="alert">
 							<div class="d-flex align-items-center justify-content-center">
-								<i class="icon icon-check fs-30 text-success lh-1 my-4 me-3 d-inline-block"></i>{{ message }}
-								
+								<i class="icon icon-check fs-30 text-success lh-1 my-4 me-3 d-inline-block"></i>{{
+								message }}
+
 								<button type="button" class="close" data-dismiss="alert" aria-label="close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
 						</div>
-						{% endfor %}
+
 					</div>
+					{% endfor %}
 					<div class="card-body">
 
 						<div class="panel panel-primary">
@@ -37,25 +42,30 @@ View all
 								<div class="tabs-menu">
 									{# Tabs #}
 									<ul class="nav panel-tabs panel-info">
-										<li class="col-sm-6 col-md-6 col-xl-2">
-											<a href="#users" class="active modal-effect btn shadow-sm d-grid mb-3" data-bs-toggle="tab">
-											<span><i class="fe fe-user me-1"></i>Utilisateurs</span></a>
+										<li>
+											<a href="#users" class="active modal-effect btn shadow-sm d-grid mb-3"
+												data-bs-toggle="tab">
+												<span><i class="fe fe-user me-1"></i>Utilisateurs</span></a>
 										</li>
-										<li class="col-sm-6 col-md-6 col-xl-2">
-											<a href="#sessions" data-bs-toggle="tab" class="modal-effect btn shadow-sm d-grid mb-3">
-											<span><i class="fe fe-calendar me-1"></i>Sessions</span></a>
+										<li>
+											<a href="#sessions" data-bs-toggle="tab"
+												class="modal-effect btn shadow-sm d-grid mb-3">
+												<span><i class="fe fe-calendar me-1"></i>Sessions</span></a>
 										</li>
-										<li class="col-sm-6 col-md-6 col-xl-2">
-											<a href="#calendars" data-bs-toggle="tab" class="modal-effect btn shadow-sm  d-grid mb-3">
-											<span><i class="fe fe-settings me-1"></i>Calendrier</span></a>
+										<li>
+											<a href="#calendars" data-bs-toggle="tab"
+												class="modal-effect btn shadow-sm  d-grid mb-3">
+												<span><i class="fe fe-settings me-1"></i>Calendrier</span></a>
 										</li>
-										<li class="col-sm-6 col-md-6 col-xl-2">
-											<a href="#technologies" data-bs-toggle="tab" class="modal-effect btn shadow-sm  d-grid mb-3">
-											<span><i class="fe fe-bell me-1"></i>Technologies</span></a>
+										<li>
+											<a href="#technologies" data-bs-toggle="tab"
+												class="modal-effect btn shadow-sm  d-grid mb-3">
+												<span><i class="fe fe-bell me-1"></i>Technologies</span></a>
 										</li>
-										<li class="col-sm-6 col-md-6 col-xl-2">
-											<a href="#courses" data-bs-toggle="tab" class="modal-effect btn shadow-sm  d-grid mb-3">
-											<span><i class="fe fe-bell me-1"></i>Cours</span></a>
+										<li>
+											<a href="#courses" data-bs-toggle="tab"
+												class="modal-effect btn shadow-sm  d-grid mb-3">
+												<span><i class="fe fe-bell me-1"></i>Cours</span></a>
 										</li>
 									</ul>
 								</div>
@@ -69,61 +79,66 @@ View all
 										{% embed "components/modal.html.twig" %}
 										{% set modalType = "modal-lg" %}
 										{% set id = "full-user" %}
-										{% block buttonTitle %}Ajouter un utilisateur{% endblock %}
+										{% set buttonTitle = "Ajouter un utilisateur" %}
 										{% block modalTitle %}Ajouter un utilisateur{% endblock %}
-										{% block dashboard %}{% include "administration/admin/add/add_users.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include "administration/admin/add/add_users.html.twig"
+										%}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 
-		
+
 										{% include "administration/admin/view/view_users.html.twig" %}
 									</div>
 									<div class="tab-pane" id="sessions">
-									{# Modal #}
+										{# Modal #}
 										{% embed "components/modal.html.twig" %}
 										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-sessions" %}
-										{% block buttonTitle %}Ajouter une session{% endblock %}
+										{% set buttonTitle = "Ajouter une session" %}
 										{% block modalTitle %}Ajouter une session{% endblock %}
-										{% block dashboard %}{% include "administration/admin/add/add_sessions.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include
+										"administration/admin/add/add_sessions.html.twig" %}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 
 										{% include "administration/admin/view/view_sessions.html.twig" %}
 									</div>
 									{# <div class="tab-pane" id="calendars">
-								
+
 										{% embed "components/modal.html.twig" %}
 										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-calendars" %}
-										{% block buttonTitle %}Ajouter un calendrier{% endblock %}
+										{% set buttonTitle = "Ajouter un calendrier" %}
 										{% block modalTitle %}Ajouter un calendrier{% endblock %}
-										{% block dashboard %}{% include "administration/admin/view/view_calendars.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include
+										"administration/admin/view/view_calendars.html.twig" %}{% endblock %}
 										{% endembed %}
-										
+
 
 									</div> #}
 									<div class="tab-pane" id="technologies">
-									{# Modal #}
+										{# Modal #}
 										{% embed "components/modal.html.twig" %}
 										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-technologies" %}
-										{% block buttonTitle %}Ajouter une technologie{% endblock %}
+										{% set buttonTitle = "Ajouter une technologie" %}
 										{% block modalTitle %}Ajouter une technologie{% endblock %}
-										{% block dashboard %}{% include "administration/admin/add/add_programmingLanguages.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include
+										"administration/admin/add/add_programmingLanguages.html.twig" %}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 
 										{% include "administration/admin/view/view_programmingLanguages.html.twig" %}
 									</div>
 									<div class="tab-pane" id="courses">
-									{# Modal #}
+										{# Modal #}
 										{% embed "components/modal.html.twig" %}
 										{% set modalType = "modal-scrolling" %}
 										{% set id = "full-courses" %}
-										{% block buttonTitle %}Ajouter un cours{% endblock %}
+										{% set buttonTitle = "Ajouter un cours" %}
 										{% block modalTitle %}Ajouter un cours{% endblock %}
-										{% block dashboard %}{% include "administration/admin/add/add_courses.html.twig" %}{% endblock %}
+										{% block dashboard %}{% include "administration/admin/add/add_courses.html.twig"
+										%}{% endblock %}
 										{% endembed %}
 										{# Fin modal #}
 										{% include "administration/admin/view/view_courses.html.twig" %}
