@@ -34,16 +34,17 @@
                 <li class="sub-category">
                     <h3>Utilisateurs</h3>
                 </li>
-
+                {% if app.user.role == 'Administrateur' %}
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-all')}}"><i
-                            class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Espace
+                            class="side-menu__icon fe fe-shield"></i><span class="side-menu__label">Espace
                             administrateur</span></a>
                 </li>
+                {% endif %}
 
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="{{path('contact_new')}}"><i
-                            class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Contact et
+                            class="side-menu__icon fe fe-send"></i><span class="side-menu__label">Contact et
                             messagerie</span></a>
                 </li>
 
@@ -53,7 +54,7 @@
 
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href=""><i
-                            class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Calendrier</span></a>
+                            class="side-menu__icon fe fe-clock"></i><span class="side-menu__label">Calendrier</span></a>
                 </li>
             </ul>
         </div>

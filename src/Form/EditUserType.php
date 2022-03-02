@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Payment;
 use App\Entity\Session;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -58,6 +59,13 @@ class EditUserType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'class' => Session::class,
+            ])
+
+            ->add('payment', EntityType::class, [
+                'required' => true,
+                'label' => 'Rémuneration',
+                'class' => Payment::class,
+                'choice_label' => 'tarification',
             ])
                     // Choix du numéro
             ->add('phone', TelType::class, [
