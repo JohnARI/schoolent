@@ -2,20 +2,31 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
+use App\Repository\UserRepository;
 use App\Repository\CalendarRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Proxies\__CG__\App\Entity\User as EntityUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/calendar")
  */
 class CalendarController extends AbstractController
 {
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+        $this->users = new ArrayCollection();
+    }
     /**
      * @Route("/", name="calendar_index", methods={"GET"})
      */
@@ -36,6 +47,8 @@ class CalendarController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // dd($calendar);
             $entityManager->persist($calendar);
             $entityManager->flush();
 
@@ -51,30 +64,69 @@ class CalendarController extends AbstractController
     /**
      * @Route("/{id}", name="calendar_show", methods={"GET"})
      */
-    public function show(CalendarRepository $calendar): Response
+    public function show(CalendarRepository $calendar, UserRepository $userRepository, $id): Response
     {
-        $events = $calendar->findAll();
 
-        // dd($events);
+        $admins =   $userRepository->findByRole('ROLE_ADMIN');
+        $teachers = $userRepository->findByRole('ROLE_TEACHER');
+        
+        $user = $this->getUser(); 
+        $id_user = $this->getUser('id');
+        
 
-        $booking = [];
-        foreach($events as $event){
+        if ($user->getRoles('ROLE_TEACHER')) {
 
-            $booking[] = [
-            'id' => $event->getId(),
-            'start' => $event->getStart()->format('Y-m-d'),
-            'end' => $event->getEnd()->format('Y-m-d'),
-            'title' => $event->getTitle(),
-            'description' => $event->getDescription(),
-            'session' => $event->getSession(),
-            'backgroundColor' =>$event->getBackgroundColor(),
-            ];
+               
+
+            $events = $calendar->findByTeacherId(['teacher_id'=>$id_user]);
+
+            // dd($events);
+
+            $booking = [];
+            foreach ($events as $event) {
+
+                $booking[] = [
+                    'id' => $event->getId(),
+                    'start' => $event->getStart()->format('Y-m-d'),
+                    'end' => $event->getEnd()->format('Y-m-d'),
+                    'title' => $event->getTitle(),
+                    'description' => $event->getDescription(),
+                    'session' => $event->getSession(),
+                    'backgroundColor' => $event->getBackgroundColor(),
+                ];
+            }
+
+
+            $data = json_encode($booking);
+
+        }
+        
+        if($user->getRoles('ROLE_ADMIN')){
+
+            $events = $calendar->findBy(['id'=>$id]);
+
+            // dd($events);
+
+            $booking = [];
+            foreach ($events as $event) {
+
+                $booking[] = [
+                    'id' => $event->getId(),
+                    'start' => $event->getStart()->format('Y-m-d'),
+                    'end' => $event->getEnd()->format('Y-m-d'),
+                    'title' => $event->getTitle(),
+                    'description' => $event->getDescription(),
+                    'session' => $event->getSession(),
+                    'backgroundColor' => $event->getBackgroundColor(),
+                ];
+            }
+
+
+            $data = json_encode($booking);
+
         }
 
-        $data = json_encode($booking);
-
         return $this->render('calendar/show.html.twig', compact('data'));
-        
     }
 
     /**
@@ -102,7 +154,7 @@ class CalendarController extends AbstractController
      */
     public function delete(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$calendar->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $calendar->getId(), $request->request->get('_token'))) {
             $entityManager->remove($calendar);
             $entityManager->flush();
         }

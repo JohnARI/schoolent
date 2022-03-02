@@ -1,7 +1,7 @@
 {% block programmingLanguages %}
 
 <div class="table-responsive">
-		<table class="table table-bordered text-nowrap border-bottom" id="basic-datatable">
+		<table class="table table-bordered text-nowrap border-bottom" id="data-table-technologies">
 		<thead>
 			<tr>
 				<th class="wd-15p border-bottom-0">Photo</th>
@@ -14,8 +14,17 @@
 		<tbody>
 			{% for programmingLanguage in programmingLanguages %}
 			<tr>
-				<td><img style="height:50px;width:50px;"
+			{% if programmingLanguage.picture %}
+						<td><img style="height:50px;width:50px;"
 						src="{{ asset('uploads/techno/' ~ programmingLanguage.picture)}}" alt=""></td>
+					{% elseif programmingLanguage.sexe == 0 %}
+					<td><img style="height:50px;width:50px;"
+						src="{{ asset('uploads/avatar/avatarMen.png')}}" alt=""></td>
+					{% elseif programmingLanguage.sexe == 1 %}
+					<td><img style="height:50px;width:50px;"
+						src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt=""></td>
+					{% endif %}
+				
 				<td>{{ programmingLanguage.name }}</td>
 
 				{% if app.user and app.user.role == 'Administrateur'%}

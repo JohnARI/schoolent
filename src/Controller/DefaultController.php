@@ -12,19 +12,33 @@ class DefaultController extends AbstractController
 
     /**
      * Dashboard Redirect.
-     * @Route("/")
+     * @Route("/", name="default")
      */
     public function index(): Response
+
     {
+
         if ($this->isGranted('ROLE_USER') == false) {
             return $this->redirectToRoute('login');
-        } else {
-            return $this->redirectToRoute('dashboard');
+        } elseif ($user = $this->getUser()) {
+            $role = $user->getRole();
+            switch ($role) {
+
+                case 'Eleve':
+
+                    return $this->redirectToRoute('dashboard-student');
+                    break;
+
+                    case 'Formateur':
+
+                        return $this->redirectToRoute('dashboard-teacher');
+                        break;
+
+                    case 'Administrateur':
+
+                        return $this->redirectToRoute('dashboard-admin');
+                        break;
+            }
         }
-
-      
-    
-
     }
 }
-

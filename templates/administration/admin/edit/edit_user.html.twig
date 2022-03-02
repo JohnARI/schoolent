@@ -1,106 +1,113 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-Register
+	Modifier un utilisateur
 {% endblock %}
 {% block header %}{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block footer %}{% endblock %}
 {% block body %}
 
-    <!-- BACKGROUND-IMAGE -->
-    <div class="login-img">
+	<!-- BACKGROUND-IMAGE -->
+	<div
+		class="login-img">
 
-        <!-- PAGE -->
-        <div class="page">
-            <div class="">
-                <!-- Theme-Layout -->
+		<!-- PAGE -->
+		<div class="page">
+			<div class="">
+				<!-- Theme-Layout -->
 
-                <!-- CONTAINER OPEN -->
-                <div class="col col-login mx-auto mt-7">
-                    <div class="text-center">
-                        <img src="../assets/images/brand/logo-white.png" class="header-brand-img m-0" alt="">
-                    </div>
-                </div>
-                <div class="container-login100">
-                    <div class="wrap-login100 p-6 row">
-                        <span class="login100-form-title">
-                            Ajouter un utilisateur
-                        </span>
-                        <div class="col">
-                            {{form_start(form)}}
-                            {% for message in app.flashes('contact_success') %}
-                                <div class="col-md-12 alert alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            {% endfor %}
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
-                                <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="mdi mdi-account" aria-hidden="true"></i>
-                                </a>
-                                {{form_widget(form.lastname)}}
-                            </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
-                                <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="mdi mdi-account" aria-hidden="true"></i>
-                                </a>
-                                {{form_widget(form.firstname)}}
-                            </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
-                                <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="zmdi zmdi-email" aria-hidden="true"></i>
-                                </a>
-                                {{form_widget(form.email)}}
-                            </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
-                                <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="zmdi zmdi-phone" aria-hidden="true"></i>
-                                </a>
-                                {{form_widget(form.phone)}}
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="wrap-input100 validate-input input-group" id="Password-toggle">
-                                <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
-                                </a>
-                                {{form_widget(form.password)}}
-                            </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
-                                <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="zmdi zmdi-key" aria-hidden="true"></i>
-                                </a>
-                                {{form_widget(form.roles)}}
-                            </div>
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="">
-                                <a href="#" class="input-group-text bg-white text-muted">
-                                    <i class="zmdi zmdi-male-female" aria-hidden="true"></i>
-                                </a>
-                                {{form_widget(form.sexe)}}
-                            </div>
-            
-                            <div class="wrap-input100 validate-input input-group" data-bs-validate="z">
-                                {{form_widget(form.picture)}}
-                            </div>
-            
-            
-                        </div>
-                        <div class="container-login100-form-btn">
-                            {{form_widget(form.submit)}}
-                        </div>
-                        {{form_end(form)}}
-            
-                    </div>
-                </div>
-                <!-- CONTAINER CLOSED -->
-            </div>
-        </div>
-        <!-- END PAGE -->
+				<!-- CONTAINER OPEN -->
+					<div class="col col-login mx-auto mt-7"> <div class="text-center">
+						<img src="../assets/images/brand/logo-white.png" class="header-brand-img m-0" alt="">
+					</div>
+				</div>
+				<div class="container-login100">
+					<div class="wrap-login100 p-6 row">
+						<span class="login100-form-title">
+							Ajouter un utilisateur
+						</span>
+						<div class="col">
+							{{form_start(form)}}
+							{% for message in app.flashes('contact_success') %}
+								<div class="col-md-12 alert alert alert-success alert-dismissible fade show" role="alert">
+									{{ message }}
+									<button type="button" class="close" data-dismiss="alert" aria-label="close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+							{% endfor %}
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+								<a href="#" class="input-group-text bg-white text-muted">
+									<i class="mdi mdi-account" aria-hidden="true"></i>
+								</a>
+								{{form_widget(form.lastname)}}
+							</div>
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+								<a href="#" class="input-group-text bg-white text-muted">
+									<i class="mdi mdi-account" aria-hidden="true"></i>
+								</a>
+								{{form_widget(form.firstname)}}
+							</div>
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
+								<a href="#" class="input-group-text bg-white text-muted">
+									<i class="zmdi zmdi-email" aria-hidden="true"></i>
+								</a>
+								{{form_widget(form.email)}}
+							</div>
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+								<a href="#" class="input-group-text bg-white text-muted">
+									<i class="zmdi zmdi-phone" aria-hidden="true"></i>
+								</a>
+								{{form_widget(form.phone)}}
+							</div>
+						</div>
+						<div class="col">
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+								<a href="#" class="input-group-text bg-white text-muted">
+									<i class="fa fa-users" aria-hidden="true"></i>
+								</a>
+								{{form_widget(form.session)}}
+							</div>
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+								<a href="#" class="input-group-text bg-white text-muted">
+									<i class="zmdi zmdi-key" aria-hidden="true"></i>
+								</a>
+								{{form_widget(form.roles)}}
+							</div>
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+								<a href="#" class="input-group-text bg-white text-muted">
+									<i class="zmdi zmdi-male-female" aria-hidden="true"></i>
+								</a>
+								{{form_widget(form.sexe)}}
+							</div>
 
-    </div>
-    <!-- BACKGROUND-IMAGE CLOSED -->
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+					<figure class="input-group-text bg-white text-muted">
+						<i class="zmdi zmdi-money" aria-hidden="true"></i>
+					</figure>
+					{{form_widget(form.payment)}}
+				</div>
 
-    {% endblock %}
+							<div class="wrap-input100 validate-input input-group" data-bs-validate="z">
+								{{form_widget(form.picture)}}
+							</div>
+
+
+						</div>
+						<div class="container-login100-form-btn">
+							{{form_widget(form.submit)}}
+						</div>
+						{{form_end(form)}}
+
+					</div>
+				</div>
+				<!-- CONTAINER CLOSED -->
+			</div>
+		</div>
+		<!-- END PAGE -->
+
+	</div>
+	<!-- BACKGROUND-IMAGE CLOSED -->
+
+{% endblock %}

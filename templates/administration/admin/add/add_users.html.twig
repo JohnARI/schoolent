@@ -16,48 +16,55 @@
 					</div>
 				{% endfor %}
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-					<a href="#" class="input-group-text bg-white text-muted">
-						<i class="mdi mdi-account" aria-hidden="true"></i>
-					</a>
+					<figure class="input-group-text bg-white text-muted">
+						<i class="mdi mdi-account-outline" aria-hidden="true"></i>
+					</figure>
 					{{form_widget(formUser.lastname)}}
 				</div>
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-					<a href="#" class="input-group-text bg-white text-muted">
+					<figure class="input-group-text bg-white text-muted">
 						<i class="mdi mdi-account" aria-hidden="true"></i>
-					</a>
+					</figure>
 					{{form_widget(formUser.firstname)}}
 				</div>
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="Valid email is required: ex@abc.xyz">
-					<a href="#" class="input-group-text bg-white text-muted">
+					<figure class="input-group-text bg-white text-muted">
 						<i class="zmdi zmdi-email" aria-hidden="true"></i>
-					</a>
+					</figure>
 					{{form_widget(formUser.email)}}
 				</div>
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-					<a href="#" class="input-group-text bg-white text-muted">
+					<figure class="input-group-text bg-white text-muted">
 						<i class="zmdi zmdi-phone" aria-hidden="true"></i>
-					</a>
+					</figure>
 					{{form_widget(formUser.phone)}}
 				</div>
 			</div>
 			<div class="col">
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-					<a href="#" class="input-group-text bg-white text-muted">
+					<figure class="input-group-text bg-white text-muted">
 						<i class="zmdi zmdi-key" aria-hidden="true"></i>
-					</a>
+					</figure>
 					{{form_widget(formUser.roles)}}
 				</div>
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-					<a href="#" class="input-group-text bg-white text-muted">
-						<i class="zmdi zmdi-male-female" aria-hidden="true"></i>
-					</a>
+					<figure class="input-group-text bg-white text-muted">
+						<i class="fa faintersex-" aria-hidden="true"></i>
+					</figure>
 					{{form_widget(formUser.sexe)}}
 				</div>
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-					<a href="#" class="input-group-text bg-white text-muted">
+					<figure class="input-group-text bg-white text-muted">
 						<i class="fa fa-users" aria-hidden="true"></i>
-					</a>
+					</figure>
 					{{form_widget(formUser.session)}}
+				</div>
+
+				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+					<figure class="input-group-text bg-white text-muted">
+						<i class="zmdi zmdi-money" aria-hidden="true"></i>
+					</figure>
+					{{form_widget(formUser.payment)}}
 				</div>
 
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="z">

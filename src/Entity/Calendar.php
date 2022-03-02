@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CalendarRepository;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity(repositoryClass=CalendarRepository::class)
@@ -45,12 +46,6 @@ class Calendar
      */
     private $end;
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
-     */
-    private $teacher;
-
     /**
      * @ORM\Column(type="string", length=100)
      */
@@ -67,9 +62,14 @@ class Calendar
     private $BackgroundColor;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $name;
+    private $teacher_name;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $teacher_id;
 
     public function __construct()
     {
@@ -142,18 +142,6 @@ class Calendar
         return $this;
     }
 
-    public function getTeacher(): ?User
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacher(?User $teacher, string $teachers): self
-    {
-        $this->teacher = $teacher;
-
-     
-        return $this;
-    }
 
     public function getTitle(): ?string
     {
@@ -191,18 +179,27 @@ class Calendar
         return $this;
     }
 
-    public function getName(): ?string
+    public function getTeacherName(): ?string
     {
-        return $this->name;
+        return $this->teacher_name;
     }
 
-    public function setName(string $name): self
+    public function setTeacherName(string $teacher_name): self
     {
-        $this->name = $name;
+        $this->teacher_name = $teacher_name;
 
         return $this;
     }
 
-   
-    
+    public function getTeacherId(): ?int
+    {
+        return $this->teacher_id;
+    }
+
+    public function setTeacherId(int $teacher_id): self
+    {
+        $this->teacher_id = $teacher_id;
+
+        return $this;
+    }
 }
