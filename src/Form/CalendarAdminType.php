@@ -20,7 +20,7 @@ class CalendarAdminType extends AbstractType
     {
         $builder
         ->add('start', DateType::class, [
-            'label' => 'Dapart',
+            'label' => 'Depart',
             'widget' => 'single_text'
         ])
         ->add('end', DateType::class, [
@@ -43,6 +43,7 @@ class CalendarAdminType extends AbstractType
         ->add('teacher', EntityType::class, [
             'label' => 'Formateur',
             'class' => User::class,
+            'multiple' => false,
             'choice_label' => 'fullname',
         ])
         ->add('submit', SubmitType::class, [

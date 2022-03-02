@@ -52,7 +52,7 @@ class Calendar
     private $teacher;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $title;
 
@@ -62,7 +62,7 @@ class Calendar
     private $Description;
 
     /**
-     * @ORM\Column(type="string", length=7)
+     * @ORM\Column(type="string", length=7, nullable=true)
      */
     private $BackgroundColor;
 
@@ -147,7 +147,7 @@ class Calendar
         return $this->teacher;
     }
 
-    public function setTeacher(?User $teacher, string $teachers): self
+    public function setTeacher(?User $teacher): self
     {
         $this->teacher = $teacher;
 
