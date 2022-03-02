@@ -27,7 +27,7 @@ class CalendarRepository extends ServiceEntityRepository
      * @throws Exception
      * @throws \Doctrine\DBAL\Exception
      */
-    public function findCalendarForMonth(): array
+    public function findDateMonth(): array
     {
         $date = new \DateTime();
         return $this->createQueryBuilder('c')

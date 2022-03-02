@@ -22,6 +22,7 @@ use App\Form\AddProgrammingLanguageType;
 use App\Form\CalendarAdminType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EditProgrammingLanguageType;
+use App\Notification\NotificationService;
 use App\Service\FileUploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,12 +37,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AdministrationController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet, FileUploader $fileUploader)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet, FileUploader $fileUploader, NotificationService $notification)
     {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
         $this->mailjet = $mailjet;
         $this->fileUploader = $fileUploader;
+        $this->notification= $notification;
+
     }
 
 
@@ -267,8 +270,8 @@ class AdministrationController extends AbstractController
         // suppression de la photo user
         if($fileName != null) {
             $filesystem = new Filesystem();
-            $projectDir = $this->getParameter('kernel.project_dir');
-            $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
+            $imageDir = $this->getParameter('kernel.project_dir');
+            $filesystem->remove($imageDir . '/public/uploads/user/' . $fileName);
         }
 
         $this->entityManager->remove($user);
@@ -359,6 +362,8 @@ class AdministrationController extends AbstractController
 
             $this->entityManager->persist($calendar[0]);
             $this->entityManager->flush();
+
+            $this->notification->sendNotification("Votre intervention a été mofifiée : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
             $this->mailjet->sendEmail($teacher, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Numero de session " . $nameSession . ".");
 
             foreach ($students as $student) { 

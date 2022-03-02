@@ -36,7 +36,7 @@ class DashboardController extends AbstractController
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
         $studentsWoman = $this->entityManager->getRepository(User::class)->findBySexeStudent(1);
         $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeStudent(0);
-        $calendarByMonth = $this->entityManager->getRepository(Calendar::class)->findCalendarForMonth();
+        $dateByMonth = $this->entityManager->getRepository(Calendar::class)->findDateMonth();
 
         // $calendarByMonth = json_encode($calendarByMonth);
   
@@ -53,7 +53,7 @@ class DashboardController extends AbstractController
             'sessions' => $sessions,
             'studentsWoman' => $studentsWoman,
             'studentsMan' => $studentsMan,
-            'calendarByMonth' => $calendarByMonth
+            'dateByMonth' => $dateByMonth
         ]);
     }
 
@@ -76,11 +76,11 @@ class DashboardController extends AbstractController
     public function showAdmin($role = 'ROLE_ADMIN'): Response
     {
 
-        $users = $this->entityManager->getRepository(User::class)->findByRole($role);
+        $admins = $this->entityManager->getRepository(User::class)->findByRole($role);
 
 
         return $this->render("administration/admin/view/view_admins.html.twig", [
-            'users' => $users,
+            'admins' => $admins,
         ]);
     }
 

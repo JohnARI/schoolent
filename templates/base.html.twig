@@ -69,4 +69,15 @@ integrity="sha256-YicH/8aE660iEnJtgll3vT54dJApy3XkYmqNfGVFEzA=" crossorigin="ano
 {% include 'components/javascripts.html.twig' %}
 {% endblock %}
 
+{% block javascripts_option %}
+{% endblock %}
+
+<script>
+	$(".delete-notif").click(function(e)){
+		e.preventDefault();
+	}
+
+</script>
+
+
 </html>

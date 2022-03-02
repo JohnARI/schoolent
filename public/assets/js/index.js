@@ -229,6 +229,7 @@
             show: false
         }
     });
+    
     /*chart-donut*/
     var chart = c3.generate({
         bindto: '#chart-donut', // id of chart wrapper

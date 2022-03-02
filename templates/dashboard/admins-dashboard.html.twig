@@ -4,6 +4,165 @@
 Dashboard admin
 {% endblock %}
 
+{% block javascripts_option %}
+<script>
+
+/*chart-month-bar*/
+
+var chart = c3.generate({
+    bindto: '#chart-monthly', // id of chart wrapper
+    
+    data: {
+        
+        columns: [
+            // each columns data
+        ['data1',{% for data in dateByMonth %}
+            {{ data.total }},
+            {% endfor %}
+        ] 
+        ],
+        type: 'bar', // default type of chart
+        colors: {
+            data1: '#0786F9'
+        },
+        names: {
+            // name of each serie
+            'data1': 'Jours'
+        }
+    },
+    axis: {
+        rotated: false,
+        x: {
+            type: 'category',
+            // name of each category
+            categories: [{% for data in dateByMonth %}
+                        {% set trans_month_hash = { 
+                            "January":"Janvier", "February":"Février", "March":"Mars",  
+                            "April":"Avril", "May":"Mai", "June":"Juin", "July":"Juillet",
+                            "August":"Aout", "September":"Septembre", "October": "Octobre", "December":"Decembre"
+                            } 
+                        %}
+                        "{{ trans_month_hash[data.0.start | date('F')] }}",
+                        {% endfor %}
+                    ]
+        }, 
+    },
+    bar: {
+        width: 100,
+    },
+    legend: {
+        show: false, //hide legend
+    },
+    
+    padding: {
+        bottom: 0,
+        top: 0
+    },
+});
+
+
+/*chart-sexe-bar*/
+
+$(document).ready(function() {
+
+    columnColors = ['#FA4FB9', '#145DF7'];
+
+    function setColumnBarColors(colors, chartContainer) {
+
+        $('#' + chartContainer + ' .c3-chart-bars .c3-shape').each(function(index) {
+          this.style.cssText += 'fill: ' + colors[index] + ' !important; stroke: ' + colors[index] + '; !important';
+        });
+
+        $('#' + chartContainer + ' .c3-chart-texts .c3-text').each(function(index) {
+          this.style.cssText += 'fill: ' + colors[index] + ' !important;';
+        });
+    }
+
+    var chart = c3.generate({
+            bindto: '#chart-sexe-bar', // id of chart wrapper
+            
+            data: {
+                
+                columns: [
+                    // each columns data
+                ['data1', {{ studentsWoman | length }}, {{ studentsMan | length }}]
+            ],
+                type: 'bar', // default type of chart
+                colors: {
+                    data1: '#7799E1',
+                },
+                names: {
+                    // name of each serie
+                    'data1': 'Etudiants'
+                }
+            },
+            axis: {
+                rotated: false,
+                x: {
+                    type: 'category',
+                    // name of each category
+                    categories: ['Femme', 'Homme']
+                },
+                y: {show:false} 
+            },
+            bar: {
+                width: {
+                    ratio : 0.25
+                }
+            },
+            
+            legend: {
+                show: false, //hide legend
+            },
+            
+            padding: {
+                bottom: 0,
+                top: 0
+            },
+        });
+
+    setColumnBarColors(columnColors, 'chart-sexe-bar');
+
+      // Color turns to original when window is resized
+      // To handle that
+    $(window).resize(function() {
+    setColumnBarColors(columnColors, 'chart-sexe-bar');
+    });
+});
+
+
+/*chart-sexe-donut*/
+    var chart = c3.generate({
+        bindto: '#chart-sexe-donut', // id of chart wrapper
+        data: {
+            columns: [
+                // each columns data
+                ['data1', {{ studentsWoman | length }} ],
+                ['data2', {{ studentsMan | length }}],
+            ],
+            type: 'donut', // default type of chart
+            colors: {
+                data1: '#FA4FB9',
+                data2: '#145DF7',
+            },
+            names: {
+                // name of each serie
+                'data1': 'Femme',
+                'data2': 'Homme',
+            }
+        },
+        axis: {},
+        legend: {
+            show: true, //hide legend
+        },
+        padding: {
+            bottom: 0,
+            top: 0
+        },
+    });
+
+</script>
+{% endblock %}
 
 
 {% block body %}
@@ -275,7 +434,7 @@ Dashboard admin
                             <div class="col-lg-4 col-md-12">
                                 <div class="card" id="chart-sexe">
                                     <div class="card-header">
-                                        <h3 class="card-title">Etudiants par genre</h3>
+                                        <h3 class="card-title">Etudiants par genre.</h3>
                                     </div>
                                     <div class="card-body">
                                         <div id="chart-sexe-bar" class="chartsh"></div> 
@@ -294,6 +453,7 @@ Dashboard admin
 
 
 {% endblock %}
+
 
 
 

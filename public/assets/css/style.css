@@ -15559,12 +15559,11 @@ a.icon:hover {
     }
 
     .pulse {
-        top: 5px !important;
+        top: -8px !important;
     }
 
     .pulse-danger {
-        top: 5px !important;
-        right: 5px !important;
+	top: -8px;
     }
 }
 
@@ -17666,14 +17665,30 @@ html.fullscreenie {
 }
 
 .pulse-danger {
-    display: block;
+    /* display: block;
     position: absolute;
     top: 7px;
     right: 8px;
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #ee335e;
+    background: #ee335e; */
+    position: relative;
+	top: -8px;
+	left: 1px;
+	font-size: 11px;
+	background-color: #E439A1;
+	border-radius: 50px;
+	height: 16px;
+	line-height: 16px;
+	color: #fff;
+	min-width: 16px;
+	text-align: center;
+	padding: 0 5px;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -5px;
+	margin-right: -5px;
 }
 
 .pulse-danger:before {
@@ -17745,18 +17760,25 @@ html.fullscreenie {
 }
 
 .pulse {
-    display: block;
-    position: absolute;
-    top: 7px;
-    right: 8px;
-    left: 22px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #22c03c;
+    position: relative;
+	top: -8px;
+	left: 1px;
+	font-size: 11px;
+	background-color: #22c03c;
+	border-radius: 50px;
+	height: 16px;
+	line-height: 16px;
+	color: #fff;
+	min-width: 16px;
+	text-align: center;
+	padding: 0 5px;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -5px;
+	margin-right: -5px;
 }
 
-.pulse:before {
+/* .pulse:before {
     content: "";
     top: -4px;
     right: -4px;
@@ -17768,7 +17790,7 @@ html.fullscreenie {
     cursor: pointer;
     box-shadow: 0 0 0 rgba(34, 192, 60, 0.9);
     animation: pulse 1s linear infinite;
-}
+} */
 
 .progress.info1 {
     background: #fed5db;
@@ -19652,12 +19674,11 @@ table.table-bordered.dataTable thead tr:first-child td {
     }
 
     .pulse {
-        top: 2px;
+        top: -8px;
     }
 
     .pulse-danger {
-        top: 2px;
-        right: 2px;
+	top: -8px;
     }
 }
 
@@ -24483,16 +24504,13 @@ ul.timeline>li:before {
     padding: 3px 6px;
 }
 
-.header .dropdown-menu .dropdown-item {
-    border-bottom: 1px solid #e9edf4;
-}
-
 .header .dropdown-menu .dropdown-item:last-child {
     border-bottom: 0;
 }
 
 .header .dropdown-item {
     color: #282f53;
+    border-radius: 8px;
 }
 
 .header .notifications-menu h5,

@@ -1,3 +1,4 @@
+    
             <!-- app-Header -->
             <div class="app-header header sticky">
                 <div class="container-fluid main-container">
@@ -67,61 +68,56 @@
                                             </a>
                                         </div>
                                         <!-- FULL-SCREEN -->
-                                        <div class="dropdown  d-flex notifications">
-                                            <a class="nav-link icon" data-bs-toggle="dropdown"><i class="fe fe-bell"></i><span class=" pulse"></span>
-												</a>
+                                        <div class="dropdown d-flex notifications">
+                                            <a class="nav-link icon" data-bs-toggle="dropdown">
+                                                <i class="fe fe-bell"></i>
+                                                {% if app.user.notifications | length > 0 %}
+                                                    <span class="pulse-danger">{{ app.user.notifications | length }}</span>
+                                                {% elseif app.user.notifications | length == 0 %}
+                                                    <span class="pulse">{{ app.user.notifications | length }}</span>
+                                                {% endif %}
+											</a>
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                                 <div class="drop-heading border-bottom">
                                                     <div class="d-flex">
-                                                        <h6 class="mt-1 mb-0 fs-16 fw-semibold text-dark">Notifications</h6>
+                                                        <h6 class="mt-1 mb-0 fs-16 fw-semibold text-dark">
+                                                            <span class="text-danger">{{ app.user.notifications | length }}</span> Notifications
+                                                        </h6>
                                                     </div>
                                                 </div>
                                                 <div class="notifications-menu">
-                                                    <a class="dropdown-item d-flex" href="notify-list.html">
-                                                        <div class="me-3 notifyimg  bg-primary brround box-shadow-primary">
-                                                            <i class="fe fe-mail"></i>
-                                                        </div>
-                                                        <div class="mt-1">
-                                                            <h5 class="notification-label mb-1">New Application received</h5>
-                                                            <span class="notification-subtext">3 days ago</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item d-flex" href="notify-list.html">
-                                                        <div class="me-3 notifyimg  bg-secondary brround box-shadow-secondary">
-                                                            <i class="fe fe-check-circle"></i>
-                                                        </div>
-                                                        <div class="mt-1">
-                                                            <h5 class="notification-label mb-1">Project has been approved</h5>
-                                                            <span class="notification-subtext">2 hours ago</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item d-flex" href="notify-list.html">
-                                                        <div class="me-3 notifyimg  bg-success brround box-shadow-success">
-                                                            <i class="fe fe-shopping-cart"></i>
-                                                        </div>
-                                                        <div class="mt-1">
-                                                            <h5 class="notification-label mb-1">Your Product Delivered</h5>
-                                                            <span class="notification-subtext">30 min ago</span>
-                                                        </div>
-                                                    </a>
-                                                    <a class="dropdown-item d-flex" href="notify-list.html">
-                                                        <div class="me-3 notifyimg bg-pink brround box-shadow-pink">
-                                                            <i class="fe fe-user-plus"></i>
-                                                        </div>
-                                                        <div class="mt-1">
-                                                            <h5 class="notification-label mb-1">Friend Requests</h5>
-                                                            <span class="notification-subtext">1 day ago</span>
-                                                        </div>
-                                                    </a>
+                                                {% for notification in app.user.notifications %}
+                                                    <div class="d-flex">
+                                                        <a class="dropdown-item d-flex" href="notify-list.html">
+                                                            <div class="me-3 notifyimg  bg-secondary brround box-shadow-secondary">
+                                                                <i class="fe fe-check-circle"></i>
+                                                            </div>
+                                                            <div class="mt-1">
+                                                                <h5 class="notification-label mb-1">{{ notification.message }}</h5>
+                                                                <span class="notification-subtext">{{ notification.createdAt | date('d/M/y') }}</span>
+                                                            </div>
+                                                        </a>
+                                                        <a class="delete-notif" href="{{ path('notification_delete', { 'id':notification.id }) }}"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                   
+                                                    {# <a href="" class="col-md-2" >
+                                                        <i class="mt-4 close-notif fa fa-trash"></i>
+                                                    </a> #}
+                                                {% endfor %}
                                                 </div>
                                                 <div class="dropdown-divider m-0"></div>
-                                                <a href="notify-list.html" class="dropdown-item text-center p-3 text-muted">View all Notification</a>
+                                                <div class="d-flex p-2">
+                                                    {% if app.user.notifications | length > 0 %}
+                                                        <a href="" class="dropdown-item text-center text-white m-3 bg-success-gradient fs-14 fw-semibold">Voir tout</a>
+                                                        <a href="{{ path('notification_delete_all') }}" class="dropdown-item text-center text-white m-3 bg-danger-gradient fs-14 fw-semibold">Tout supprimer</a>
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
                                         <!-- NOTIFICATIONS -->
                                         <div class="dropdown  d-flex message">
                                             <a class="nav-link icon text-center" data-bs-toggle="dropdown">
-                                                <i class="fe fe-message-square"></i><span class="pulse-danger"></span>
+                                                <i class="fe fe-message-square"></i><span class="pulse">0</span>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                                 <div class="drop-heading border-bottom">
