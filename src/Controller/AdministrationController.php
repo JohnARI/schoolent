@@ -43,8 +43,7 @@ class AdministrationController extends AbstractController
         $this->passwordHasher = $passwordHasher;
         $this->mailjet = $mailjet;
         $this->fileUploader = $fileUploader;
-        $this->notification= $notification;
-
+        $this->notification = $notification;
     }
 
 
@@ -63,7 +62,7 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator, string $projectDir): Response
+    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator, string $projectDir, UserRepository $userRepository): Response
     {
         // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
@@ -71,6 +70,7 @@ class AdministrationController extends AbstractController
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
         $calendars = $this->entityManager->getRepository(Calendar::class)->findAll();
         $courses = $this->entityManager->getRepository(Course::class)->findAll();
+        $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
 
         // Fin tableaux
 
@@ -81,14 +81,14 @@ class AdministrationController extends AbstractController
         $formUser->handleRequest($request);
 
         if ($formUser->isSubmitted() && $formUser->isValid()) {
-            
+
             // Ajout de photo
             $file = $formUser->get('picture')->getData();
-            
+
             if ($file) {
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
-            } 
+            }
             $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
@@ -120,7 +120,7 @@ class AdministrationController extends AbstractController
             return $this->redirect($request->getUri());
         }
         // Fin add techno
-        
+
         // Add session
 
         $session = new Session();
@@ -168,12 +168,13 @@ class AdministrationController extends AbstractController
 
             $this->notification->sendNotification("Vous avez un nouveau cours de: " . $programmingLanguages . "du" . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
 
-            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
-            if($student){
-            foreach ($students as $student) { 
-                $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours ." " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
-            }}
-            
+            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . "intervention sur " . $cours . " " . $programmingLanguages . " Numero de session " . $nameSession . ".");
+            if ($student) {
+                foreach ($students as $student) {
+                    $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours . " " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+                }
+            }
+
             $this->addFlash('success', 'Une nouvelle a été date ajoutée !');
             return $this->redirect($request->getUri());
         }
@@ -211,6 +212,7 @@ class AdministrationController extends AbstractController
             'formCourse' => $formCourse->createView(),
             'formTechno' => $formTechno->createView(),
             'courses' => $courses,
+            'students' => $students,
         ]);
     }
 
@@ -250,14 +252,14 @@ class AdministrationController extends AbstractController
     }
 
     /**
-    * @Route("/admin/delete/user/{id}", name="delete_user")
-    */
+     * @Route("/admin/delete/user/{id}", name="delete_user")
+     */
     public function deleteUser(User $user, Request $request, string $projectDir): Response
     {
         $fileName = $user->getPicture();
 
         // suppression de la photo user
-        if($fileName) {
+        if ($fileName) {
             $filesystem = new Filesystem();
             $imageDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($imageDir . '/public/uploads/user/' . $fileName);
@@ -309,7 +311,7 @@ class AdministrationController extends AbstractController
         $fileName = $technologie->getPicture();
 
         // suppression de la photo technologie
-        if($fileName) {
+        if ($fileName) {
             $filesystem = new Filesystem();
             $projectDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($projectDir . '/public/uploads/techno/' . $fileName);
@@ -355,10 +357,10 @@ class AdministrationController extends AbstractController
             $this->notification->sendNotification("Votre intervention a été mofifiée : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
             $this->mailjet->sendEmail($teacher, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Numero de session " . $nameSession . ".");
 
-            foreach ($students as $student) { 
+            foreach ($students as $student) {
                 $this->mailjet->sendEmail($student, "votre convocation vient d'étre à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
             }
-           
+
             $this->addFlash('success', 'La date a été modifiée !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
@@ -418,12 +420,12 @@ class AdministrationController extends AbstractController
     {
         $fileName = $course->getLink();
         // suppression de la photo technologie
-        if($fileName) {
+        if ($fileName) {
             $filesystem = new Filesystem();
             $projectDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($projectDir . '/public/uploads/cours/' . $fileName);
         }
-        
+
         $this->entityManager->remove($course);
         $this->entityManager->flush();
 

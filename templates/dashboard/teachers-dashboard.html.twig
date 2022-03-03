@@ -1,127 +1,143 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-Dashboard Professeur
+	Dashboard Professeur
 {% endblock %}
 
 {% block body %}
 
-{#
-<!--app-content open--> #}
-<div class="main-content app-content mt-0">
-    <div class="side-app">
+	{#
+	<!--app-content open--> #}
+	<div class="main-content app-content mt-0">
+		<div
+			class="side-app">
 
-        {#
-        <!-- CONTAINER --> #}
-        <div class="main-container container-fluid">
+			{#
+			        <!-- CONTAINER --> #}
+			<div
+				class="main-container container-fluid">
 
-            {# Header #}
-            <div class="page-header">
-                <h1 class="page-title">Professeur</h1>
-            </div>
-            {# Fin header #}
-
-            {# Tableaux et modal #}
-            <div class="row">
-                <div class="col">
-                    <div class="row">
-                        {# Mes élèves #}
-                        <div class="col">
-                            <div class="card overflow-hidden">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div class="mt-2 me-4">
-                                            <h6 class="">Mes élèves</h6>
-                                            <h2 class="mb-0 number-font">{{ students | length }}</h2>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <div class="chart-wrapper mt-1">
-                                                <canvas id="saleschart" class="h-8 w-9 chart-dropshadow"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="text-muted fs-13"><i class="fa fa-users  text-secondary"></i>
-                                        {% embed "components/modal.html.twig" %}
-                                        {% set modalType = "modal-xl effect-flip-verticalshow" %}
-                                        {% set id = "full-students" %}
-                                        {% block button %}<button href="" class="text-secondary" data-bs-toggle="modal"
-                                            data-bs-target="#{{id}}">Voir tous mes élèves</button>{% endblock %}
-                                        {% block modalTitle %}Tous les étudiants{% endblock %}
-                                        {% block dashboard %}{% include
+				{# Header #}
+				<div class="page-header">
+					<h1 class="page-title">Professeur</h1>
+				</div>
+				{# Fin header #}
+				{% block teacher %}
+					{# Tableaux et modal #}
+					<div class="row">
+						<div class="col">
+							<div
+								class="row">
+								{# Mes élèves #}
+								<div class="col">
+									<div class="card overflow-hidden">
+										<div class="card-body">
+											<div class="d-flex">
+												<div class="mt-2 me-4">
+													<h6 class="">Mes élèves</h6>
+													<h2 class="mb-0 number-font">{{ varStud | length }}</h2>
+												</div>
+												<div class="ms-auto">
+													<div class="chart-wrapper mt-1">
+														<canvas id="saleschart" class="h-8 w-9 chart-dropshadow"></canvas>
+													</div>
+												</div>
+											</div>
+											<span class="text-muted fs-13">
+												<i class="fa fa-users  text-secondary"></i>
+												{% embed "components/modal.html.twig" %}
+													{% set modalType = "modal-xl effect-flip-verticalshow" %}
+													{% set id = "full-students" %}
+													{% block button %}
+														<button href="" class="text-secondary" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous mes élèves</button>
+													{% endblock %}
+													{% block modalTitle %}Tous les étudiants
+													{% endblock %}
+													{% block dashboard %}
+														{% include
                                         "/administration/admin/view/view_students.html.twig" %}
-                                        {% endblock %}
-                                        {% endembed %}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        {# Fin mes élèves #}
-                        {# Session #}
-                        {% if app.user.session %}
-                        <div class="col">
-                            <div class="card overflow-hidden">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div class="mt-2">
-                                            <h6 class="">Ma session</h6>
-                                            <h2 class="mb-0 number-font">{{ app.user.session}}</h2>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <div class="chart-wrapper mt-1">
-                                                <canvas id="costchart" class="h-8 w-9 chart-dropshadow"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="text-muted fs-13">
-                                        <p><i class="fa fa-address-card text-cyan"></i> du <strong>{{
-                                                app.user.session.startSession | date("d/m/Y")}}</strong> au <strong>{{
-                                                app.user.session.endSession | date("d/m/Y")}}</strong></p>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="col">
-                            <div class="card overflow-hidden">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div class="mt-2">
-                                            <h6 class="">Ma session</h6>
-                                            <h2 class="mb-0 number-font">Aucune session en cours</h2>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {# Fin ma session #}
-                        {# Rémunération #}
-                        <div class="col">
-                            <div class="card overflow-hidden">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div class="mt-2 me-4">
-                                            <h6 class="">Rémunération</h6>
-                                            {% if app.user.payment %}
-                                            <h2 class="mb-0 number-font">{{app.user.payment}} €/jour</h2>
-                                            {% else %}
-                                            <h2 class="mb-0 number-font"> 0€/jour</h2>
-                                            {% endif %}
-                                        </div>
+													{% endblock %}
+												{% endembed %}
+											</span>
+										</div>
+									</div>
+								</div>
+								{# Fin mes élèves #}
+								{# Session #}
+								{% if app.user.session %}
+									<div class="col">
+										<div class="card overflow-hidden">
+											<div class="card-body">
+												<div class="d-flex">
+													<div class="mt-2">
+														<h6 class="">Ma session</h6>
+														<h2 class="mb-0 number-font">{{ app.user.session}}</h2>
+													</div>
+													<div class="ms-auto">
+														<div class="chart-wrapper mt-1">
+															<canvas id="costchart" class="h-8 w-9 chart-dropshadow"></canvas>
+														</div>
+													</div>
+												</div>
+												<span class="text-muted fs-13">
+													<p>
+														<i class="fa fa-address-card text-cyan"></i>
+														du
+														<strong>{{
+                                                app.user.session.startSession | date("d/m/Y")}}</strong>
+														au
+														<strong>{{
+                                                app.user.session.endSession | date("d/m/Y")}}</strong>
+													</p>
+												</span>
+											</div>
+										</div>
+									</div>
+								{% else %}
+									<div class="col">
+										<div class="card overflow-hidden">
+											<div class="card-body">
+												<div class="d-flex">
+													<div class="mt-2">
+														<h6 class="">Ma session</h6>
+														<h2 class="mb-0 number-font">Aucune session en cours</h2>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endif %}
+								{# Fin ma session #}
+								{# Rémunération #}
+								<div class="col">
+									<div class="card overflow-hidden">
+										<div class="card-body">
+											<div class="d-flex">
+												<div class="mt-2 me-4">
+													<h6 class="">Rémunération</h6>
+													{% if app.user.payment %}
+														<h2 class="mb-0 number-font">{{app.user.payment}}
+															€/jour</h2>
+													{% else %}
+														<h2 class="mb-0 number-font">
+															0€/jour</h2>
+													{% endif %}
+												</div>
 
 
-                                    </div>
-                                </div>
-                            </div>
-                            {# Fin rémunération #}
-                        </div>
-                    </div>
-                </div>
-                {# Fin tableaux et modal #}
+											</div>
+										</div>
+									</div>
+									{# Fin rémunération #}
+								</div>
+							</div>
+						</div>
+						{# Fin tableaux et modal #}
+					{% endblock %}
 
-            </div>
-        </div>
-    </div>
-</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {% endblock %}
