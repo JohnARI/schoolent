@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Calendar_test
+{% endblock %}
+
+{% block header %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+<body>
+				<div class="card-body">
+					<div id='calendar2'></div>
+				</div>
+
+
+</body>			
+
+<script>
+
+window.onload = () => {
+
+
+    var calendarEl = document.getElementById('calendar2');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+
+        defaultView: 'month',
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true, // display business hours
+        editable: true,
+        selectable: true,
+        selectMirror: true,
+        droppable: true, // this allows things to be dropped onto the calendar
+        select: function(arg) {
+            var title = prompt('Event Title:');
+			var teacherName = prompt('Teacher Name:');
+			var description = prompt('description');
+            if (title) {
+                calendar.addEvent({
+
+                    title: title,
+                    start: arg.start,
+                    end: arg.end,
+                    allDay: arg.allDay,
+					teacherName: teacherName,
+					description: description
+					
+                })
+				
+            }
+            calendar.unselect()
+        },
+        eventClick: function(arg) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                arg.event.remove()
+            }
+        },
+        editable: true,
+        dayMaxEvents: true, // allow "more" link when too many events
+        events: [
+	{% for calendar in calendar %}
+      {
+          title:'{{calendar.title}} avec {{calendar.teacherName}}',
+          start: '{{calendar.start |date('Y-m-d H:i:s')}}',
+          end: '{{calendar.end |date('Y-m-d H:i:s')}}'
+        
+      }, 
+        {% endfor %}
+	
+	]
+
+		
+    })
+
+		calendar.on('eventAdd', (e) => {
+				let url = '/api/edit'
+				let donnees = {
+				"title": e.event.title,
+				"start": e.event.start,
+				"end": e.event.end,
+				"description": e.event.extendedProps.description,
+				"teacherName" : e.event.extendedProps.teacherName,
+				"teacherId" : 10,
+				"backgroundColor": '0080ff'
+
+
+				}
+
+
+				let xhr = new XMLHttpRequest
+
+				xhr.open("PUT", url, true)
+				xhr.send(JSON.stringify(donnees))
+
+				
+
+            })
+
+	
+
+    calendar.render();
+
+				calendar.on('eventChange', (e) => {
+				let url = `/api/${
+				18
+				}/edit`
+				let donnees = {
+				"title": e.event.title,
+				"start": e.event.start,
+				"end": e.event.end,
+				"description": e.event.extendedProps.description,
+				"backgroundColor": e.event.backgroundColor
+
+
+				}
+
+
+				let xhr = new XMLHttpRequest
+
+				xhr.open("PUT", url)
+				xhr.send(JSON.stringify(donnees))
+
+			
+				}) 
+}
+
+
+</script>
+{% endblock %}
