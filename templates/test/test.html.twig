@@ -9,6 +9,8 @@
 {% block footer %}{% endblock %}
 
 {% block body %}
+
+
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card">
@@ -104,12 +106,13 @@
 						</div>
 						<div class="col-md-12 col-xl-9">
 							<span class="text-center" style="display:none" id="btn-supp">
-								<a href="{{path('calendar_delete', {'id':2})}}" class="btn btn-danger btn-sm">Supprimer</a>
+								<a href="{{ path('calendar_delete', {'id': 1, 'token': csrf_token('delete')}) }}" class="btn btn-danger btn-sm" onclick="envoyerId()" id="myDiv" >Supprimer</a>
 							</span>
 							<div id='calendar2'></div>
 						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 		<div class="col-md-12">
@@ -145,18 +148,36 @@ let calendar = new FullCalendar.Calendar(calendarElt, {
 				},
 				events: {{ data|raw }},
 				editable: true,
-				selectable: true,
 				eventResizableFromStart: true,
-				eventClick: function(event) {
-				
+				eventClick: function(info) {
+
+						{# alert('Event: ' + info.event.title);
+    					alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+    					alert('View: ' + info.view.type); #}
 								
 
 						document.querySelector('#btn-supp').style.display="block";
 
-						window.monId = 2;
+						localStorage.setItem("monId",info.event.id);
 
-						alert(monId);
+						event_id = localStorage.getItem("monId");
+
+
+						alert(event_id);
+
+						
+
+						document.querySelector('#myDiv').getAttribute('href');
+    					document.querySelector('#myDiv').href = "{{ path('calendar_delete', {'id': 1, 'token': csrf_token('delete')}) }}";
 				
+				},
+
+				dateClick: function(info) {
+						alert('Clicked on: ' + info.dateStr);
+						alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+						alert('Current view: ' + info.view.type);
+						// change the day's background color just for fun
+					
 				}
 				})
 
@@ -180,9 +201,13 @@ let calendar = new FullCalendar.Calendar(calendarElt, {
 				xhr.open("PUT", url)
 				xhr.send(JSON.stringify(donnees))
 
-				})
+			
+				}) 
 
 				calendar.render()
 
 				}
+
+
+		
 </script>{% endblock %}

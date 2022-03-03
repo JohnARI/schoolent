@@ -37,16 +37,16 @@
                                 <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-contact')}}"><i class="side-menu__icon fe fe-user-check"></i><span class="side-menu__label">Contacts et messages</span></a>
                             </li>
                                     
-                            <li class="sub-category">
+                            {# <li class="sub-category">
                                 <h3>Planifications</h3>
                             </li>
-                            <li class="slide">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="#"><i class="side-menu__icon fe fe-calendar"></i><span class="side-menu__label">Calendriers</span></a>
-                            </li>
+                            {# <li class="slide">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="{{path('calendar_index')}}"><i class="side-menu__icon fe fe-calendar"></i><span class="side-menu__label">Calendriers</span></a>
+                            </li> #}
                                     
-                            <li class="sub-category">
+                            {# <li class="sub-category">
                                 <h3>Ecole</h3>
-                            </li>
+                            </li> #} 
 
 				<li class="sub-category">
 					<h3>Utilisateurs</h3>
@@ -98,7 +98,7 @@
 					</li>
 				{% else %}
 					<li class="slide">
-						<a class="side-menu__item" data-bs-toggle="slide" href="{{path('calendar_show', {'id':app.calendar.id})}}">
+						<a class="side-menu__item" data-bs-toggle="slide" href="{{path('calendar_index')}}">
 							<i class="side-menu__icon fe fe-calendar"></i>
 							<span class="side-menu__label">Calendriers</span>
 						</a>

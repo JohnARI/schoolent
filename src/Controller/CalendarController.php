@@ -7,6 +7,8 @@ use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\UserRepository;
 use App\Repository\CalendarRepository;
+use DateInterval;
+use DatePeriod;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class CalendarController extends AbstractController
 {
+
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -37,31 +40,100 @@ class CalendarController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route("/view", name="calendar_view", methods={"GET"})
+     */
+    public function view(): Response
+    {
+        return $this->render('calendar/new.html.twig');
+    }
+
+
     /**
      * @Route("/new", name="calendar_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, CalendarRepository $calendarRepository): Response
     {
+        
         $calendar = new Calendar();
         $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
+        $user = $this->getUser(); 
+        $id_user = $this->getUser('id');
+
+        $events = $calendarRepository->findBy(['teacher_id'=>$id_user]);
+
+        foreach($events as $event){
+
+            $start = $event->getStart();
+            $end = $event->getEnd();
+        }
+      
+        $interval = DateInterval::createFromDateString('1 day');
+        $daterange = new DatePeriod($start,$interval,$end);
+        $start_date = $form['start']->getData();
+        $end_date = $form['end']->getData();
+       
+
+        // dd($daterange);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // dd($calendar);
+           
+
+            // $start_date = $events->getStart();
+            // $end_date = $calendarRepository->getEnd();
+           
+
+           
+            // dd($start_date);
+           
+
+        if($start_date < $start && $end_date < $start || $start_date > $end && $end_date > $end ){
+
+               
+            
             $entityManager->persist($calendar);
-            $entityManager->flush();
+             $entityManager->flush();
 
-            $this->addFlash('message_succès', 'Votre évènement a bien été enrégistré');
+             $this->addFlash('message_succès', 'Votre évènement a bien été enrégistré');
 
-            return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
+             return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
+
+               
+
+
+
+
+
+         }else{
+            
+    
+            
+        
+
+             $this->addFlash('message_error', 'Les dates sélectionnées contienent déjà un évènememnt');
+
+
+             return $this->renderForm('calendar/_form.html.twig', [
+                'calendar' => $calendar,
+                'form' => $form,
+            ]);
+
+         }
+
         }
 
         return $this->renderForm('calendar/_form.html.twig', [
             'calendar' => $calendar,
             'form' => $form,
         ]);
+        
     }
+
+
 
     /**
      * @Route("/{id}", name="calendar_show", methods={"GET"})
@@ -101,8 +173,12 @@ class CalendarController extends AbstractController
 
             $data = json_encode($booking);
 
+            
+
         } else {
-            $events = $calendar->findBy(['id'=>$id]);
+
+
+            $events = $calendar->findBy(['teacher_id'=>$id]);
 
             // dd($events);
 
@@ -153,27 +229,18 @@ class CalendarController extends AbstractController
      */
     public function delete(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
     {
-            
-        $event = $calendar->getId(2);
-        
-        $entityManager->remove($event);
-        $entityManager->flush();
+    
 
-        return $this->redirectToRoute('test.html.twig');
+        if ($this->isCsrfTokenValid('delete' . $calendar->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($calendar);
+            $entityManager->flush();
+        }
+
+        
+
+        return $this->redirectToRoute('test');
     }
 
 
-    // /**
-    //  * @Route("/delete/{id}", name="calendar_delete_event", methods={"POST"})
-    //  */
-    // public function deleteEven(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
-    // {
-
-       
-
-    //     $entityManager->remove($calendar);
-    //     $entityManager->flush();
-
-    //     return $this->redirectToRoute('test.html.twig');
-    // }
+    
 }

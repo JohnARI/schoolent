@@ -153,4 +153,16 @@ class CalendarRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /*
+    public function findByNot($fiel, $value): ?Calendar
+    {
+      $qb = $this->createQueryBuilder('c');
+    $qb->where($qb->expr()->not($qb->expr()->eq('c.'.$field, '?indispobible')));
+    $qb->setParameter(1, $value);
+
+    return $qb->getQuery()
+        ->getResult();
+    }
+    */
 }

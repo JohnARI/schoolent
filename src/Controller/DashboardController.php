@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Session;
+use App\Entity\Calendar;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,7 @@ class DashboardController extends AbstractController
      */
     public function admin(): Response
     {
+        $calendar = $this->entityManager->getRepository(Calendar::class)->findAll();
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
@@ -45,6 +47,7 @@ class DashboardController extends AbstractController
             'sessions' => $sessions,
             'studentsWoman' => $studentsWoman,
             'studentsMan' => $studentsMan,
+            'calendar'=> $calendar,
         ]);
     }
 
