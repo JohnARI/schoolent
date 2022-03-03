@@ -15,6 +15,22 @@
 					<div id='calendar2'></div>
 				</div>
 
+		<div id='popup' style='position:fixed; top:30%; left:50%; background-color:lightGray; z-index:1000; color:black; display: none; '>
+    <form name="teacherName" method='POST' action='' >
+    
+    <label for="Teacher">Choose a Teacher:</label>
+       <select id="monTeacher">
+            <option>Teacher1</option>
+            <option>Teacher2</option>
+            <option>Teacher3</option>
+            <option>Teacher4</option>
+       </select>
+
+        <button type='submit' name='valider' value='valider'>Valider</button>
+    </form>
+ 
+</div>
+
 
 </body>			
 
@@ -41,9 +57,24 @@ window.onload = () => {
         droppable: true, // this allows things to be dropped onto the calendar
         select: function(arg) {
             var title = prompt('Event Title:');
-			var teacherName = prompt('Teacher Name:');
-			var description = prompt('description');
-            if (title) {
+			var description = prompt('description:');
+            if(title && description){
+                document.querySelector('#popup').style.display="block";
+
+               /**Retourne la valeur du select selectId*/
+                        function getSelectValue(selectId)
+                        {
+                            /**On récupère l'élement html <select>*/
+                            var selectElmt = document.getElementById(selectId);
+                            /**
+                            selectElmt.options correspond au tableau des balises <option> du select
+                            selectElmt.selectedIndex correspond à l'index du tableau options qui est actuellement sélectionné
+                            */
+                            return selectElmt.options[selectElmt.selectedIndex].value;
+                        }
+                
+				var teacherName = getSelectValue('monTeacher');
+
                 calendar.addEvent({
 
                     title: title,
@@ -56,6 +87,7 @@ window.onload = () => {
                 })
 				
             }
+            
             calendar.unselect()
         },
         eventClick: function(arg) {
@@ -70,7 +102,8 @@ window.onload = () => {
       {
           title:'{{calendar.title}} avec {{calendar.teacherName}}',
           start: '{{calendar.start |date('Y-m-d H:i:s')}}',
-          end: '{{calendar.end |date('Y-m-d H:i:s')}}'
+          end: '{{calendar.end |date('Y-m-d H:i:s')}}',
+          backgroundColor: '{{calendar.backgroundColor}}'
         
       }, 
         {% endfor %}
@@ -89,7 +122,7 @@ window.onload = () => {
 				"description": e.event.extendedProps.description,
 				"teacherName" : e.event.extendedProps.teacherName,
 				"teacherId" : 10,
-				"backgroundColor": '0080ff'
+				"backgroundColor": '#0080ff'
 
 
 				}
