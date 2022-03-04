@@ -7,8 +7,6 @@ use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\UserRepository;
 use App\Repository\CalendarRepository;
-use DateInterval;
-use DatePeriod;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +21,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class CalendarController extends AbstractController
 {
-
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -40,100 +37,29 @@ class CalendarController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @Route("/view", name="calendar_view", methods={"GET"})
-     */
-    public function view(): Response
-    {
-        return $this->render('calendar/new.html.twig');
-    }
-
-
     /**
      * @Route("/new", name="calendar_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager, CalendarRepository $calendarRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        
         $calendar = new Calendar();
         $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
-        $user = $this->getUser(); 
-        $id_user = $this->getUser('id');
-
-        $events = $calendarRepository->findBy(['teacher_id'=>$id_user]);
-
-        foreach($events as $event){
-
-            $start = $event->getStart();
-            $end = $event->getEnd();
-        }
-      
-        $interval = DateInterval::createFromDateString('1 day');
-        // $daterange = new DatePeriod($start,$interval,$end);
-        $start_date = $form['start']->getData();
-        $end_date = $form['end']->getData();
-       
-
-        // dd($daterange);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-           
-
-            // $start_date = $events->getStart();
-            // $end_date = $calendarRepository->getEnd();
-           
-
-           
-            // dd($start_date);
-           
-
-        if($start_date < $start && $end_date < $start || $start_date > $end && $end_date > $end ){
-
-               
-            
+            // dd($calendar);
             $entityManager->persist($calendar);
-             $entityManager->flush();
+            $entityManager->flush();
 
-             $this->addFlash('message_succès', 'Votre évènement a bien été enrégistré');
-
-             return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
-
-               
-
-
-
-
-
-         }else{
-            
-    
-            
-        
-
-             $this->addFlash('message_error', 'Les dates sélectionnées contienent déjà un évènememnt');
-
-
-             return $this->renderForm('calendar/_form.html.twig', [
-                'calendar' => $calendar,
-                'form' => $form,
-            ]);
-
-         }
-
+            return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('calendar/_form.html.twig', [
             'calendar' => $calendar,
             'form' => $form,
         ]);
-        
     }
-
-
 
     /**
      * @Route("/{id}", name="calendar_show", methods={"GET"})
@@ -148,11 +74,11 @@ class CalendarController extends AbstractController
         $id_user = $this->getUser('id');
         
 
-        if ($this->isGranted('ROLE_TEACHER')) {
+        if ($user->getRoles('ROLE_TEACHER')) {
 
                
-            
-            $events = $calendar->findBy(['teacher_id'=>$id_user]);
+
+            $events = $calendar->findByTeacherId(['teacher_id'=>$id_user]);
 
             // dd($events);
 
@@ -167,20 +93,17 @@ class CalendarController extends AbstractController
                     'description' => $event->getDescription(),
                     'session' => $event->getSession(),
                     'backgroundColor' => $event->getBackgroundColor(),
-                    
                 ];
             }
 
-            // dd($booking);
 
             $data = json_encode($booking);
 
-            
+        }
+        
+        if($user->getRoles('ROLE_ADMIN')){
 
-        } else {
-
-
-            $events = $calendar->findBy(['teacher_id'=>$id]);
+            $events = $calendar->findBy(['id'=>$id]);
 
             // dd($events);
 
@@ -231,18 +154,11 @@ class CalendarController extends AbstractController
      */
     public function delete(Request $request, Calendar $calendar, EntityManagerInterface $entityManager): Response
     {
-    
-
         if ($this->isCsrfTokenValid('delete' . $calendar->getId(), $request->request->get('_token'))) {
             $entityManager->remove($calendar);
             $entityManager->flush();
         }
 
-        
-
-        return $this->redirectToRoute('test');
+        return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
     }
-
-
-    
 }

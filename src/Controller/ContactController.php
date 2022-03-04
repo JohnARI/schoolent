@@ -57,8 +57,8 @@ class ContactController extends AbstractController
 
         if ($form->isSubmitted() && !$form->isValid()) {
 
-            
-        }$this->addFlash('contact_error', 'Votre formulaire contient des erreurs, Merci de bien vouloir les rectifier');
+            $this->addFlash('contact_error', 'Votre formulaire contient des erreurs, Merci de bien vouloir les rectifier');
+        }
 
         return $this->renderForm('contact/_form.html.twig', [
             'contact' => $contact,
