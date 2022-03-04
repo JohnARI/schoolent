@@ -17,18 +17,14 @@
 
 		<div id='popup' style='position:fixed; top:30%; left:50%; background-color:lightGray; z-index:1000; color:black; display: none; '>
     <form name="teacherName" method='POST' action='' >
-    
     <label for="Teacher">Choose a Teacher:</label>
        <select id="monTeacher">
-            <option>Teacher1</option>
-            <option>Teacher2</option>
-            <option>Teacher3</option>
-            <option>Teacher4</option>
+            {% for calendar in calendrier %}
+            <option>{{calendar.teacherName}}</option>
+            {% endfor %}
        </select>
-
         <button type='submit' name='valider' value='valider'>Valider</button>
     </form>
- 
 </div>
 
 
@@ -58,8 +54,8 @@ window.onload = () => {
         select: function(arg) {
             var title = prompt('Event Title:');
 			var description = prompt('description:');
-            if(title && description){
-                document.querySelector('#popup').style.display="block";
+
+            document.querySelector('#popup').style.display="block";
 
                /**Retourne la valeur du select selectId*/
                         function getSelectValue(selectId)
@@ -72,8 +68,11 @@ window.onload = () => {
                             */
                             return selectElmt.options[selectElmt.selectedIndex].value;
                         }
+
+            var myform = document.froms['teacherName'];
+			var teacherName = getSelectValue('monTeacher');
+            if(title && description && teacherName){
                 
-				var teacherName = getSelectValue('monTeacher');
 
                 calendar.addEvent({
 
@@ -121,7 +120,7 @@ window.onload = () => {
 				"end": e.event.end,
 				"description": e.event.extendedProps.description,
 				"teacherName" : e.event.extendedProps.teacherName,
-				"teacherId" : 10,
+				"teacherId" :" ",
 				"backgroundColor": '#0080ff'
 
 

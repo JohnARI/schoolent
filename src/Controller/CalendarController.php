@@ -167,9 +167,11 @@ class CalendarController extends AbstractController
                     'description' => $event->getDescription(),
                     'session' => $event->getSession(),
                     'backgroundColor' => $event->getBackgroundColor(),
+                    
                 ];
             }
 
+            // dd($booking);
 
             $data = json_encode($booking);
 

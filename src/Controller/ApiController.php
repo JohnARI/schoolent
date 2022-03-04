@@ -15,6 +15,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiController extends AbstractController
 {
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+        
+    }
+
     /**
      * @Route("/api/{id}/edit", name="api_events_edit", methods={"PUT"})
      */
@@ -83,8 +90,17 @@ class ApiController extends AbstractController
 
         $users = $user->findAll();
 
-        // dd($users);
+        $info = [];
+            foreach ($user as $users) {
 
+                $info[] = [
+                    'id' => $users->getId(),
+                    'fullname' => $users->getFullname(),
+                ];
+            }
+
+
+        
         //On Récupère les données
         $donnees = json_decode($request->getContent());
 
@@ -118,7 +134,28 @@ class ApiController extends AbstractController
             $calendar->setEnd(new DateTime($donnees->end));
             $calendar->setDescription($donnees->description);
             $calendar->setTeacherName($donnees->teacherName);
-            $calendar->setTeacherId($donnees->teacherId);
+
+            $moninfo = 'Test10 Testo';
+
+            if($moninfo){
+
+    
+
+                    $query = $this->entityManager->createQuery(
+                        'SELECT u.id
+                            FROM App:User u
+                        WHERE u.fullname = :fullname
+                        ORDER BY u.id ASC'
+                    )->setParameter('fullname', $moninfo);
+
+                    $id = $query->getSingleScalarResult();
+
+                    settype($id, 'integer');
+            
+                
+
+                $calendar->setTeacherId($id);
+            }
 
                 if( $donnees->title == 'HTML'|| $donnees->title == 'html'|| $donnees->title == 'Html'){
                     $calendar->setBackgroundColor('#EE1581');
