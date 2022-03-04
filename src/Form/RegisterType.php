@@ -50,20 +50,23 @@ class RegisterType extends AbstractType
             ])
                     // Choix du numéro
             ->add('phone', TelType::class, [
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Téléphone',
                     'class' => 'input100 form-control',
                 ],
+                
             ])
                     // Choice session
             ->add('session', EntityType::class, [
                 'attr' => [
                     'class' => 'input100 form-control',
+                    
                 ],
                 'placeholder' => 'Session',
                 'required' => false,
-                // 'multiple' => false,
-                // 'expanded' => false,
+                'multiple' => false,
+                'expanded' => false,
                 'class' => Session::class,
             ])
       
@@ -71,10 +74,13 @@ class RegisterType extends AbstractType
             ->add('sexe', ChoiceType::class, [
                 'attr' => [
                     'class' => 'input100 form-control',
+                    
                 ],
                 'placeholder' => 'Sexe',
+                
                 'required' => true,
                 'multiple' => false,
+                'expanded' => false,
                 'choices'  => [
                     'Homme' => 0,
                     'Femme' => 1,
@@ -84,8 +90,9 @@ class RegisterType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'attr' => [
                     'class' => 'input100 form-control',
+                    
                 ],
-                'label' => 'Roles',
+                'placeholder' => 'Rôle',
                 'required' => true,
                 'multiple' => false,
                 'expanded' => false,
@@ -97,6 +104,7 @@ class RegisterType extends AbstractType
             ])
 
             ->add('payment', EntityType::class, [
+                'required' => true,
                 'label' => 'Rémuneration',
                 'class' => Payment::class,
                 'choice_label' => 'tarification',

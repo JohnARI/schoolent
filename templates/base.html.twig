@@ -23,7 +23,7 @@
 		<link href='fullcalendar/daygrid/main.css' rel='stylesheet'/>
 		<link href='fullcalendar/list/main.css' rel='stylesheet'/>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		
 		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
 		{% block stylesheets %}
 			{% include 'components/stylesheets.html.twig' %}
@@ -39,28 +39,58 @@
 			<img src="../assets/images/loader.svg" class="loader-img" alt="Loader">
 		</div>
 		<!-- /GLOBAL-LOADER -->
+		<div class="page">
+			<div class="page-main">
+			{% block header %}
+				{% embed 'components/header.html.twig' %}
 
-		{% block header %}
-			{% include 'components/header.html.twig' %}
-		{% endblock %}
+					{% block error %}
+						{% for label, messages in app.flashes %}
 
-		{% block sidebar %}
-			{% include 'components/sidebar.html.twig' %}
-		{% endblock %}
+							{% for message in messages %}
+								<div id="errorMessage" class="d-flex justify-content-center">
+									<div class="alert alert-{{ label }}">
+										{{ message }}
+									</div>
+								</div>
 
-		{% block body %}{% endblock %}
+							{% endfor %}
 
-		{% block footer %}
-			{% include 'components/footer.html.twig' %}
-		{% endblock %}
+						{% endfor %}
 
+					{% endblock %}
+				{% endembed %}
+			{% endblock %}
+
+			{% block sidebar %}
+				{% include 'components/sidebar.html.twig' %}
+			{% endblock %}
+
+			{% block body %}{% endblock %}
+			</div>
+
+			{% block countryModal %}
+				{% include 'components/country_modal.html.twig' %}
+			{% endblock %}
+
+			{% block footer %}
+				{% include 'components/footer.html.twig' %}
+			{% endblock %}
+		</div>
 	</body>
-	<script src='fullcalendar/core/main.js'></script>
-	<script src='fullcalendar/list/main.js'></script>
-	<script src='fullcalendar/daygrid/main.js'></script>
-
 	{% block javascripts %}
 		{% include 'components/javascripts.html.twig' %}
 	{% endblock %}
+
+{% block javascripts_option %}
+{% endblock %}
+
+<script>
+	$(".delete-notif").click(function(e)){
+		e.preventDefault();
+	}
+
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 </html>

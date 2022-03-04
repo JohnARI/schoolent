@@ -260,7 +260,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFullName(): ?string
     {
-        return $this->getLastName() . ' ' . $this->getFirstName();
+        return $this->getFirstName() . ' ' . $this->getLastname();
     }
 
     public function setFullName(string $fullname): self

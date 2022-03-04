@@ -1,59 +1,64 @@
 {% block students %}
 
-<div class="table-responsive">
-	<table class="table table-bordered text-nowrap border-bottom" id="data-table-students">
-		<thead>
-			<tr>
-				<th class="wd-15p border-bottom-0">Photo</th>
-				<th class="wd-15p border-bottom-0">Prénom</th>
-				<th class="wd-15p border-bottom-0">Nom</th>
-				<th class="wd-20p border-bottom-0">Role</th>
-				<th class="wd-10p border-bottom-0">Email</th>
-				<th class="wd-10p border-bottom-0">Session</th>
-                {% if app.user and app.user.role == 'Administrateur'%}
-				<th class="wd-10p border-bottom-0">Actions</th>
-                {% endif %}
-
-			</tr>
-		</thead>
-		<tbody>
-			{% for student in students %}
+	<div class="table-responsive">
+		<table class="table table-bordered text-nowrap border-bottom" id="data-table-students">
+			<thead>
 				<tr>
-				{% if student.picture %}
-						<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
-					{% elseif student.sexe == 0 %}
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
-					{% elseif student.sexe == 1 %}
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+					<th class="wd-15p border-bottom-0">Photo</th>
+					<th class="wd-15p border-bottom-0">Prénom</th>
+					<th class="wd-15p border-bottom-0">Nom</th>
+					<th class="wd-20p border-bottom-0">Role</th>
+					<th class="wd-10p border-bottom-0">Email</th>
+					<th class="wd-10p border-bottom-0">Session</th>
+					{% if app.user and app.user.role == 'Administrateur'%}
+						<th class="wd-10p border-bottom-0">Actions</th>
 					{% endif %}
-					<td>{{ student.firstname }}</td>
-					<td>{{ student.lastname }}</td>
-					<td>{{ student.role }}</td>
-					<td>{{ student.email }}</td>
-					<td>{{ student.session }}</td>
 
-                    {% if app.user and app.user.role == 'Administrateur'%}
-					<td name="bstable-actions">
-						<div
-							class="btn-list">
-							{# Bouton modifier #}
-							<a href="{{path('edit_user',{'id': student.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
-								<span class="fe fe-edit"></span>
-							</a>
-							{# fin bouton modifier #}
-
-							{# Bouton supprimer #}
-							<a href="{{path('delete_user',{'id': student.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
-								<span class="fe fe-trash-2"></span>
-							</a>
-							{# fin bouton supprimer #}
-						</div>
-					</td>
-                    {% endif %}
 				</tr>
-			{% endfor %}
+			</thead>
+			<tbody>
+				{% if app.user.role == 'Administrateur' %}
+					{% set let = myStudents %}
+				{% else %}
+					{% set let = students %}
+				{% endif %}
+				{% for student in let %}
+					<tr>
+						{% if student.picture %}
+							<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
+						{% elseif student.sexe == 0 %}
+							<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
+						{% elseif student.sexe == 1 %}
+							<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+						{% endif %}
+						<td>{{ student.firstname }}</td>
+						<td>{{ student.lastname }}</td>
+						<td>{{ student.role }}</td>
+						<td>{{ student.email }}</td>
+						<td>{{ student.session }}</td>
 
-		</tbody>
-	</table>
-</div>
+						{% if app.user and app.user.role == 'Administrateur'%}
+							<td name="bstable-actions">
+								<div
+									class="btn-list">
+									{# Bouton modifier #}
+									<a href="{{path('edit_user',{'id': student.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+										<span class="fe fe-edit"></span>
+									</a>
+									{# fin bouton modifier #}
+
+									{# Bouton supprimer #}
+									<a href="{{path('delete_user',{'id': student.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger">
+										<span class="fe fe-trash-2"></span>
+									</a>
+									{# fin bouton supprimer #}
+								</div>
+							</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+
+			</tbody>
+		</table>
+	</div>
 {% endblock %}

@@ -3,6 +3,7 @@
 .c3 svg {
     font: 10px sans-serif;
     -webkit-tap-highlight-color: transparent;
+    position: absolute;
     font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -11,6 +12,10 @@
     fill: none;
     stroke: rgba(0, 40, 100, 0.12);
 }
+  
+/* tspan {
+stroke: rgb(55, 56, 55) !important;
+} */
 
 .c3 text {
     -webkit-user-select: none;
@@ -29,7 +34,7 @@
 }
 
 .c3-chart-arc path {
-    stroke: #fff;
+    stroke: rgb(255, 255, 255);
 }
 
 .c3-chart-arc text {
@@ -44,9 +49,21 @@
 /*-- Grid --*/
 
 .c3-grid line {
-    stroke: #f0f0f0;
+    stroke: none;
 }
 
+/* #chart-sexe-bar .c3-axis-y .tick {
+    visibility: hidden;
+} */
+
+#chart-sexe-bar .c3-axis-x {
+    margin-bottom: 5px;
+}
+
+/* #chart-sexe {
+background-color: #a5e8ec;
+
+} */
 .c3-grid text {
     fill: #aaa;
 }

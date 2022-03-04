@@ -54,12 +54,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-    public function findBySexeUser(string $role, $sexe )
+    public function findBySexeStudent($sexe)
     {
         return $this->createQueryBuilder('u')
             ->where('u.roles LIKE :role')
             ->andWhere('u.sexe = :sexe')
-            ->setParameter('role', "%$role%")
+            ->setParameter('role', "%ROLE_USER%")
             ->setParameter('sexe', $sexe)
             ->getQuery()
             ->getResult();

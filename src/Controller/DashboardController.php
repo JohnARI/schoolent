@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Calendar;
 use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Session;
-use App\Entity\Calendar;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ class DashboardController extends AbstractController
      * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
      * @Route("admin/dashboard", name="dashboard-admin")
      */
-    public function admin(): Response
+    public function admin(UserRepository $userRepository): Response
     {
         $calendar = $this->entityManager->getRepository(Calendar::class)->findAll();
         $users = $this->entityManager->getRepository(User::class)->findAll();
@@ -34,10 +34,19 @@ class DashboardController extends AbstractController
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
         $admins = $this->entityManager->getRepository(User::class)->findByRole('ROLE_ADMIN');
         $sessions = $this->entityManager->getRepository(Session::class)->findAll();
-        $studentsWoman = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 1);
-        $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeUser('ROLE_USER', 0);
+        $studentsWoman = $this->entityManager->getRepository(User::class)->findBySexeStudent(1);
+        $studentsMan = $this->entityManager->getRepository(User::class)->findBySexeStudent(0);
+        $dateByMonth = $this->entityManager->getRepository(Calendar::class)->findDateMonth();
+        $session = $this->entityManager->getRepository(Session::class)->findAll();
+        $mySession = $this->getUser()->getSession($session);
+        $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
+
+        // $calendarByMonth = json_encode($calendarByMonth);
+
         // dd($students);
         // dd($sexe);
+        // dd($studentsMan);
+        // dd($calendarByMonth);
 
         return $this->render('dashboard/admins-dashboard.html.twig', [
             'users' => $users,
@@ -47,7 +56,9 @@ class DashboardController extends AbstractController
             'sessions' => $sessions,
             'studentsWoman' => $studentsWoman,
             'studentsMan' => $studentsMan,
-            'calendar'=> $calendar,
+            'dateByMonth' => $dateByMonth,
+            'mySessions' => $mySession,
+            'myStudents' => $myStudents,
         ]);
     }
 
@@ -58,11 +69,11 @@ class DashboardController extends AbstractController
     public function teacher(UserRepository $userRepository): Response
     {
         $session = $this->entityManager->getRepository(Session::class)->findAll();
-        $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
-        $sessions = $this->getUser()->getSession($session);
+        $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
+        $mySession = $this->getUser()->getSession($session);
         return $this->render('dashboard/teachers-dashboard.html.twig', [
-            'students' => $students,
-            'sessions' => $sessions,
+            'myStudents' => $myStudents,
+            'mySessions' => $mySession,
         ]);
     }
 
@@ -78,50 +89,6 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/students-dashboard.html.twig', [
             'teachers' => $teachers,
-            'students' => $students,
-        ]);
-    }
-
-
-    /**
-     * @Route("admin/teachers", name="view-teachers")
-     */
-    public function showTeacher(): Response
-    {
-
-        $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
-
-        return $this->render("administration/admin/view/view_teachers.html.twig", [
-            'teachers' => $teachers,
-        ]);
-    }
-
-    /**
-     * @Route("admin/admins", name="view-admins")
-     */
-    public function showAdmin($role = 'ROLE_ADMIN'): Response
-    {
-
-        $users = $this->entityManager->getRepository(User::class)->findByRole($role);
-
-
-        return $this->render("administration/admin/view/view_admins.html.twig", [
-            'users' => $users,
-        ]);
-    }
-
-    /**
-     * @Route("teacher/students", name="view-students")
-     */
-    public function showUser(UserRepository $userRepository): Response
-    {
-
-        $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
-
-
-
-
-        return $this->render("administration/admin/view/view_students.html.twig", [
             'students' => $students,
         ]);
     }
