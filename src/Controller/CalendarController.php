@@ -71,7 +71,7 @@ class CalendarController extends AbstractController
         }
       
         $interval = DateInterval::createFromDateString('1 day');
-        $daterange = new DatePeriod($start,$interval,$end);
+        // $daterange = new DatePeriod($start,$interval,$end);
         $start_date = $form['start']->getData();
         $end_date = $form['end']->getData();
        
@@ -167,9 +167,11 @@ class CalendarController extends AbstractController
                     'description' => $event->getDescription(),
                     'session' => $event->getSession(),
                     'backgroundColor' => $event->getBackgroundColor(),
+                    
                 ];
             }
 
+            // dd($booking);
 
             $data = json_encode($booking);
 

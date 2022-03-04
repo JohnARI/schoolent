@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Calendar;
+use App\Form\CalendarType;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +26,7 @@ class TestController extends AbstractController
     public function index(CalendarRepository $calendar): Response
     {
 
+        $calendrier = $calendar->findAll();
         $query = $this->entityManager->createQuery(
             'SELECT c
                 FROM App:Calendar c
@@ -32,14 +34,35 @@ class TestController extends AbstractController
             ORDER BY c.title ASC'
         )->setParameter('title', 'indisponible');
 
-
         $calendar = $query->getResult();
 
+        $calendars = new Calendar;
+        $form = $this->createForm(CalendarType::class, $calendars);
+
+        //------------------------------------------------TEST----------------------------------------------
+        
+        // $moninfo = 'Test10 Testo';
+
+        // $query = $this->entityManager->createQuery(
+        //     'SELECT u.id
+        //         FROM App:User u
+        //     WHERE u.fullname = :fullname
+        //     ORDER BY u.id ASC'
+        // )->setParameter('fullname', $moninfo);
+
+        // $id = $query->getSingleScalarResult();
+
+        // settype($id, 'integer');
   
+        // dd($id);
+
+         //------------------------------------------------TEST----------------------------------------------
 
         return $this->render('test/test2.html.twig',[
 
             'calendar' => $calendar,
+            'form'=> $form->createView(),
+            'calendrier'=> $calendrier
         ]);
         
     }
