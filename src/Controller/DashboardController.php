@@ -6,7 +6,6 @@ use App\Entity\Calendar;
 use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Session;
-use App\Entity\Calendar;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
