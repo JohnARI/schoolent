@@ -11,36 +11,33 @@
 {% block body %}
 
 
-<div class="modal modal-dark fade" id="modalDark" tabindex="-1" aria-labelledby="modalDarkLabel" aria-hidden="true" >
+{# <div  id="modalDark" tabindex="-1" aria-labelledby="modalDarkLabel" aria-hidden="true" style='position:fixed; top:30%; left:50%; background-color:lightGray; z-index:1000; color:black; display: none;' >
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<h1 class="text-center" ><i class="fe fe-calendar text-warning"></i></h1>
                 <h4 class="text-center text-muted">Ajouter une nouvelle intervention</h4>
-				<div class="modal-body text-center p-4 pb-5">
-					{{form_start(form, {'attr': {'class': 'validatCalendar'}})}}
-					<div class="form-group">
-						<label for="title">Intitulé</label>
-						{{form_widget(form.title, {'attr': {'class': 'form-control'}})}}
-					</div>
-					<div class="form-group">
-						<label for="start">Debut</label>
-						{{form_widget(form.start, {'attr': {'class': 'form-control'}})}}
-					</div>
-					<div class="form-group">
-						<label for="end">Fin</label>
-						{{form_widget(form.end, {'attr': {'class': 'form-control'}})}}
-					</div>
+				        <form action="" method="post" class="col-6 mx-auto" name="myForm">
 
-					<div class="form-group">
-						<label for="end">Professeur</label>
-						{{form_widget(form.teacher, {'attr': {'class': 'form-control'}})}}
-			          <hr>
-					</div>
-					{{form_end(form)}}
+                            <label for="email" class="form-label">Title</label>
+                            <input type="text" name="title" id="title" class="form-control">
+
+                            <label for="description">Description</label>
+                            <input type="text" name="description" id="description" class="form-control">
+
+                            <label for="teacher" class="form-label">Enseignant</label>
+                            <select type="text" name="teacher" id="teacher" class="form-control">
+                                <option type="text" class="form-control">Pauline</option>
+                                <option type="text" class="form-control">Marine</option>
+                                <option type="text" class="form-control">Eric</option>
+                            </select>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary mt-3">Ajouter</button>
+                            </div>
+                        </form>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> #}
 
 {# -------------------------------------------------------------Calendar------------------------------ #}
 				<div class="card-body">
@@ -84,26 +81,11 @@ window.onload = () => {
         selectMirror: true,
         droppable: true, // this allows things to be dropped onto the calendar
         select: function(arg) {
-           
+    
+            var title = prompt('title:');
+            var description = prompt('description:');
+            var teacherName  = prompt('teacherName:');
 
-            document.querySelector('#popup').style.display="block";
-
-               /**Retourne la valeur du select selectId*/
-                        function getSelectValue(selectId)
-                        {
-                            /**On récupère l'élement html <select>*/
-                            var selectElmt = document.getElementById(selectId);
-                            /**
-                            selectElmt.options correspond au tableau des balises <option> du select
-                            selectElmt.selectedIndex correspond à l'index du tableau options qui est actuellement sélectionné
-                            */
-                            return selectElmt.options[selectElmt.selectedIndex].value;
-                        }
-
-           
-			var teacherName = getSelectValue('monTeacher');
-
-            $("#modalDark").modal('show');
 
             if(title && description && teacherName){
                 

@@ -135,7 +135,7 @@ class ApiController extends AbstractController
             $calendar->setDescription($donnees->description);
             $calendar->setTeacherName($donnees->teacherName);
 
-            $moninfo = 'Test10 Testo';
+            $moninfo = $donnees->teacherName;
 
             if($moninfo){
 
