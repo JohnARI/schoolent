@@ -34,6 +34,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 	<body
 		class="app sidebar-mini ltr light-mode">
 
+		{% block switcher %}
+				{% include 'components/switcher.html.twig' %}
+			{% endblock %}
+
 		<!-- GLOBAL-LOADER -->
 		<div id="global-loader">
 			<img src="../assets/images/loader.svg" class="loader-img" alt="Loader">
