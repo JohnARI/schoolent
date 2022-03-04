@@ -52,10 +52,21 @@
                     <h3>Planning</h3>
                 </li>
 
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
-                            class="side-menu__icon fe fe-clock"></i><span class="side-menu__label">Calendrier</span></a>
-                </li>
+                {% if app.user.roles != ['ROLE_ADMIN'] %}
+					<li class="slide">
+						<a class="side-menu__item" data-bs-toggle="slide" href="{{path('calendar_show', {'id':app.user.id})}}">
+							<i class="side-menu__icon fe fe-calendar"></i>
+							<span class="side-menu__label">Calendriers</span>
+						</a>
+					</li>
+				{% else %}
+					<li class="slide">
+						<a class="side-menu__item" data-bs-toggle="slide" href="{{path('calendar_index')}}">
+							<i class="side-menu__icon fe fe-calendar"></i>
+							<span class="side-menu__label">Calendriers</span>
+						</a>
+					</li
+				{% endif %}
             </ul>
         </div>
     </div>

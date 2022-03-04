@@ -28,7 +28,7 @@ class DashboardController extends AbstractController
      */
     public function admin(UserRepository $userRepository): Response
     {
-
+        $calendar = $this->entityManager->getRepository(Calendar::class)->findAll();
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
