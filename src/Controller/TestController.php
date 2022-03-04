@@ -61,7 +61,7 @@ class TestController extends AbstractController
         return $this->render('test/test2.html.twig',[
 
             'calendar' => $calendar,
-            'form'=> $form,
+            'form'=> $form->createView(),
             'calendrier'=> $calendrier
         ]);
         

@@ -10,12 +10,44 @@
 
 {% block body %}
 
-<body>
+
+<div class="modal modal-dark fade" id="modalDark" tabindex="-1" aria-labelledby="modalDarkLabel" aria-hidden="true" >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<h1 class="text-center" ><i class="fe fe-calendar text-warning"></i></h1>
+                <h4 class="text-center text-muted">Ajouter une nouvelle intervention</h4>
+				<div class="modal-body text-center p-4 pb-5">
+					{{form_start(form, {'attr': {'class': 'validatCalendar'}})}}
+					<div class="form-group">
+						<label for="title">Intitulé</label>
+						{{form_widget(form.title, {'attr': {'class': 'form-control'}})}}
+					</div>
+					<div class="form-group">
+						<label for="start">Debut</label>
+						{{form_widget(form.start, {'attr': {'class': 'form-control'}})}}
+					</div>
+					<div class="form-group">
+						<label for="end">Fin</label>
+						{{form_widget(form.end, {'attr': {'class': 'form-control'}})}}
+					</div>
+
+					<div class="form-group">
+						<label for="end">Professeur</label>
+						{{form_widget(form.teacher, {'attr': {'class': 'form-control'}})}}
+			          <hr>
+					</div>
+					{{form_end(form)}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+{# -------------------------------------------------------------Calendar------------------------------ #}
 				<div class="card-body">
 					<div id='calendar2'></div>
 				</div>
 
-		<div id='popup' style='position:fixed; top:30%; left:50%; background-color:lightGray; z-index:1000; color:black; display: none; '>
+{# <div id='popup' style='position:fixed; top:30%; left:50%; background-color:lightGray; z-index:1000; color:black; display: none; '>
     <form name="teacherName" method='POST' action='' >
     <label for="Teacher">Choose a Teacher:</label>
        <select id="monTeacher">
@@ -25,10 +57,10 @@
        </select>
         <button type='submit' name='valider' value='valider'>Valider</button>
     </form>
-</div>
+</div> #}
 
 
-</body>			
+	
 
 <script>
 
@@ -52,8 +84,7 @@ window.onload = () => {
         selectMirror: true,
         droppable: true, // this allows things to be dropped onto the calendar
         select: function(arg) {
-            var title = prompt('Event Title:');
-			var description = prompt('description:');
+           
 
             document.querySelector('#popup').style.display="block";
 
@@ -69,8 +100,11 @@ window.onload = () => {
                             return selectElmt.options[selectElmt.selectedIndex].value;
                         }
 
-            var myform = document.froms['teacherName'];
+           
 			var teacherName = getSelectValue('monTeacher');
+
+            $("#modalDark").modal('show');
+
             if(title && description && teacherName){
                 
 
