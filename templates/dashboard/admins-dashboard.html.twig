@@ -5,169 +5,15 @@
 {% block body %}
 
 	{% block javascripts_option %}
-		<script>
-
-			/*chart-month-bar*/
-
-var chart = c3.generate({
-bindto: '#chart-monthly', // id of chart wrapper
-
-data: {
-
-columns: [
-// each columns data
-['data1',{% for data in dateByMonth %}{{ data.total }},{% endfor %}]
-],
-type: 'bar', // default type of chart
-colors: {
-data1: '#0786F9'
-},
-names: { // name of each serie
-'data1': 'Jours'
-}
-},
-axis: {
-rotated: false,
-x: {
-type: 'category',
-// name of each category
-categories: [{% for data in dateByMonth %}{% set trans_month_hash = { 
-                            "January":"Janvier", "February":"Février", "March":"Mars",  
-                            "April":"Avril", "May":"Mai", "June":"Juin", "July":"Juillet",
-                            "August":"Aout", "September":"Septembre", "October": "Octobre", "December":"Decembre"
-                            } %}"{{ trans_month_hash[data.0.start | date('F')] }}",{% endfor %}]
-}
-},
-bar: {
-width: 100
-},
-legend: {
-show: false, // hide legend
-},
-
-padding: {
-bottom: 0,
-top: 0
-}
-});
-
-
-/*chart-sexe-bar*/
-
-$(document).ready(function () {
-
-columnColors = ['#FA4FB9', '#145DF7'];
-
-function setColumnBarColors(colors, chartContainer) {
-
-$('#' + chartContainer + ' .c3-chart-bars .c3-shape').each(function (index) {
-this.style.cssText += 'fill: ' + colors[index] + ' !important; stroke: ' + colors[index] + '; !important';
-});
-
-$('#' + chartContainer + ' .c3-chart-texts .c3-text').each(function (index) {
-this.style.cssText += 'fill: ' + colors[index] + ' !important;';
-});
-}
-
-var chart = c3.generate({
-bindto: '#chart-sexe-bar', // id of chart wrapper
-
-data: {
-
-columns: [
-// each columns data
-['data1', {{ studentsWoman | length }}, {{ studentsMan | length }}]
-],
-type: 'bar', // default type of chart
-colors: {
-data1: '#7799E1'
-},
-names: { // name of each serie
-'data1': 'Etudiants'
-}
-},
-axis: {
-rotated: false,
-x: {
-type: 'category',
-// name of each category
-categories: ['Femme', 'Homme']
-},
-y: {
-show: false
-}
-},
-bar: {
-width: {
-ratio: 0.25
-}
-},
-
-legend: {
-show: false, // hide legend
-},
-
-padding: {
-bottom: 0,
-top: 0
-}
-});
-
-setColumnBarColors(columnColors, 'chart-sexe-bar');
-
-// Color turns to original when window is resized
-// To handle that
-$(window).resize(function () {
-setColumnBarColors(columnColors, 'chart-sexe-bar');
-});
-});
-
-
-/*chart-sexe-donut*/
-var chart = c3.generate({
-bindto: '#chart-sexe-donut', // id of chart wrapper
-data: {
-columns: [
-// each columns data
-[
-'data1', {{ studentsWoman | length }}
-],
-[
-'data2', {{ studentsMan | length }}
-],
-],
-type: 'donut', // default type of chart
-colors: {
-data1: '#FA4FB9',
-data2: '#145DF7'
-},
-names: { // name of each serie
-'data1': 'Femme',
-'data2': 'Homme'
-}
-},
-axis: {},
-legend: {
-show: true, // hide legend
-},
-padding: {
-bottom: 0,
-top: 0
-}
-});
-
-		</script>
+	{% include "components/c3_charts.html.twig" %}
 	{% endblock %}
+	{% set varStud = students %}
 
-	<!--app-content open-->
+	{# <!--app-content open--> #}
 	<div class="main-content app-content mt-0">
-		<div
-			class="side-app">
-
-			<!-- CONTAINER -->
-			<div
-				class="main-container container-fluid">
-
+		<div class="side-app">
+			{# <!-- CONTAINER --> #}
+			<div class="main-container container-fluid">
 				{# Header #}
 				<div class="page-header">
 					<h1 class="page-title">Administration</h1>
@@ -176,8 +22,7 @@ top: 0
 
 				<div class="panel panel-primary">
 					<div class="tab-menu-heading">
-						<div
-							class="tabs-menu">
+						<div class="tabs-menu">
 							{# Tabs #}
 							<ul class="nav panel-tabs panel-info">
 								<li>
@@ -202,170 +47,130 @@ top: 0
 						<div class="tab-content">
 
 
-							<div
-								class="tab-pane active" id="users">
-
+							<div class="tab-pane active" id="users">
 
 								{# Tableaux et modal #}
 
-								<div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
-									<div class="row">
-										<div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-											<div class="card overflow-hidden">
-												<div class="card-body">
-													<div class="d-flex align-items-center">
-														<div class="mt-2 me-4">
-															<h6 class="">Etudiants</h6>
-															<h2 class="mb-0 number-font">{{ students | length }}</h2>
-														</div>
-														<div class="d-flex">
-															<div>
-																<h6 class="me-4">Homme</h6>
-
-																<h4 class="mb-0 number-font">{{ studentsMan | length }}</h4>
-															</div>
-															<div>
-																<h6 class="me-4">Femme</h6>
-																<h4 class="mb-0 number-font">{{ studentsWoman | length }}
-																</h4>
-															</div>
-														</div>
-														<div class="ms-auto">
-															<div class="chart-wrapper mt-1">
-																<canvas id="saleschart" class="h-8 w-9 chart-dropshadow"></canvas>
-															</div>
-														</div>
-													</div>
-													<span class="text-muted fs-13">
-														<i class="fa fa-users  text-secondary"></i>
-														{% embed "components/modal.html.twig" %}
+								<!-- ROW OPEN -->
+								<div class="row">
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+										<a class="card bg-primary img-card box-primary-shadow">
+											{% embed "components/modal.html.twig" %}
 															{% set modalType = "modal-xl effect-flip-verticalshow" %}
-															{% set id = "xl-students" %}
+															{% set id = "xl-allStudent" %}
 															{% set buttonTitle = "Ajouter un utilisateur" %}
 															{% block button %}
-																<button class="text-secondary" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous les
-																																											                            étudiants</button>
+															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																<div class="d-flex justify-content-between">
+																	<div class="text-white me-4">
+																		<h2 class="mb-0 number-font">{{ students | length }}</h2>
+																		<p class="text-white mb-0">Etudiants </p>
+																	</div>
+																	<div class="text-white me-4">
+																		<h2 class="mb-0 number-font">{{ studentsMan | length }}</h2>
+																		<i class="fa fa-mars fs-20 text-white"></i>
+																	</div>
+																	<div class="text-white">
+																		<h2 class="mb-0 number-font">{{ studentsWoman | length }}</h2>
+																		<i class="fa fa-venus fs-20 text-white"></i>
+																	</div>
+																	<div class="ms-auto"> <i class="fa fa-user-o text-white fs-30 me-2 mt-2"></i> </div>
+																</div>
+															</button>
 															{% endblock %}
 															{% block modalTitle %}Tous les étudiants
 															{% endblock %}
 															{% block dashboard %}
-																{% include
-                        "/administration/admin/view/view_students.html.twig" %}
+																{% include "/administration/admin/view/view_students.html.twig" %}
 															{% endblock %}
 														{% endembed %}
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-											<div class="card overflow-hidden">
-												<div class="card-body">
-													<div class="d-flex">
-														<div class="mt-2">
-															<h6 class="">Formateurs</h6>
-															<h2 class="mb-0 number-font">{{ teachers | length }}
-															</h2>
-														</div>
-														<div class="ms-auto">
-															<div class="chart-wrapper mt-1">
-																<canvas id="leadschart" class="h-8 w-9 chart-dropshadow"></canvas>
-															</div>
-														</div>
-													</div>
-													<span class="text-muted fs-13">
-														<i class="fa fa-user text-pink"></i>
-														{% embed "components/modal.html.twig" %}
+											
+										</a>
+									</div>
+									<!-- COL END -->
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+										<a class="card bg-azure img-card box-azure-shadow">
+											{% embed "components/modal.html.twig" %}
 															{% set modalType = "modal-xl" %}
 															{% set id = "full-teacher" %}
 															{% block button %}
-																<button href="" class="text-pink" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous les
-																																											                            formateurs</button>
+															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																<div class="d-flex">
+																	<div class="text-white">
+																		<h2 class="mb-0 number-font">{{ teachers | length }}</h2>
+																		<p class="text-white mb-0">Professeurs</p>
+																	</div>
+																	<div class="ms-auto"> <i class="fa fa-user-circle text-white fs-30 me-2 mt-2"></i> </div>
+																</div>
+															</button>
 															{% endblock %}
-															{% block modalTitle %}Tous les formateurs
+															{% block modalTitle %}Tous les professeurs
 															{% endblock %}
 															{% block dashboard %}
-																{% include
-                        "/administration/admin/view/view_teachers.html.twig" %}
+																{% include "/administration/admin/view/view_teachers.html.twig" %}
 															{% endblock
                         %}
 														{% endembed %}
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-											<div class="card overflow-hidden">
-												<div class="card-body">
-													<div class="d-flex">
-														<div class="mt-2">
-															<h6 class="">Administrateurs</h6>
-															<h2 class="mb-0 number-font">{{ admins | length }}</h2>
-														</div>
-														<div class="ms-auto">
-															<div class="chart-wrapper mt-1">
-																<canvas id="profitchart" class="h-8 w-9 chart-dropshadow"></canvas>
-															</div>
-														</div>
-													</div>
-													<span class="text-muted fs-13">
-														<i class="fa fa-user text-green"></i>
-														{% embed "components/modal.html.twig" %}
-															{% set modalType = "modal-xl" %}
-															{% set id = "full-admin" %}
-															{% block button %}
-																<button href="" class="text-green" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous les
-																																											                            admins</button>
-															{% endblock %}
-															{% block modalTitle %}Tous les administrateurs
-															{% endblock %}
-															{% block dashboard %}
-																{% include
-                        "/administration/admin/view/view_admins.html.twig" %}
-															{% endblock %}
-														{% endembed %}
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
-											<div class="card overflow-hidden">
-												<div class="card-body">
-													<div class="d-flex">
-														<div class="mt-2">
-															<h6 class="">Sessions</h6>
-															<h2 class="mb-0 number-font">{{ sessions | length }}</h2>
-														</div>
-														<div class="ms-auto">
-															<div class="chart-wrapper mt-1">
-																<canvas id="costchart" class="h-8 w-9 chart-dropshadow"></canvas>
-															</div>
-														</div>
-													</div>
-													<span class="text-muted fs-13">
-														<i class="fa fa-address-card text-cyan"></i>
-														{% embed
-                        "components/modal.html.twig" %}
-															{% set modalType = "modal-xl" %}
-															{% set id = "full-session" %}
-															{% block button %}
-																<button href="" class="text-cyan" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir toutes les
-																																											                            sessions</button>
-															{% endblock %}
-															{% block modalTitle %}Tous les administrateurs
-															{% endblock %}
-															{% block dashboard %}
-																{% include
-                        "/administration/admin/view/view_sessions.html.twig" %}
-															{% endblock
-                        %}
-														{% endembed %}
-													</span>
-												</div>
-											</div>
-										</div>
-
+											
+										</a>
 									</div>
+									<!-- COL END -->
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+										<a class="card bg-success img-card box-success-shadow">
+											{% embed "components/modal.html.twig" %}
+															{% set modalType = "modal-xl" %}
+															{% set id = "xl-admins" %}
+															{% block button %}
+															<button class="card-body" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																<div class="d-flex">
+																	<div class="text-white">
+																		<h2 class="mb-0 number-font text-start">{{ admins | length }}</h2>
+																		<p class="text-white mb-0">Administrateurs</p>
+																	</div>
+																	<div class="ms-auto"> <i class="fa fa-id-badge text-white fs-30 me-2 mt-2"></i> </div>
+																</div>
+															</button>
+															{% endblock %}
+															{% block modalTitle %}Tous les administrateurs
+															{% endblock %}
+															{% block dashboard %}
+																{% include "/administration/admin/view/view_admins.html.twig" %}
+															{% endblock %}
+														{% endembed %}
+											
+										</a>
+									</div>
+									{# <!-- COL END --> #}
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+										<a class="card bg-info img-card box-info-shadow">
+											{% embed "components/modal.html.twig" %}
+																					{% set modalType = "modal-xl" %}
+																					{% set id = "full-session" %}
+																					{% block button %}
+																					<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																						<div class="d-flex">
+																							<div class="text-white">
+																								<h2 class="mb-0 number-font">{{ sessions | length }}</h2>
+																								<p class="text-white mb-0">Sessions</p>
+																							</div>
+																							<div class="ms-auto"> <i class="fa fa-tags text-white fs-30 me-2 mt-2"></i> </div>
+																						</div>
+																					</button>
+																					{% endblock %}
+																					{% block modalTitle %}Tous les administrateurs
+																					{% endblock %}
+																					{% block dashboard %}
+																						{% include "/administration/admin/view/view_sessions.html.twig" %}
+																					{% endblock %}
+																				{% endembed %}
+											
+										</a>
+									</div>
+									{# <!-- COL END --> #}
 								</div>
+								{# <!-- ROW CLOSED --> #}
+
+
 								{# Fin tableaux et modal #}
 
 								<div class="row">

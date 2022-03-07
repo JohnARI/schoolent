@@ -3,6 +3,7 @@
 {% block title %}
 	Dashboard Professeur
 {% endblock %}
+{% set varStud = myStudents %}
 
 {% block body %}
 
@@ -23,120 +24,110 @@
 				</div>
 				{# Fin header #}
 				{% block teacher %}
-					{# Tableaux et modal #}
-					<div class="row">
-						<div class="col">
-							<div
-								class="row">
-								{# Mes élèves #}
-								<div class="col">
-									<div class="card overflow-hidden">
-										<div class="card-body">
-											<div class="d-flex">
-												<div class="mt-2 me-4">
-													<h6 class="">Mes élèves</h6>
-													{% set varStud = students %}
-													<h2 class="mb-0 number-font">{{ students | length }}</h2>
-												</div>
-												<div class="ms-auto">
-													<div class="chart-wrapper mt-1">
-														<canvas id="saleschart" class="h-8 w-9 chart-dropshadow"></canvas>
-													</div>
-												</div>
-											</div>
-											<span class="text-muted fs-13">
-												<i class="fa fa-users  text-secondary"></i>
-												{% embed "components/modal.html.twig" %}
-													{% set modalType = "modal-xl effect-flip-verticalshow" %}
-													{% set id = "full-students" %}
-													{% block button %}
-														<button href="" class="text-secondary" data-bs-toggle="modal" data-bs-target="#{{id}}">Voir tous mes élèves</button>
-													{% endblock %}
-													{% block modalTitle %}Tous les étudiants
-													{% endblock %}
-													{% block dashboard %}
-														{% include
-                                        "/administration/admin/view/view_students.html.twig" %}
-													{% endblock %}
-												{% endembed %}
-											</span>
-										</div>
+
+				{# Tableaux et modal #}
+				<!-- ROW OPEN -->
+								<div class="row">
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+										<a class="card bg-primary img-card box-primary-shadow">
+											{% embed "components/modal.html.twig" %}
+															{% set modalType = "modal-xl effect-flip-verticalshow" %}
+															{% set id = "xl-myStudent" %}
+															{% set buttonTitle = "Ajouter un utilisateur" %}
+															{% block button %}
+															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																<div class="d-flex">
+																	<div class="text-white me-4">
+																		<h2 class="mb-0 number-font">{{ varStud | length }}</h2>
+																		<p class="text-white mb-0">Etudiants </p>
+																	</div>
+																	
+																	<div class="ms-auto"> <i class="fa fa-user-o text-white fs-30 me-2 mt-2"></i> </div>
+																</div>
+															</button>
+															{% endblock %}
+															{% block modalTitle %}Tous les étudiants
+															{% endblock %}
+															{% block dashboard %}
+																{% include "/administration/admin/view/view_students.html.twig" %}
+															{% endblock %}
+														{% endembed %}
+											
+										</a>
 									</div>
-								</div>
-								{# Fin mes élèves #}
-								{# Session #}
-								{% if app.user.session %}
-									<div class="col">
-										<div class="card overflow-hidden">
-											<div class="card-body">
-												<div class="d-flex">
-													<div class="mt-2">
-														<h6 class="">Ma session</h6>
-														<h2 class="mb-0 number-font">{{ app.user.session}}</h2>
-													</div>
-													<div class="ms-auto">
-														<div class="chart-wrapper mt-1">
-															<canvas id="costchart" class="h-8 w-9 chart-dropshadow"></canvas>
-														</div>
-													</div>
-												</div>
-												<span class="text-muted fs-13">
-													<p>
-														<i class="fa fa-address-card text-cyan"></i>
-														du
-														<strong>{{
-                                                app.user.session.startSession | date("d/m/Y")}}</strong>
+									<!-- COL END -->
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+										<a class="card bg-azure img-card box-azure-shadow">
+											{% embed "components/modal.html.twig" %}
+															{% set modalType = "modal-xl" %}
+															{% set id = "xl-mySession" %}
+															{% block button %}
+															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																<div class="d-flex">
+																	<div class="text-white">
+																	{% if app.user.session %}
+																		<h2 class="mb-0 number-font">{{ app.user.session}}</h2>
+																		{% else %}
+																			<h2 class="mb-0 number-font">Aucune session</h2>
+																		{% endif %}
+																		<p class="text-white mb-0">Ma session 	du
+														{{ app.user.session.startSession | date("d/m/Y") }}
 														au
-														<strong>{{
-                                                app.user.session.endSession | date("d/m/Y")}}</strong>
-													</p>
-												</span>
-											</div>
-										</div>
+														{{ app.user.session.endSession | date("d/m/Y") }}</p>
+																	</div>
+																	<div class="ms-auto"> <i class="fa fa-heart-o text-white fs-30 me-2 mt-2"></i> </div>
+																</div>
+															</button>
+															{% endblock %}
+															{% block modalTitle %}Tous les professeurs
+															{% endblock %}
+															{% block dashboard %}
+																{% include "/administration/admin/view/view_teachers.html.twig" %}
+															{% endblock
+                        %}
+														{% endembed %}
+											
+										</a>
 									</div>
-								{% else %}
-									<div class="col">
-										<div class="card overflow-hidden">
-											<div class="card-body">
-												<div class="d-flex">
-													<div class="mt-2">
-														<h6 class="">Ma session</h6>
-														<h2 class="mb-0 number-font">Aucune session en cours</h2>
-													</div>
-												</div>
-											</div>
-										</div>
+									<!-- COL END -->
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
+										<a class="card bg-success img-card box-success-shadow">
+											{% embed "components/modal.html.twig" %}
+															{% set modalType = "modal-xl" %}
+															{% set id = "xl-myPayment" %}
+															{% block button %}
+															<button class="card-body" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																<div class="d-flex">
+																	<div class="text-white">
+																	{% if app.user.payment %}
+																	
+																		<h2 class="mb-0 number-font text-start">{{app.user.payment}} / jour</h2>
+																		{% else %}
+																		<h2 class="mb-0 number-font text-start">0 / jour</h2>
+																		{% endif %}
+																			
+																		<p class="text-white mb-0">Rémunération</p>
+																	</div>
+																	<div class="ms-auto"> <i class="fa fa-dollar text-white fs-30 me-2 mt-2"></i> </div>
+																</div>
+															</button>
+															{% endblock %}
+															{% block modalTitle %}Tous les administrateurs
+															{% endblock %}
+															{% block dashboard %}
+																{% include "/administration/admin/view/view_admins.html.twig" %}
+															{% endblock %}
+														{% endembed %}
+											
+										</a>
 									</div>
-								{% endif %}
-								{# Fin ma session #}
-								{# Rémunération #}
-								<div class="col">
-									<div class="card overflow-hidden">
-										<div class="card-body">
-											<div class="d-flex">
-												<div class="mt-2 me-4">
-													<h6 class="">Rémunération</h6>
-													{% if app.user.payment %}
-														<h2 class="mb-0 number-font">{{app.user.payment}}
-															€/jour</h2>
-													{% else %}
-														<h2 class="mb-0 number-font">
-															0€/jour</h2>
-													{% endif %}
-												</div>
-
-
-											</div>
-										</div>
-									</div>
-									{# Fin rémunération #}
+									{# <!-- COL END --> #}
+								
 								</div>
-							</div>
-						</div>
-						{# Fin tableaux et modal #}
+								{# <!-- ROW CLOSED --> #}
+								{# Fin tableaux et modal #}
 					
-
-				</div>
+					
 				{% endblock %}
 			</div>
 		</div>

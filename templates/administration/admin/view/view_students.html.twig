@@ -17,12 +17,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% if app.user.role == 'Administrateur' %}
-					{% set let = myStudents %}
-				{% else %}
-					{% set let = students %}
-				{% endif %}
-				{% for student in let %}
+				{% for student in varStud %}
 					<tr>
 						{% if student.picture %}
 							<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
