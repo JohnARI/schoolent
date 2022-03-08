@@ -2,6 +2,9 @@
 	<div class="container-fluid main-container">
 		<div class="d-flex">
 			<a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="#"></a>
+			<div class="demo-icon nav-link icon">
+									<i class="fe fe-settings fa-spin  text_primary"></i>
+								</div>
 			<!-- sidebar-toggle-->
 			<a class="logo-horizontal" href="{{path('default')}}">
 				<img src="{{asset('assets/images/brand/school.png')}}" class="header-brand-img h-20 w-20 desktop-logo"
@@ -114,7 +117,7 @@
 									<div class="d-flex p-2">
 										{% if app.user.notifications | length > 0 %}
 										<a href=""
-											class="dropdown-item text-center text-white m-3 bg-success fs-14 fw-semibold">Voir
+											class="dropdown-item text-center p-3 text-muted">Voir
 											tout</a>
 										{% endif %}
 									</div>
@@ -230,9 +233,7 @@
 										Déconnexion
 									</a>
 								</div>
-								<div class="demo-icon nav-link icon">
-									<i class="fe fe-settings fa-spin  text_primary"></i>
-								</div>
+								
 							</div>
 						</div>
 					</div>
