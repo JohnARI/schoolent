@@ -1,9 +1,9 @@
 {% block modal %}
 	{% block button %}
-		<button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#{{id}}">{{buttonTitle}}</button>
+		<button class="btn btn-primary mb-4" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">{{buttonTitle}}</button>
 	{% endblock %}
 		
-	<div class="modal fade" id="{{id}}" tabindex="-1" role="dialog">
+	<div class="modal fade effect-flip-vertical" id="{{id}}" tabindex="-1" role="dialog">
         <div class="modal-dialog {{modalType}}" role="document">
 			<div class="modal-content">
 				<div class="modal-header">

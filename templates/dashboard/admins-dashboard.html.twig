@@ -60,7 +60,7 @@
 															{% set id = "xl-allStudent" %}
 															{% set buttonTitle = "Ajouter un utilisateur" %}
 															{% block button %}
-															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+															<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
 																<div class="d-flex justify-content-between">
 																	<div class="text-white me-4">
 																		<h2 class="mb-0 number-font">{{ students | length }}</h2>
@@ -87,7 +87,7 @@
 															{% set modalType = "modal-xl" %}
 															{% set id = "full-teacher" %}
 															{% block button %}
-															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+															<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
 																<div class="d-flex">
 																	<div class="text-white">
 																		<h2 class="mb-0 number-font">{{ teachers | length }}</h2>
@@ -114,7 +114,7 @@
 															{% set modalType = "modal-xl" %}
 															{% set id = "xl-admins" %}
 															{% block button %}
-															<button class="card-body" data-bs-toggle="modal" data-bs-target="#{{id}}">
+															<button class="card-body" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
 																<div class="d-flex">
 																	<div class="text-white">
 																		<h2 class="mb-0 number-font text-start">{{ admins | length }}</h2>
@@ -140,7 +140,7 @@
 																					{% set modalType = "modal-xl" %}
 																					{% set id = "full-session" %}
 																					{% block button %}
-																					<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+																					<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
 																						<div class="d-flex">
 																							<div class="text-white">
 																								<h2 class="mb-0 number-font">{{ sessions | length }}</h2>

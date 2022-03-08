@@ -35,7 +35,7 @@
 															{% set id = "xl-myStudent" %}
 															{% set buttonTitle = "Ajouter un utilisateur" %}
 															{% block button %}
-															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+															<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
 																<div class="d-flex">
 																	<div class="text-white me-4">
 																		<h2 class="mb-0 number-font">{{ varStud | length }}</h2>
@@ -62,7 +62,7 @@
 															{% set modalType = "modal-sm" %}
 															{% set id = "mySession" %}
 															{% block button %}
-															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
+															<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
 																<div class="d-flex">
 																	<div class="text-white">
 																	{% if app.user.session %}
