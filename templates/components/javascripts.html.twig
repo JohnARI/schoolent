@@ -142,7 +142,7 @@
 <script src="{{asset('assets/js/custom1.js')}}"></script>
 
 {# <!-- Switcher js --> #}
-    <script src="../assets/switcher/js/switcher.js"></script>
+<script src="../assets/switcher/js/switcher.js"></script>
 
 {# <!-- WIDGET JS --> #}
 <script src="{{asset('assets/js/widget.js')}}"></script>
@@ -167,4 +167,18 @@ let error = document.querySelector('#errorMessage');
 setTimeout(function () {
 $(error).remove();
 }, 5000)
+
+
+$('.deleteUser').on('click', function () {
+return confirm('Voulez-vous vraiment supprimé cet utilisateur ?');
+});
+
+$('.deleteSession').on('click', function () {
+return confirm('Voulez-vous vraiment supprimé cette session ?');
+});
+
+$('.deleteTechnologie').on('click', function () {
+return confirm('Voulez-vous vraiment supprimé cette technologie ?');
+});
+
 </script>

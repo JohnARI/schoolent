@@ -39,7 +39,7 @@
 																<div class="d-flex">
 																	<div class="text-white me-4">
 																		<h2 class="mb-0 number-font">{{ varStud | length }}</h2>
-																		<p class="text-white mb-0">Etudiants </p>
+																		<p class="text-white mb-0">Mes étudiants</p>
 																	</div>
 																	
 																	<div class="ms-auto"> <i class="fa fa-user-o text-white fs-30 me-2 mt-2"></i> </div>
@@ -59,8 +59,8 @@
 									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
 										<a class="card bg-azure img-card box-azure-shadow">
 											{% embed "components/modal.html.twig" %}
-															{% set modalType = "modal-xl" %}
-															{% set id = "xl-mySession" %}
+															{% set modalType = "modal-sm" %}
+															{% set id = "mySession" %}
 															{% block button %}
 															<button class="card-body text-start" data-bs-toggle="modal" data-bs-target="#{{id}}">
 																<div class="d-flex">
@@ -70,19 +70,21 @@
 																		{% else %}
 																			<h2 class="mb-0 number-font">Aucune session</h2>
 																		{% endif %}
-																		<p class="text-white mb-0">Ma session 	du
-														{{ app.user.session.startSession | date("d/m/Y") }}
-														au
-														{{ app.user.session.endSession | date("d/m/Y") }}</p>
+																		<p class="text-white mb-0">Session</p>
 																	</div>
-																	<div class="ms-auto"> <i class="fa fa-heart-o text-white fs-30 me-2 mt-2"></i> </div>
+																	<div class="ms-auto"> <i class="fa fa-tags text-white fs-30 me-2 mt-2"></i> </div>
 																</div>
 															</button>
 															{% endblock %}
-															{% block modalTitle %}Tous les professeurs
+															{% block modalTitle %}Session
 															{% endblock %}
 															{% block dashboard %}
-																{% include "/administration/admin/view/view_teachers.html.twig" %}
+																<p>Bonjour {{app.user.fullname}} 
+																{% if app.user.session %}
+																vous avez une session du <strong>{{ app.user.session.startSession | date("d/m/Y") }}</strong> au <strong>{{ app.user.session.endSession | date("d/m/Y") }}</strong> avec <strong>{{varStud | length }}</strong> étudiants
+																{% else %}
+																	vous n'avez aucune session en cours
+																{% endif %}</p>
 															{% endblock
                         %}
 														{% endembed %}
@@ -91,12 +93,9 @@
 									</div>
 									<!-- COL END -->
 									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-										<a class="card bg-success img-card box-success-shadow">
-											{% embed "components/modal.html.twig" %}
-															{% set modalType = "modal-xl" %}
-															{% set id = "xl-myPayment" %}
-															{% block button %}
-															<button class="card-body" data-bs-toggle="modal" data-bs-target="#{{id}}">
+										<div class="card bg-success img-card box-success-shadow">
+										
+															<div class="card-body">
 																<div class="d-flex">
 																	<div class="text-white">
 																	{% if app.user.payment %}
@@ -110,16 +109,10 @@
 																	</div>
 																	<div class="ms-auto"> <i class="fa fa-dollar text-white fs-30 me-2 mt-2"></i> </div>
 																</div>
-															</button>
-															{% endblock %}
-															{% block modalTitle %}Tous les administrateurs
-															{% endblock %}
-															{% block dashboard %}
-																{% include "/administration/admin/view/view_admins.html.twig" %}
-															{% endblock %}
-														{% endembed %}
+															</div>
+															
 											
-										</a>
+										</div>
 									</div>
 									{# <!-- COL END --> #}
 								

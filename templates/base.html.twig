@@ -52,8 +52,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 						{% for label, messages in app.flashes %}
 
 							{% for message in messages %}
-								<div id="errorMessage" class="d-flex justify-content-center">
-									<div class="alert alert-{{ label }}">
+								<div id="errorMessage" class="d-flex justify-content-end">
+									<div class="alert alert-{{ label }} text-center">
 										{{ message }}
 									</div>
 								</div>
@@ -72,10 +72,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 			{% block body %}{% endblock %}
 			</div>
-
-			{% block countryModal %}
-				{% include 'components/country_modal.html.twig' %}
-			{% endblock %}
 
 			{% block footer %}
 				{% include 'components/footer.html.twig' %}

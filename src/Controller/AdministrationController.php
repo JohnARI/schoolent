@@ -94,7 +94,7 @@ class AdministrationController extends AbstractController
             $this->entityManager->flush();
 
             $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   . $temporaryPassword);
-            $this->addFlash('message_success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
+            $this->addFlash('success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
             //Message de succès
             return $this->redirect($request->getUri());
         }
@@ -241,7 +241,7 @@ class AdministrationController extends AbstractController
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            $this->addFlash('success', 'L\'utilistauer a été modifié !');
+            $this->addFlash('success', 'L\'utilisateur a été modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
@@ -397,7 +397,7 @@ class AdministrationController extends AbstractController
             $this->addFlash('success', 'La session a été modifiée !');
         }
 
-        return $this->render('administration/admin/edit-session.html.twig', [
+        return $this->render('administration/admin/edit/edit-session.html.twig', [
             'form' => $form->createView(),
         ]);
     }

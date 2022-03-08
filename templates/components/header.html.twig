@@ -3,17 +3,13 @@
 		<div class="d-flex">
 			<a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="#"></a>
 			<!-- sidebar-toggle-->
-			<a class="logo-horizontal " href="index.html">
-				<img src="{{asset('assets/images/brand/logo-white.png')}}" class="header-brand-img desktop-logo" alt="logo">
-				<img src="{{asset('assets/images/brand/logo-3.png')}}" class="header-brand-img light-logo1" alt="logo">
+			<a class="logo-horizontal" href="{{path('default')}}">
+				<img src="{{asset('assets/images/brand/school.png')}}" class="header-brand-img h-20 w-20 desktop-logo"
+					alt="logo">
+				<img src="{{asset('assets/images/brand/school_black.png')}}" class="header-brand-img h-20 w-20 light-logo1" alt="logo">
 			</a>
 			<!-- LOGO -->
-			<div class="main-header-center ms-3 d-none d-lg-block">
-				<input class="form-control" placeholder="Rechercher..." type="search">
-				<button class="btn px-0 pt-2">
-					<i class="fe fe-search" aria-hidden="true"></i>
-				</button>
-			</div>
+
 			<div class="d-flex order-lg-2 ms-auto header-right-icons">
 				<div class="dropdown d-lg-none d-md-block d-none">
 					<a href="#" class="nav-link icon" data-bs-toggle="dropdown">
@@ -29,7 +25,9 @@
 					</div>
 				</div>
 				<!-- SEARCH -->
-				<button class="navbar-toggler navresponsive-toggler d-md-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+				<button class="navbar-toggler navresponsive-toggler d-md-none ms-auto" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4"
+					aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon fe fe-more-vertical"></span>
 				</button>
 				<div class="navbar navbar-collapse responsive-navbar p-0">
@@ -48,14 +46,8 @@
 									</div>
 								</div>
 							</div>
-							{% block error %}{% endblock %}
-							<!-- COUNTRY -->
-							<div class="d-flex country">
-								<a class="nav-link icon text-center" data-bs-target="#country-selector" data-bs-toggle="modal">
-									<i class="fe fe-globe"></i>
-									<span class="fs-16 ms-2 d-none d-xl-block">English</span>
-								</a>
-							</div>
+
+
 							<!-- SEARCH -->
 							<div class="dropdown  d-flex">
 								<a class="nav-link icon theme-layout nav-link-bg layout-setting">
@@ -78,47 +70,52 @@
 								<a class="nav-link icon" data-bs-toggle="dropdown">
 									<i class="fe fe-bell"></i>
 									{% if app.user.notifications | length > 0 %}
-										<span class="pulse-danger">{{ app.user.notifications | length }}</span>
+									<span class="pulse-danger">{{ app.user.notifications | length }}</span>
 									{% elseif app.user.notifications | length == 0 %}
-										<span class="pulse">{{ app.user.notifications | length }}</span>
+									<span class="pulse">{{ app.user.notifications | length }}</span>
 									{% endif %}
 								</a>
 								<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
 									<div class="drop-heading border-bottom">
 										<div class="d-flex">
-											<h6 class="mt-1 mb-0 fs-16 fw-semibold text-dark">
+											<h6 class="mt-1 mb-0 fs-16 fw-semibold text-dark me-auto">
 												<span class="text-danger">{{ app.user.notifications | length }}</span>
 												Notifications
 											</h6>
+
+											<a href="{{ path('notification_delete_all') }}">Tout effacer</a>
 										</div>
 									</div>
 									<div class="notifications-menu">
 										{% for notification in app.user.notifications %}
-											<div class="d-flex">
-												<a class="dropdown-item d-flex" href="notify-list.html">
-													<div class="me-3 notifyimg  bg-secondary brround box-shadow-secondary">
-														<i class="fe fe-check-circle"></i>
-													</div>
-													<div class="mt-1">
-														<h5 class="notification-label mb-1">{{ notification.message }}</h5>
-														<span class="notification-subtext">{{ notification.createdAt | date('d/M/y') }}</span>
-													</div>
-												</a>
-												<a class="delete-notif" href="{{ path('notification_delete', { 'id':notification.id }) }}">
-													<i class="fa fa-trash"></i>
-												</a>
-											</div>
+										<div class="d-flex">
+											<a class="dropdown-item d-flex" href="notify-list.html">
+												<div class="me-3 notifyimg  bg-secondary brround box-shadow-secondary">
+													<i class="fe fe-check-circle"></i>
+												</div>
+												<div class="mt-1">
+													<h5 class="notification-label mb-1">{{ notification.message }}</h5>
+													<span class="notification-subtext">{{ notification.createdAt |
+														date('d/M/y') }}</span>
+												</div>
+											</a>
+											<a class="delete-notif"
+												href="{{ path('notification_delete', { 'id':notification.id }) }}">
+												<i class="fa fa-trash"></i>
+											</a>
+										</div>
 
-											{# <a href="" class="col-md-2" >
-											                                            <i class="mt-4 close-notif fa fa-trash"></i>
-											                                        </a> #}
+										{# <a href="" class="col-md-2">
+											<i class="mt-4 close-notif fa fa-trash"></i>
+										</a> #}
 										{% endfor %}
 									</div>
 									<div class="dropdown-divider m-0"></div>
 									<div class="d-flex p-2">
 										{% if app.user.notifications | length > 0 %}
-											<a href="" class="dropdown-item text-center text-white m-3 bg-success-gradient fs-14 fw-semibold">Voir tout</a>
-											<a href="{{ path('notification_delete_all') }}" class="dropdown-item text-center text-white m-3 bg-danger-gradient fs-14 fw-semibold">Tout supprimer</a>
+										<a href=""
+											class="dropdown-item text-center text-white m-3 bg-success fs-14 fw-semibold">Voir
+											tout</a>
 										{% endif %}
 									</div>
 								</div>
@@ -140,7 +137,8 @@
 									</div>
 									<div class="message-menu">
 										<a class="dropdown-item d-flex" href="chat.html">
-											<span class="avatar avatar-md brround me-3 align-self-center cover-image" data-bs-image-src="../assets/images/users/1.jpg"></span>
+											<span class="avatar avatar-md brround me-3 align-self-center cover-image"
+												data-bs-image-src="../assets/images/users/1.jpg"></span>
 											<div class="wd-90p">
 												<div class="d-flex">
 													<h5 class="mb-1">Peter Theil</h5>
@@ -152,7 +150,8 @@
 											</div>
 										</a>
 										<a class="dropdown-item d-flex" href="chat.html">
-											<span class="avatar avatar-md brround me-3 align-self-center cover-image" data-bs-image-src="../assets/images/users/15.jpg"></span>
+											<span class="avatar avatar-md brround me-3 align-self-center cover-image"
+												data-bs-image-src="../assets/images/users/15.jpg"></span>
 											<div class="wd-90p">
 												<div class="d-flex">
 													<h5 class="mb-1">Abagael Luth</h5>
@@ -164,7 +163,8 @@
 											</div>
 										</a>
 										<a class="dropdown-item d-flex" href="chat.html">
-											<span class="avatar avatar-md brround me-3 align-self-center cover-image" data-bs-image-src="../assets/images/users/12.jpg"></span>
+											<span class="avatar avatar-md brround me-3 align-self-center cover-image"
+												data-bs-image-src="../assets/images/users/12.jpg"></span>
 											<div class="wd-90p">
 												<div class="d-flex">
 													<h5 class="mb-1">Brizid Dawson</h5>
@@ -176,7 +176,8 @@
 											</div>
 										</a>
 										<a class="dropdown-item d-flex" href="chat.html">
-											<span class="avatar avatar-md brround me-3 align-self-center cover-image" data-bs-image-src="../assets/images/users/4.jpg"></span>
+											<span class="avatar avatar-md brround me-3 align-self-center cover-image"
+												data-bs-image-src="../assets/images/users/4.jpg"></span>
 											<div class="wd-90p">
 												<div class="d-flex">
 													<h5 class="mb-1">Shannon Shaw</h5>
@@ -197,17 +198,20 @@
 							<!-- SIDE-MENU -->
 							<div class="dropdown d-flex profile-1">
 								{% if app.user.picture is not null %}
-									<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
-										<img src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="profile-user" class="avatar  profile-user brround cover-image">
-									</a>
+								<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+									<img src="{{ asset('uploads/user/' ~ app.user.picture)}}" alt="profile-user"
+										class="avatar  profile-user brround cover-image">
+								</a>
 								{% elseif app.user.sexe == 0 %}
-									<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
-										<img src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="profile-user" class="avatar  profile-user brround cover-image">
-									</a>
+								<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+									<img src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="profile-user"
+										class="avatar  profile-user brround cover-image">
+								</a>
 								{% elseif app.user.sexe == 1 %}
-									<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
-										<img src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="profile-user" class="avatar  profile-user brround cover-image">
-									</a>
+								<a href="#" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+									<img src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="profile-user"
+										class="avatar  profile-user brround cover-image">
+								</a>
 								{% endif %}
 								<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
 									<div class="drop-heading">
@@ -226,9 +230,9 @@
 										Déconnexion
 									</a>
 								</div>
-								 <div class="demo-icon nav-link icon">
-                                                <i class="fe fe-settings fa-spin  text_primary"></i>
-                                            </div>
+								<div class="demo-icon nav-link icon">
+									<i class="fe fe-settings fa-spin  text_primary"></i>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -236,4 +240,5 @@
 			</div>
 		</div>
 	</div>
-</div></div>
+</div>
+{% block error %}{% endblock %}
