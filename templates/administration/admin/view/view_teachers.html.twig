@@ -20,11 +20,11 @@
 			{% for teacher in teachers %}
 				<tr>
 				{% if teacher.picture %}
-						<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ teacher.picture)}}" alt="Photo de profil"></td>
+						<td><a href="{{path('profil_user', {'id': teacher.id} ) }}"><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ teacher.picture)}}" alt="Photo de profil"></a></td>
 					{% elseif teacher.sexe == 0 %}
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
+					<td><a href="{{path('profil_user', {'id': teacher.id} ) }}"><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></a></td>
 					{% elseif teacher.sexe == 1 %}
-					<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+					<td><a href="{{path('profil_user', {'id': teacher.id} ) }}"><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></a></td>
 					{% endif %}
 					
 					<td>{{ teacher.firstname }}</td>

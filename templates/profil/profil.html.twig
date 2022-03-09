@@ -15,13 +15,13 @@
 
 			<!-- PAGE-HEADER -->
 			<div class="page-header">
-				<h1 class="page-title">Edit Profile</h1>
+				<h1 class="page-title">Modifier votre profil</h1>
 				<div>
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item">
-							<a href="#">Pages</a>
+							<a href="{{path('default')}}">Accueil</a>
 						</li>
-						<li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+						<li class="breadcrumb-item active" aria-current="page">Modifier vos informations</li>
 					</ol>
 				</div>
 			</div>
@@ -32,7 +32,7 @@
 				<div class="col-xl-4">
 					<div class="card">
 						<div class="card-header">
-							<div class="card-title">Edit Password</div>
+							<div class="card-title">Modifier votre mot de passe</div>
 						</div>
 						<div class="card-body">
 							<div class="text-center chat-image mb-5">
@@ -55,8 +55,7 @@
 
 								<div class="main-chat-msg-name">
 									<a href="profile.html">
-										<h5 class="mb-1 text-dark fw-semibold">{{app.user.firstname ~ ' ' ~
-											app.user.lastname}}</h5>
+										<h5 class="mb-1 text-dark fw-semibold">{{app.user.fullname}}</h5>
 									</a>
 									<p class="text-muted mt-0 mb-0 pt-0 fs-13">{{app.user.role}}</p>
 								</div>

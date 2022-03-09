@@ -20,11 +20,17 @@
 				{% for student in varStud %}
 					<tr>
 						{% if student.picture %}
-							<td><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></td>
+							<td>
+								<a href="{{path('profil_user', {'id': student.id} ) }}"><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ student.picture)}}" alt="Photo de profil"></a>
+							</td>
 						{% elseif student.sexe == 0 %}
-							<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></td>
+							<td>
+								<a href="{{path('profil_user', {'id': student.id} ) }}"><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="Photo de profil"></a>
+							</td>
 						{% elseif student.sexe == 1 %}
-							<td><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></td>
+							<td>
+								<a href="{{path('profil_user', {'id': student.id} ) }}"><img style="height:100px;width:100px;" src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="Photo de profil"></a>
+							</td>
 						{% endif %}
 						<td>{{ student.firstname }}</td>
 						<td>{{ student.lastname }}</td>
