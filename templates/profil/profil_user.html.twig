@@ -43,13 +43,18 @@
                                                                 </div>
                                                                 <div class="profile-img-content text-dark text-start">
                                                                     <div class="text-dark">
+                                                                        
                                                                         <h3 class="h3 mb-2">{{user.fullname}}</h3>
                                                                         <h5 class="text-muted">{{user.role}}</h5>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="btn-profile">
-                                                                <button class="btn btn-primary mt-1 mb-1"> <i class="fa fa-rss"></i> <span>Follow</span></button>
+                                                            {% if user.id == app.user.id %}
+                                                                <a href="{{path('profil')}}" class="btn btn-primary mt-1 mb-1"> <i class="fa fa-rss"></i> <span>Edit profil</span></a>
+                                                                {% else %}
+                                                                    <button class="btn btn-primary mt-1 mb-1"> <i class="fa fa-rss"></i> <span>Follow</span></button>
+                                                                {% endif %}
                                                                 <button class="btn btn-secondary mt-1 mb-1"> <i class="fa fa-envelope"></i> <span>Message</span></button>
                                                             </div>
                                                         </div>
