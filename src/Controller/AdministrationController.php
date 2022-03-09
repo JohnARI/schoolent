@@ -33,6 +33,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class AdministrationController extends AbstractController
 {
@@ -46,7 +48,6 @@ class AdministrationController extends AbstractController
         $this->notification= $notification;
 
     }
-
 
     /**
      * @Route("/admin/view-users", name="view-users")
@@ -63,8 +64,13 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator, string $projectDir): Response
+    public function viewAll(Request $request, PasswordGenerator $passwordGenerator, CacheInterface $cache): Response
     {
+        // $text = $cache->get('texte_details', function(ItemInterface $item){
+        //     $item->expiresAfter(20);
+        //     return $this->fonctionLongue();
+        // });
+        
         // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
@@ -85,7 +91,7 @@ class AdministrationController extends AbstractController
             // Ajout de photo
             $file = $formUser->get('picture')->getData();
             
-            if ($file != null) {
+            if ($file) {
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
             } 
@@ -109,7 +115,7 @@ class AdministrationController extends AbstractController
         if ($formTechno->isSubmitted() && $formTechno->isValid()) {
             $technoPicture = $formTechno->get('picture')->getData();
 
-            if ($technoPicture != null) {
+            if ($technoPicture) {
                 $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
                 $techno->setPicture($newFilename);
             }
@@ -166,6 +172,8 @@ class AdministrationController extends AbstractController
             $this->entityManager->persist($calendar);
             $this->entityManager->flush();
 
+            $this->notification->sendNotification("Vous avez un nouveau cours de: " . $programmingLanguages . "du" . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
+
             $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'). "intervention sur " . $cours ." " . $programmingLanguages . " Numero de session " . $nameSession . ".");
             if($student){
             foreach ($students as $student) { 
@@ -221,7 +229,7 @@ class AdministrationController extends AbstractController
 
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
-
+        $fileName = $user->getPicture();
         if ($form->isSubmitted() && $form->isValid()) {
 
             $file = $form->get('picture')->getData();
@@ -230,22 +238,9 @@ class AdministrationController extends AbstractController
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
             } elseif (is_null($file)) {
-                $defaultAvatar = new File($projectDir . '/public/uploads/user/default_avatar.png');
-                $originalFilename = pathinfo($defaultAvatar, PATHINFO_FILENAME);
-                $extension = '.' . $defaultAvatar->guessExtension();
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . $extension;
-                try {
-                    $defaultAvatar->move($this->getParameter('user_picture'), $newFilename);
-                    $user->setPicture($newFilename);
-                } catch (FileException $exception) {
-                    // Code à executer si une erreur est attrapée
-                }
-            } else {
-                $this->addFlash('warning', 'Les types de fichier autorisés sont : .jpeg / .png' /* Autre fichier autorisé*/);
-                return $this->redirectToRoute('addUser');
+                $filesystem = new Filesystem();
+                $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
             }
-
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
@@ -263,12 +258,12 @@ class AdministrationController extends AbstractController
     /**
     * @Route("/admin/delete/user/{id}", name="delete_user")
     */
-    public function deleteUser(User $user, Request $request): Response
+    public function deleteUser(User $user, Request $request, string $projectDir): Response
     {
         $fileName = $user->getPicture();
 
         // suppression de la photo user
-        if($fileName != null) {
+        if($fileName) {
             $filesystem = new Filesystem();
             $imageDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($imageDir . '/public/uploads/user/' . $fileName);
@@ -276,7 +271,7 @@ class AdministrationController extends AbstractController
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-        $this->addFlash('success', 'L\'utilistauer a été suprimmé !');
+        $this->addFlash('success', 'L\'utilisateur a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
 
@@ -320,7 +315,7 @@ class AdministrationController extends AbstractController
         $fileName = $technologie->getPicture();
 
         // suppression de la photo technologie
-        if($fileName != null) {
+        if($fileName) {
             $filesystem = new Filesystem();
             $projectDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($projectDir . '/public/uploads/techno/' . $fileName);
@@ -429,7 +424,7 @@ class AdministrationController extends AbstractController
     {
         $fileName = $course->getLink();
         // suppression de la photo technologie
-        if($fileName != null) {
+        if($fileName) {
             $filesystem = new Filesystem();
             $projectDir = $this->getParameter('kernel.project_dir');
             $filesystem->remove($projectDir . '/public/uploads/cours/' . $fileName);
@@ -441,4 +436,6 @@ class AdministrationController extends AbstractController
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'Le cours a été suprimmé');
     }
+
+   
 }

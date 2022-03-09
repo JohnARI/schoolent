@@ -32,12 +32,17 @@
 				center: 'title',
 				end: 'dayGridMonth'
 			},
+			selectable: true,
 			events: {{data|raw}},
 			editable: true,
 			eventResizableFromStart: true
 	})
 
 		calendar.on('eventChange', (e) => {
+         console.log(e.event.end);
+
+
+
 			let url = `/api/${e.event.id}/edit`
 			let donnees = {
 				"title": e.event.title,

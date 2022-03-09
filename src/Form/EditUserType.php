@@ -2,9 +2,12 @@
 
 namespace App\Form;
 
+use App\Entity\Payment;
+use App\Entity\Session;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -47,27 +50,22 @@ class EditUserType extends AbstractType
                 ]
             ])
 
-            ->add('password', RepeatedType::class, [
-                'constraints' => new Length([
-                    'min' => 4,
-                    'max' => 180,
-                ]),
-                'type' => PasswordType::class,
+            ->add('session', EntityType::class, [
+                'attr' => [
+                    'class' => 'input100 form-control',
+                ],
+                'placeholder' => 'Session',
+                'required' => false,
+                'multiple' => false,
+                'expanded' => false,
+                'class' => Session::class,
+            ])
+
+            ->add('payment', EntityType::class, [
                 'required' => true,
-                'invalid_message' => 'les deux mots de passe doivent être identiques',
-                'first_options' => [ 
-                    'label' => 'Nouveau mot de passe',
-                    'attr' => ['placeholder' => 'Entrez votre nouveau mot de passe',
-                    'class' => 'input100 form-control'                    
-                    ]
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le nouveau mot de passe',
-                    'attr' => ['placeholder' => 'Confirmez votre Nouveau mot de passe',
-                    'class' => 'input100 form-control'
-                    
-                    ]
-                ],
+                'label' => 'Rémuneration',
+                'class' => Payment::class,
+                'choice_label' => 'tarification',
             ])
                     // Choix du numéro
             ->add('phone', TelType::class, [

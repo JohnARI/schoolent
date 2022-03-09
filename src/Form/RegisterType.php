@@ -2,12 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\Session;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Payment;
+use App\Entity\Session;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -49,31 +50,36 @@ class RegisterType extends AbstractType
             ])
                     // Choix du numéro
             ->add('phone', TelType::class, [
+                'required' => true,
                 'attr' => [
                     'placeholder' => 'Téléphone',
                     'class' => 'input100 form-control',
                 ],
+                
             ])
                     // Choice session
             ->add('session', EntityType::class, [
                 'attr' => [
                     'class' => 'input100 form-control',
+                    
                 ],
                 'placeholder' => 'Session',
                 'required' => false,
-                // 'multiple' => false,
-                // 'expanded' => false,
+                'multiple' => false,
+                'expanded' => false,
                 'class' => Session::class,
             ])
       
                     // Choix du sexe
             ->add('sexe', ChoiceType::class, [
                 'attr' => [
-                    'class' => 'input100 form-control',
+                    'class' => 'input100 form-control',  
                 ],
                 'placeholder' => 'Sexe',
+                
                 'required' => true,
                 'multiple' => false,
+                'expanded' => false,
                 'choices'  => [
                     'Homme' => 0,
                     'Femme' => 1,
@@ -83,16 +89,26 @@ class RegisterType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'attr' => [
                     'class' => 'input100 form-control',
+                    
                 ],
-                'label' => 'Roles',
+                'placeholder' => 'Rôle',
                 'required' => true,
                 'multiple' => false,
                 'expanded' => false,
                 'choices'  => [
                     'Administrateur' => "ROLE_ADMIN",
-                    'Formateur' => "ROLE_TEACHER",
                     'Eleve' => "ROLE_USER",
+                    'Formateur' => "ROLE_TEACHER",
                 ]
+            ])
+
+            ->add('payment', EntityType::class, [
+                'attr' => [
+                    'class' => 'input100 form-control',  
+                ],
+                'placeholder' => 'Rémuneration',
+                'required' => false,
+                'class' => Payment::class,
             ])
 
             ->add('picture', FileType::class, [    
