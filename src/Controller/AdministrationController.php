@@ -251,6 +251,21 @@ class AdministrationController extends AbstractController
         ]);
     }
 
+     /**
+     * @Route("/profil/{id}", name="profil_user")
+     */
+    public function profilUser($id): Response
+    {
+        $user = $this->entityManager->getRepository(User::class)->find($id);
+
+        
+
+        return $this->render('profil/profil_user.html.twig', [
+            'user' => $user,
+        
+        ]);
+    }
+
     /**
      * @Route("/admin/delete/user/{id}", name="delete_user")
      */
