@@ -158,11 +158,10 @@ language: {
 url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/French.json'
 }
 });
-{ /* ERRORMESSAGE */
-}
+{ /* ERRORMESSAGE */ }
 let error = document.querySelector('#errorMessage');
 setTimeout(function () {
-$(error).remove();
+	$(error).remove();
 }, 5000)
 
 
@@ -179,3 +178,83 @@ return confirm('Voulez-vous vraiment supprimé cette technologie ?');
 });
 
 </script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+// <script>
+// 	function onClickDelete(e){
+// 		e.prevenetDefault();
+		
+// 		const url = this.href;
+// 		const viewNotif = this.querySelectorAll('span.notif-view');
+
+// 		axios.get(url).then(function(response){
+// 			// console.log(response);
+// 			const notifs = response.data.notifications;
+// 			viewNotif.textContent = notifs; 
+// 		});
+// 	}
+// 	document.querySelectorAll('a.delete-notif').forEach(function(link){
+// 		link.addEventListener('click', onClickDelete);
+// 	})
+// </script>
+
+<script>
+
+    // afficher les notifications en asynchrone en suprimmant une notification
+    Array.from(document.querySelectorAll('a.delete-notif')).forEach(function (link) {
+        link.addEventListener('click', onClickDelete);
+    });
+    async function onClickDelete(event) {
+        event.preventDefault();
+        const url = this.href;
+        
+        const count = Array.from(document.querySelectorAll('span.notif-view'));
+
+        try {
+            const result = await axios.get(url);	
+            const data = result.data;
+            
+            count.forEach(count => {
+                count.textContent = data.notifications;
+            });
+            
+        } catch (error) {
+            // error
+        }
+        
+    }
+
+    // afficher les notifications en asynchrone en ajoutant une notification
+    {# function loadDoc() {
+
+        setInterval(() => {
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                const count = document.querySelectorAll("span.notif-view").forEach(count => {
+                    count.innerHTML = this.responseText;
+                });
+            } 
+        };
+        $.ajax({
+		url: '{{ path("notification_delete") }}',
+		type: 'DELETE',
+		success: function(data) {
+			$('#zaz').html(data);
+		}
+	});
+    
+        let url ="{{path('notification')}}";
+        
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }, 500);  
+    }
+    loadDoc(); #}
+    </script>
+
+    <script>
+    
+    </script>

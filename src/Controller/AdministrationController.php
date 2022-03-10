@@ -33,6 +33,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class AdministrationController extends AbstractController
 {
@@ -45,7 +47,6 @@ class AdministrationController extends AbstractController
         $this->fileUploader = $fileUploader;
         $this->notification = $notification;
     }
-
 
     /**
      * @Route("/admin/view-users", name="view-users")
@@ -62,8 +63,13 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(Request $request, SluggerInterface $slugger, PasswordGenerator $passwordGenerator, string $projectDir, UserRepository $userRepository): Response
+    public function viewAll(Request $request, PasswordGenerator $passwordGenerator, CacheInterface $cache, UserRepository $userRepository): Response
     {
+        // $text = $cache->get('texte_details', function(ItemInterface $item){
+        //     $item->expiresAfter(20);
+        //     return $this->fonctionLongue();
+        // });
+        
         // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
@@ -447,4 +453,6 @@ class AdministrationController extends AbstractController
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'Le cours a été suprimmé');
     }
+
+   
 }

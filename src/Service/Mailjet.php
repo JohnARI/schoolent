@@ -3,8 +3,7 @@
 
 namespace App\Service;
 
-
-
+use App\Entity\Contact;
 use Mailjet\Client;
 use App\Entity\User;
 use Twig\Environment;
@@ -47,6 +46,44 @@ class Mailjet
                         [
                             'Email' => $user->getEmail(),
                             'Name' => $user->getFirstname()
+                        ]
+                    ],
+                    'TemplateID' => 3600624,
+                    'TemplateLanguage' => true,
+                    'Subject' => $subject,
+                    'Variables' => [
+                        'body' => $message,
+                    ]
+
+                ]
+            ]
+        ];
+    }
+
+    public function sendEmailContact(Contact $contact, string $myMessage)
+    {
+        $message = $this->twig->render('models/contact.html.twig', [
+            'contact' => $contact,
+            'message' => $myMessage
+        ]);
+
+        $this->send($this->generateSingleBodyContact($contact, "School ENT", $message));
+    }
+
+    private function generateSingleBodyContact(Contact $contact, string $subject, string $message): array
+    {
+        return [
+            'Messages' => [
+                [
+                    'From' => [
+                        'Email' => "a.takabait@gmail.com",
+                        'Name' => "School"
+                    ],
+                    
+                    'To' => [
+                        [
+                            'Email' => $contact->getEmail(),
+                            'Name' => $contact->getName()
                         ]
                     ],
                     'TemplateID' => 3600624,

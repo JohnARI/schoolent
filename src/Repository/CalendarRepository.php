@@ -33,6 +33,7 @@ class CalendarRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->addSelect('MONTH(c.start) as month ,SUM(DATE_DIFF(c.end,c.start)) as total')
             ->andWhere('YEAR(c.start) = YEAR(:dateNow)')
+            // ->andWhere('c.title' != 'indisponible')
             ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
             ->groupBy('month')
             ->orderBy('month', 'ASC')

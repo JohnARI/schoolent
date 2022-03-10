@@ -32,7 +32,7 @@ class Notification
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
-
+ 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
