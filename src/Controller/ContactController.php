@@ -51,13 +51,13 @@ class ContactController extends AbstractController
 
             $contact = new Contact();
             $form = $this->createForm(ContactType::class, $contact);
-            $this->addFlash('contact_success', 'Votre message a bien été envoyé, Un administrateur va vous répondre très bientôt!');
+            $this->addFlash('contact_success', 'Votre message a bien été envoyé, un administrateur va vous répondre très bientôt!');
             //Message de succès
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
 
-            $this->addFlash('contact_error', 'Votre formulaire contient des erreurs, Merci de bien vouloir les rectifier');
+            $this->addFlash('contact_error', 'Votre formulaire contient des erreurs, merci de bien vouloir les rectifier');
         }
 
         return $this->renderForm('contact/_form.html.twig', [

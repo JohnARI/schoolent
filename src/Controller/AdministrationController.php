@@ -379,7 +379,7 @@ class AdministrationController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
-        $this->addFlash('success', 'La date a été suprimée');
+        $this->addFlash('success', 'La date a été supprimée');
     }
 
     /**
@@ -410,7 +410,7 @@ class AdministrationController extends AbstractController
         $this->entityManager->remove($session);
         $this->entityManager->flush();
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
-        $this->addFlash('success', 'La session a été suprimée');
+        $this->addFlash('success', 'La session a été supprimée');
     }
 
     /**
@@ -430,6 +430,6 @@ class AdministrationController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
-        $this->addFlash('success', 'Le cours a été suprimé');
+        $this->addFlash('success', 'Le cours a été supprimé');
     }
 }
