@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Calendar;
 use App\Entity\User;
+use App\Entity\Grade;
 use App\Entity\Contact;
 use App\Entity\Session;
+use App\Form\GradeType;
+use App\Entity\Calendar;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -66,14 +69,30 @@ class DashboardController extends AbstractController
      * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
      * @Route("teacher/dashboard", name="dashboard-teacher")
      */
-    public function teacher(UserRepository $userRepository): Response
+    public function teacher(UserRepository $userRepository, Request $request): Response
     {
+        $grade = new Grade();
+        $formGrade = $this->createForm(GradeType::class, $grade);
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
         $mySession = $this->getUser()->getSession($session);
+
+        if ($formGrade->isSubmitted() && $formGrade->isValid()) {
+
+            $this->entityManager->persist($grade);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'L\'utilisateur a été modifié !');
+            return $this->redirect($request->getUri());
+        }
+
+
+
+
+
         return $this->render('dashboard/teachers-dashboard.html.twig', [
             'myStudents' => $myStudents,
             'mySessions' => $mySession,
+            'formGrade' => $formGrade->createView()
         ]);
     }
 
