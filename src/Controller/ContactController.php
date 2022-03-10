@@ -34,20 +34,20 @@ class ContactController extends AbstractController
             $entityManager->flush();
 
             // Envoi d'email
-            $user = (new User())
-                    ->setEmail('maisongaultier78@gmail.com')
-                    ->setFirstName('SchoolEnt')
-                    ->setLastname('School');
+            // $user = (new User())
+            //         ->setEmail('maisongaultier78@gmail.com')
+            //         ->setFirstName('SchoolEnt')
+            //         ->setLastname('School');
 
-            $email = (new EmailModel())
-            ->setTitle("Hello ".$user->getFirstname())
-            ->setSubject("New contact from your website")
-            ->setContent("<br>From : ".$contact->getEmail()
-                        ."<br> Name : ".$contact->getName()
-                        ."<br> Subject : ".$contact->getObjet()
-                        ."<br><br>".$contact->getMessage());
+            // $email = (new EmailModel())
+            // ->setTitle("Hello ".$user->getFirstname())
+            // ->setSubject("New contact from your website")
+            // ->setContent("<br>From : ".$contact->getEmail()
+            //             ."<br> Name : ".$contact->getName()
+            //             ."<br> Subject : ".$contact->getObjet()
+            //             ."<br><br>".$contact->getMessage());
 
-            $emailSender->sendEmailNotificationByMailjet($user, $email);
+            // $emailSender->sendEmailNotificationByMailjet($user, $email);
 
             $contact = new Contact();
             $form = $this->createForm(ContactType::class, $contact);
