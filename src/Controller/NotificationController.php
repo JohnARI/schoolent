@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Notification;
+use App\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,18 @@ class NotificationController extends AbstractController
     {
         $this->entityManager = $entityManager;
     }
+
+    // /**
+    //  * afficher le nombre de notifications AJAX
+    //  * @Route("admin/notification", name="notification", methods={"GET"})
+    //  */
+    // public function Notification(): Response
+    // {
+    //     return $this->json(
+    //     $this->entityManager->getRepository(Notification::class)->count(['user' => $this->getUser()])
+    //     , 200);
+    // }
+
     /**
      * Supprimer toute les notifications
      * @Route("/dashboard/notification/delete_notifications_all", name="notification_delete_all",methods={"GET"})
@@ -29,6 +42,7 @@ class NotificationController extends AbstractController
         return $this->redirect($request->get('redirect') ?? '/');
     }
 
+
     /**
      * Supprimer une notification
      * @Route("/dashboard/notification/{id}/delete", name="notification_delete",methods={"GET"})
@@ -37,7 +51,12 @@ class NotificationController extends AbstractController
     {
         $this->entityManager->remove($notification);
         $this->entityManager->flush();
-
-        return $this->redirect($request->get('redirect') ?? '/');
+        
+        return $this->json([
+            'code' => 200,
+            'message' => 'la notification est supprimée',
+            'notifications' => $this->entityManager->getRepository(Notification::class)->count(['user' => $this->getUser()]),
+        ], 200);
+        // return $this->redirect($request->get('redirect') ?? '/');
     }
 }

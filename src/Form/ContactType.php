@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Contact;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,6 +18,13 @@ class ContactType extends AbstractType
             ->add('phone')
             ->add('objet')
             ->add('message')
+            ->add('submit', SubmitType::class, [
+                'label' => "Envoyer la demande",
+                'attr' => [
+                    'class' => 'login100-form-btn btn-primary col-4',
+                    'type' => 'submit',
+                ]
+            ]);
             
         ;
     }

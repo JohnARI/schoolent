@@ -73,8 +73,7 @@ class RegisterType extends AbstractType
                     // Choix du sexe
             ->add('sexe', ChoiceType::class, [
                 'attr' => [
-                    'class' => 'input100 form-control',
-                    
+                    'class' => 'input100 form-control',  
                 ],
                 'placeholder' => 'Sexe',
                 
@@ -104,10 +103,12 @@ class RegisterType extends AbstractType
             ])
 
             ->add('payment', EntityType::class, [
-                'required' => true,
-                'label' => 'Rémuneration',
+                'attr' => [
+                    'class' => 'input100 form-control',  
+                ],
+                'placeholder' => 'Rémuneration',
+                'required' => false,
                 'class' => Payment::class,
-                'choice_label' => 'tarification',
             ])
 
             ->add('picture', FileType::class, [    
