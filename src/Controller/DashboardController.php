@@ -23,7 +23,7 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
+     * Afficher les utilsateurs : le nombre d'administrateurs, d'élèves, et professeurs et leurs calendriers respectifs(élèves et professeurs).
      * @Route("admin/dashboard", name="dashboard-admin")
      */
     public function admin(UserRepository $userRepository): Response
@@ -63,7 +63,7 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
+     * Afficher la liste des élèves par session, son emploi du temps, le nombre d'intervention et sa rémunération.
      * @Route("teacher/dashboard", name="dashboard-teacher")
      */
     public function teacher(UserRepository $userRepository): Response
@@ -78,7 +78,7 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * Afficher les utilsateurs, le nombre des élèves, et formateurs, des administrateurs et de sétudiants.
+     * Afficher la session, l'emploi du temps et le nom du professeur. 
      * @Route("/dashboard", name="dashboard-student")
      */
     public function student(UserRepository $userRepository): Response
@@ -98,8 +98,6 @@ class DashboardController extends AbstractController
      */
     public function showContact(): Response
     {
-
-
 
         $contacts = $this->entityManager->getRepository(Contact::class)->findAll();
 

@@ -34,30 +34,30 @@ class ContactController extends AbstractController
             $entityManager->flush();
 
             // Envoi d'email
-            $user = (new User())
-                    ->setEmail('maisongaultier78@gmail.com')
-                    ->setFirstName('SchoolEnt')
-                    ->setLastname('School');
+            // $user = (new User())
+            //         ->setEmail('maisongaultier78@gmail.com')
+            //         ->setFirstName('SchoolEnt')
+            //         ->setLastname('School');
 
-            $email = (new EmailModel())
-            ->setTitle("Hello ".$user->getFirstname())
-            ->setSubject("New contact from your website")
-            ->setContent("<br>From : ".$contact->getEmail()
-                        ."<br> Name : ".$contact->getName()
-                        ."<br> Subject : ".$contact->getObjet()
-                        ."<br><br>".$contact->getMessage());
+            // $email = (new EmailModel())
+            // ->setTitle("Hello ".$user->getFirstname())
+            // ->setSubject("New contact from your website")
+            // ->setContent("<br>From : ".$contact->getEmail()
+            //             ."<br> Name : ".$contact->getName()
+            //             ."<br> Subject : ".$contact->getObjet()
+            //             ."<br><br>".$contact->getMessage());
 
-            $emailSender->sendEmailNotificationByMailjet($user, $email);
+            // $emailSender->sendEmailNotificationByMailjet($user, $email);
 
             $contact = new Contact();
             $form = $this->createForm(ContactType::class, $contact);
-            $this->addFlash('contact_success', 'Votre message a bien été envoyé, Un administrateur va vous répondre très bientôt!');
+            $this->addFlash('contact_success', 'Votre message a bien été envoyé, un administrateur va vous répondre très bientôt!');
             //Message de succès
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
 
-            $this->addFlash('contact_error', 'Votre formulaire contient des erreurs, Merci de bien vouloir les rectifier');
+            $this->addFlash('contact_error', 'Votre formulaire contient des erreurs, merci de bien vouloir les rectifier');
         }
 
         return $this->renderForm('contact/_form.html.twig', [

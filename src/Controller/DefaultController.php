@@ -32,7 +32,7 @@ class DefaultController extends AbstractController
                     return $this->redirectToRoute('dashboard-student');
                     break;
 
-                    case 'Formateur':                       
+                    case 'Professeur':                       
 
                         return $this->redirectToRoute('dashboard-teacher');
                         break;
