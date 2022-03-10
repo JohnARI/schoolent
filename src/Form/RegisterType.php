@@ -98,7 +98,7 @@ class RegisterType extends AbstractType
                 'expanded' => false,
                 'choices'  => [
                     'Administrateur' => "ROLE_ADMIN",
-                    'Formateur' => "ROLE_TEACHER",
+                    'Professeur' => "ROLE_TEACHER",
                     'Eleve' => "ROLE_USER",
                 ]
             ])

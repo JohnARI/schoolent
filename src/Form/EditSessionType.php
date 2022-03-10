@@ -28,7 +28,7 @@ class EditSessionType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary '],
-                'label' => 'modifier une session'
+                'label' => 'Modifier une session'
             ]);
         ;
     }

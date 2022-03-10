@@ -31,31 +31,82 @@
                             class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
                 </li>
 
-                <li class="sub-category">
-                    <h3>Utilisateurs</h3>
-                </li>
+
                 {% if app.user.role == 'Administrateur' %}
+                <li class="sub-category">
+                    <h3>Utilisateur</h3>
+                </li>
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-all')}}"><i
-                            class="side-menu__icon fe fe-shield"></i><span class="side-menu__label">Espace
+                            class="side-menu__icon fe fe-users"></i><span class="side-menu__label">Espace
                             administrateur</span></a>
                 </li>
-                {% endif %}
-
                 <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="{{path('contact_new')}}"><i
-                            class="side-menu__icon fe fe-send"></i><span class="side-menu__label">Contact et
-                            messagerie</span></a>
+                    <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-contact')}}"><i
+                            class="side-menu__icon fe fe-mail"></i><span class="side-menu__label">Messages reçus</span></a>
                 </li>
 
                 <li class="sub-category">
                     <h3>Planning</h3>
                 </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
+                        class="side-menu__icon fe fe-calendar"></i><span class="side-menu__label">Calendrier</span></a>
+                </li>
+                {% endif %}
+
+
+                {% if app.user.role == 'Professeur' %}
+                <li class="sub-category">
+                    <h3>Espace personnel</h3>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
+                            class="side-menu__icon fe fe-monitor"></i><span class="side-menu__label">Classe virtuelle</span></a>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
+                            class="side-menu__icon fe fe-folder"></i><span class="side-menu__label">Contrat</span></a>
+                </li>               
+                
+                <li class="sub-category">
+                    <h3>Planning</h3>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
+                        class="side-menu__icon fe fe-calendar"></i><span class="side-menu__label">Emploi du temps</span></a>
+                </li>
+                {% endif %}
+
+
+                {% if app.user.role == 'Eleve' %}
+                <li class="sub-category">
+                    <h3>Espace personnel</h3>
+                </li>
 
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href=""><i
-                            class="side-menu__icon fe fe-clock"></i><span class="side-menu__label">Calendrier</span></a>
+                            class="side-menu__icon fe fe-monitor"></i><span class="side-menu__label">Classe virtuelle</span></a>
                 </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
+                            class="side-menu__icon fe fe-folder"></i><span class="side-menu__label">Cours</span></a>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
+                            class="side-menu__icon fe fe-message-circle"></i><span class="side-menu__label">Messagerie instantanée</span></a>
+                </li>
+                
+                <li class="sub-category">
+                    <h3>Planning</h3>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
+                        class="side-menu__icon fe fe-calendar"></i><span class="side-menu__label">Emploi du temps</span></a>
+                </li>
+                {% endif %}
+
+
             </ul>
         </div>
     </div>
