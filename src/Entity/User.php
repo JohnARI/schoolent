@@ -310,7 +310,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $us = $this->getRoles();
         $acces =  implode(",", $us);
         $admin = "Administrateur";
-        $professeur = "Formateur";
+        $professeur = "Professeur";
         $eleve = "Eleve";
 
         switch ($acces) {

@@ -141,7 +141,7 @@ class AdministrationController extends AbstractController
             $this->entityManager->persist($session);
             $this->entityManager->flush();
             return $this->redirect($request->getUri());
-            $this->addFlash('success', 'Une nouvelle a été session ajoutée !');
+            $this->addFlash('success', 'Une nouvelle session a été ajoutée !');
         }
         // Fin add session
 
@@ -174,10 +174,10 @@ class AdministrationController extends AbstractController
 
             $this->notification->sendNotification("Vous avez un nouveau cours de: " . $programmingLanguages . "du" . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
 
-            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . "intervention sur " . $cours . " " . $programmingLanguages . " Numero de session " . $nameSession . ".");
+            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . "intervention sur " . $cours . " " . $programmingLanguages . " Nom de session " . $nameSession . ".");
             if ($student) {
                 foreach ($students as $student) {
-                    $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours . " " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+                    $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours . " " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.');
                 }
             }
 
@@ -203,7 +203,7 @@ class AdministrationController extends AbstractController
 
             $this->entityManager->persist($course);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Un nouveaux cours ajouté !');
+            $this->addFlash('success', 'Un nouveau cours ajouté !');
             return $this->redirect($request->getUri());
         }
 
@@ -375,11 +375,11 @@ class AdministrationController extends AbstractController
             $this->entityManager->persist($calendar[0]);
             $this->entityManager->flush();
 
-            $this->notification->sendNotification("Votre intervention a été mofifiée : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
-            $this->mailjet->sendEmail($teacher, "Votre planning vient d'etre mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Numero de session " . $nameSession . ".");
+            $this->notification->sendNotification("Votre intervention a été modifiée : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
+            $this->mailjet->sendEmail($teacher, "Votre planning vient d'être mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Nom de session " . $nameSession . ".");
 
             foreach ($students as $student) {
-                $this->mailjet->sendEmail($student, "votre convocation vient d'étre à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le formateur " . $teacher . '.');
+                $this->mailjet->sendEmail($student, "votre convocation vient d'être mis à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.');
             }
 
             $this->addFlash('success', 'La date a été modifiée !');
@@ -400,7 +400,7 @@ class AdministrationController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
-        $this->addFlash('success', 'La date a été suprimmée');
+        $this->addFlash('success', 'La date a été supprimée');
     }
 
     /**
@@ -431,7 +431,7 @@ class AdministrationController extends AbstractController
         $this->entityManager->remove($session);
         $this->entityManager->flush();
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
-        $this->addFlash('success', 'La session a été suprimmée');
+        $this->addFlash('success', 'La session a été supprimée');
     }
 
     /**
@@ -451,7 +451,7 @@ class AdministrationController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
-        $this->addFlash('success', 'Le cours a été suprimmé');
+        $this->addFlash('success', 'Le cours a été supprimé');
     }
 
    

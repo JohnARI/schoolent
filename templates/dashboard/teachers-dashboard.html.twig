@@ -39,7 +39,7 @@
 																<div class="d-flex">
 																	<div class="text-white me-4">
 																		<h2 class="mb-0 number-font">{{ varStud | length }}</h2>
-																		<p class="text-white mb-0">Mes étudiants</p>
+																		<p class="text-white mb-0">Liste des étudiants</p>
 																	</div>
 																	
 																	<div class="ms-auto"> <i class="fa fa-user-o text-white fs-30 me-2 mt-2"></i> </div>
@@ -81,12 +81,11 @@
 															{% block dashboard %}
 																<p>Bonjour {{app.user.fullname}} 
 																{% if app.user.session %}
-																vous avez une session du <strong>{{ app.user.session.startSession | date("d/m/Y") }}</strong> au <strong>{{ app.user.session.endSession | date("d/m/Y") }}</strong> avec <strong>{{varStud | length }}</strong> étudiants
+																Vous avez une session du <strong>{{ app.user.session.startSession | date("d/m/Y") }}</strong> au <strong>{{ app.user.session.endSession | date("d/m/Y") }}</strong> avec <strong>{{varStud | length }}</strong> étudiants
 																{% else %}
-																	vous n'avez aucune session en cours
+																	Vous n'avez aucune session en cours
 																{% endif %}</p>
-															{% endblock
-                        %}
+															{% endblock %}
 														{% endembed %}
 											
 										</a>

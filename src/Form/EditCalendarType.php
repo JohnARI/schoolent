@@ -41,7 +41,7 @@ class EditCalendarType extends AbstractType
             'choice_label' => 'name',
         ])
         ->add('teacher', EntityType::class, [
-            'label' => 'Formateur',
+            'label' => 'Professeur',
             'class' => User::class,
             'choice_label' => 'fullname',
         ])

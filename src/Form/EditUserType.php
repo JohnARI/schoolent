@@ -62,11 +62,14 @@ class EditUserType extends AbstractType
             ])
 
             ->add('payment', EntityType::class, [
-                'required' => true,
-                'label' => 'Rémuneration',
+                'attr' => [
+                    'class' => 'input100 form-control',  
+                ],
+                'placeholder' => 'Rémuneration',
+                'required' => false,
                 'class' => Payment::class,
-                'choice_label' => 'tarification',
             ])
+
                     // Choix du numéro
             ->add('phone', TelType::class, [
                 'attr' => [
@@ -100,7 +103,7 @@ class EditUserType extends AbstractType
                 'expanded' => false,
                 'choices'  => [
                     'Administrateur' => "ROLE_ADMIN",
-                    'Formateur' => "ROLE_TEACHER",
+                    'Professeur' => "ROLE_TEACHER",
                     'Eleve' => "ROLE_USER",
                 ]
             ])
