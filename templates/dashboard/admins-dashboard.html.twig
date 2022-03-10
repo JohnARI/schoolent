@@ -8,20 +8,19 @@ Dashboard admin
 
 
 <script>
+c3.chart.internal.fn.additionalConfig = {
+    bar_radiusAll: false,//from   w  ww . d  e  mo 2 s  .  c  o  m
+    bar_radius: 5,
+    tooltip_format_color: undefined
+};
+
 /*chart-month-bar*/
 
 var chart = c3.generate({
     bindto: '#chart-monthly', // id of chart wrapper
     
     data: {
-        
-        columns: [
-            // each columns data
-        ['data1',{% for data in dateByMonth %}
-            {{ data.total }},
-            {% endfor %}
-        ] 
-        ],
+        columns: [['data1',{% for data in dateByMonth %} {{ data.total }},{% endfor %}]],
         type: 'bar', // default type of chart
         colors: {
             data1: '#0786F9'
@@ -29,7 +28,11 @@ var chart = c3.generate({
         names: {
             // name of each serie
             'data1': 'Jours'
-        }
+        },
+        
+     
+      
+     
     },
     axis: {
         rotated: false,
@@ -45,14 +48,27 @@ var chart = c3.generate({
                         %}
                         "{{ trans_month_hash[data.0.start | date('F')] }}",
                         {% endfor %}
-                    ]
+                    ],
         }, 
     },
     bar: {
         width: 100,
     },
+    
     legend: {
         show: false, //hide legend
+    },
+    point: {
+        r: 5,
+        focus: {
+            expand: {
+                
+                r: 1,
+            }
+        },
+        select: {
+            r: 3,
+        },
     },
     
     padding: {

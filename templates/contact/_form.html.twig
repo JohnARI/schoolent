@@ -70,9 +70,8 @@
 						<div class="form-group col-md-12">
 							{{form_row(form.message, {"label":"Votre message : "})}}
 						</div>
-
-						<div class="col-md-12">
-							<button type="submit"> <a href="" class="login100-form-btn btn-primary">{{ button_label|default('Envoyer le message') }}</a></button>
+						<div class="container-login100-form-btn">
+							{{form_widget(form.submit)}}
 						</div>
 						{{form_end(form)}}
 						<div class="text-center pt-3">

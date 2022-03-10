@@ -87,8 +87,6 @@ class DashboardController extends AbstractController
             'students' => $students,
         ]);
     }
-
-
     /**
      * @Route("admin/teachers", name="view-teachers")
      */
@@ -123,10 +121,6 @@ class DashboardController extends AbstractController
     {
 
         $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
-
-
-
-
         return $this->render("administration/admin/view/view_students.html.twig", [
             'students' => $students,
         ]);
