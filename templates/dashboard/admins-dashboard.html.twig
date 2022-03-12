@@ -37,20 +37,14 @@
 											<i class="fe fe-calendar me-1"></i>Professeur</span>
 									</a>
 								</li>
-
-
 							</ul>
 						</div>
 					</div>
 
 					<div class="panel-body tabs-menu-body">
 						<div class="tab-content">
-
-
 							<div class="tab-pane active" id="users">
-
 								{# Tableaux et modal #}
-
 								<!-- ROW OPEN -->
 								<div class="row">
 									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
@@ -76,11 +70,11 @@
 															{% block dashboard %}
 																{% include "/administration/admin/view/view_students.html.twig" %}
 															{% endblock %}
-														{% endembed %}
-											
+														{% endembed %}							
 										</a>
 									</div>
 									<!-- COL END -->
+
 									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
 										<a class="card bg-azure img-card box-azure-shadow">
 											{% embed "components/modal.html.twig" %}
@@ -102,11 +96,11 @@
 															{% block dashboard %}
 																{% include "/administration/admin/view/view_teachers.html.twig" %}
 															{% endblock %}
-														{% endembed %}
-											
+														{% endembed %}											
 										</a>
 									</div>
 									<!-- COL END -->
+
 									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
 										<a class="card bg-success img-card box-success-shadow">
 											{% embed "components/modal.html.twig" %}
@@ -129,33 +123,31 @@
 																{% include "/administration/admin/view/view_admins.html.twig" %}
 															{% endblock %}
 														{% endembed %}
-											
 										</a>
 									</div>
 									{# <!-- COL END --> #}
 									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
 										<a class="card bg-info img-card box-info-shadow">
 											{% embed "components/modal.html.twig" %}
-																					{% set modalType = "modal-xl" %}
-																					{% set id = "full-session" %}
-																					{% block button %}
-																					<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
-																						<div class="d-flex">
-																							<div class="text-white">
-																								<h2 class="mb-0 number-font">{{ sessions | length }}</h2>
-																								<p class="text-white mb-0">Sessions</p>
-																							</div>
-																							<div class="ms-auto"> <i class="fa fa-tags text-white fs-30 me-2 mt-2"></i> </div>
-																						</div>
-																					</button>
-																					{% endblock %}
-																					{% block modalTitle %}Toutes les sessions
-																					{% endblock %}
-																					{% block dashboard %}
-																						{% include "/administration/admin/view/view_sessions.html.twig" %}
-																					{% endblock %}
-																				{% endembed %}
-											
+												           {% set modalType = "modal-xl" %}
+												           {% set id = "full-session" %}
+												           {% block button %}
+											               <button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
+											                    <div class="d-flex">
+											                        <div class="text-white">
+																	    <h2 class="mb-0 number-font">{{ sessions | length }}</h2>
+																		<p class="text-white mb-0">Sessions</p>
+																		</div>
+																		<div class="ms-auto"> <i class="fa fa-tags text-white fs-30 me-2 mt-2"></i> </div>
+																	</div>
+																</button>
+																{% endblock %}
+																{% block modalTitle %}Toutes les sessions
+																{% endblock %}
+																{% block dashboard %}
+																		{% include "/administration/admin/view/view_sessions.html.twig" %}
+																{% endblock %}
+															{% endembed %}
 										</a>
 									</div>
 									{# <!-- COL END --> #}
@@ -189,15 +181,11 @@
 										</div>
 									</div>
 								</div>
-
-
 							</div>
 
 							<div class="tab-pane" id="teachers">
 								{% set varStud = myStudents %}
 								{{ block("teacher", "dashboard/teachers-dashboard.html.twig") }}
-
-
 							</div>
 						</div>
 

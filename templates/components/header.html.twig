@@ -3,8 +3,8 @@
 		<div class="d-flex">
 			<a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="#"></a>
 			<div class="demo-icon nav-link icon">
-									<i class="fe fe-settings fa-spin  text_primary"></i>
-								</div>
+				<i class="fe fe-settings fa-spin  text_primary"></i>
+			</div>
 			<!-- sidebar-toggle-->
 			<a class="logo-horizontal" href="{{path('default')}}">
 				<img src="{{asset('assets/images/brand/school.png')}}" class="header-brand-img h-20 w-20 desktop-logo"
@@ -68,6 +68,9 @@
 									<i class="fe fe-minimize fullscreen-button"></i>
 								</a>
 							</div>
+
+
+							{% if (app.user.role == 'Professeur') or (app.user.role == 'Eleve') %}				
 							<!-- FULL-SCREEN -->
 							<div class="dropdown d-flex notifications">
 								<a class="nav-link icon" data-bs-toggle="dropdown">
@@ -126,7 +129,7 @@
 							<!-- NOTIFICATIONS -->
 							<div class="dropdown  d-flex message">
 								<a class="nav-link icon text-center" data-bs-toggle="dropdown">
-									<i class="fe fe-message-square"></i>
+									<i class="fe fe-message-circle"></i>
 									<span class="pulse">0</span>
 								</a>
 								<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -197,6 +200,7 @@
 									<a href="#" class="dropdown-item text-center p-3 text-muted">See all Messages</a>
 								</div>
 							</div>
+							{% endif %}
 							<!-- MESSAGE-BOX -->
 							<!-- SIDE-MENU -->
 							<div class="dropdown d-flex profile-1">
@@ -229,7 +233,7 @@
 										Profil
 									</a>
 									<a class="dropdown-item" href="{{path('app_logout')}}">
-										<i class="dropdown-icon fe fe-alert-circle"></i>
+										<i class="dropdown-icon fe fe-log-out"></i>
 										Déconnexion
 									</a>
 								</div>

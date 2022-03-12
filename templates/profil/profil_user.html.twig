@@ -33,7 +33,6 @@
                                                             <div class="profile-cover__img">
                                                                 <div class="profile-img-1">
                                                                 {% if user.picture %}
-                                                                
                                                                     <img src="{{ asset('uploads/user/' ~ user.picture)}}" alt="image utilisateur">
                                                                     {% elseif user.sexe == 0 %}
                                                                     <img src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="image utilisateur">
@@ -51,7 +50,7 @@
                                                             </div>
                                                             <div class="btn-profile">
                                                             {% if user.id == app.user.id %}
-                                                                <a href="{{path('profil')}}" class="btn btn-primary mt-1 mb-1"> <i class="fa fa-rss"></i> <span>Edit profil</span></a>
+                                                                <a href="{{path('profil')}}" class="btn btn-primary mt-1 mb-1"> <i class="fa fa-user"></i> <span>Modifier profil</span></a>
                                                                 {% else %}
                                                                     <button class="btn btn-primary mt-1 mb-1"> <i class="fa fa-rss"></i> <span>Follow</span></button>
                                                                 {% endif %}
@@ -68,11 +67,11 @@
                                                                     <a class="social-icon text-primary" href=""><i class="fa fa-youtube"></i></a>
                                                                     <a class="social-icon text-primary" href=""><i class="fa fa-rss"></i></a>
                                                                     <a class="social-icon text-primary" href=""><i class="fa fa-linkedin"></i></a>
-                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-google-plus"></i></a>
+                                                                    <a class="social-icon text-primary" href=""><i class="fa fa-google-plus"></i></a> 
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> 
                                                 </div>
 
                                             </div>

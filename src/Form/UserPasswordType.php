@@ -33,14 +33,14 @@ class UserPasswordType extends AbstractType
                 ]),
                 'type' => PasswordType::class,
                 'required' => true,
-                'invalid_message' => 'les deux mots de passe doivent être identiques',
+                'invalid_message' => 'Les deux mots de passe doivent être identiques',
                 
                 'first_options' => [ 
 
                     'attr' => ['placeholder' => 'Entrez votre nouveau mot de passe']
                 ],
                 'second_options' => [
-                    'attr' => ['placeholder' => 'Confirmez votre Nouveau mot de passe']
+                    'attr' => ['placeholder' => 'Confirmez votre nouveau mot de passe']
                 ],
             ])
             ->add('submit', SubmitType::class, [
