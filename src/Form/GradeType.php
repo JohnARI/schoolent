@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\User;
 use App\Entity\Grade;
-use App\Entity\Rating;
 use App\Entity\Session;
 use App\Repository\UserRepository;
 use App\Entity\ProgrammingLanguage;
@@ -51,34 +50,43 @@ class GradeType extends AbstractType
                         ->setParameter('user', $mySession)
                         ->orderBy('u.lastname', 'ASC');
                 },
-                'label' => 'Elève'
+             
             ];
 
-            if ($user->getRole() == 'Administrateur') {
+        
 
-                $form->add('user', EntityType::class, [
-                    'class' => User::class,
-                    'choice_label' => 'Fullname',
-                    'label' => 'Elève'
-                ]);
-            } else {
+            
                 
-                $form->add('user', EntityType::class, $formOptions);
-            }
+                $form->add('user', EntityType::class, $formOptions, [
+                    'attr' => [
+                        'class' => 'input100 form-control',
+                    ]
+                ]);
+            
         });
         $builder
 
             ->add('category', EntityType::class, [
-                'label' => 'Language',
+      
                 'class' => ProgrammingLanguage::class,
                 'choice_label' => 'name',
+                'attr' => [
+                    'class' => 'input100 form-control',
+                ]
             ])
-            ->add('name', TextType::class, ['label' => 'Intitulé'])
-            ->add('grade', NumberType::class, ['label' => 'Note'])
-            ->add('comment', TextareaType::class, ['label' => 'Commentaire'])
+            ->add('name', TextType::class, ['attr' => [
+                'attr' => 'input100 form-control',
+            ]])
+            ->add('grade', NumberType::class, ['attr' => [
+                'class' => 'input100 form-control',
+            ]])
+            ->add('comment', TextareaType::class, [
+                'attr' => [
+                'class' => 'input100 form-control',
+            ]])
 
             ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-primary btn-block'],
+                'attr' => ['class' => 'login100-form-btn btn-primary'],
                 'label' => 'Ajouter une note'
             ]);;
     }
