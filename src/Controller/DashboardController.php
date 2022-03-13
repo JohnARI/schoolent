@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Grade;
+use DateTimeImmutable;
 use App\Entity\Contact;
 use App\Entity\Session;
 use App\Form\GradeType;
@@ -30,9 +31,7 @@ class DashboardController extends AbstractController
      * @Route("admin/dashboard", name="dashboard-admin")
      */
     public function admin(UserRepository $userRepository, Request $request): Response
-    {
-        $grade = new Grade();
-        $formGrade = $this->createForm(GradeType::class, $grade);
+    {      
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
@@ -45,12 +44,16 @@ class DashboardController extends AbstractController
         $mySession = $this->getUser()->getSession($session);
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
 
+        $grade = new Grade();
 
+        $formGrade = $this->createForm(GradeType::class, $grade);
+        $formGrade->handleRequest($request);
+        
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
-
+            $grade->setCreatedAt(new DateTimeImmutable());
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
-            $this->addFlash('success', 'L\'utilisateur a été modifié !');
+            $this->addFlash('success', 'La note a été attribué');
             return $this->redirect($request->getUri());
         }
 
@@ -82,11 +85,14 @@ class DashboardController extends AbstractController
      */
     public function teacher(UserRepository $userRepository, Request $request): Response
     {
-        $grade = new Grade();
-        $formGrade = $this->createForm(GradeType::class, $grade);
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
         $mySession = $this->getUser()->getSession($session);
+
+        $grade = new Grade();
+        
+        $formGrade = $this->createForm(GradeType::class, $grade);
+        $formGrade->handleRequest($request);
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
 

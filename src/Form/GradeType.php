@@ -35,43 +35,40 @@ class GradeType extends AbstractType
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $mySession = $user->getSession($session)->getId();
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($user, $mySession) {
-           
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($mySession) {
+
             $form = $event->getForm();
 
             $formOptions = [
                 'class' => User::class,
+                'placeholder' => 'Elève',
                 'choice_label' => 'Fullname',
                 'query_builder' => function (UserRepository $userRepository) use ($mySession) {
                     return $userRepository->createQueryBuilder('u')
-                        ->where('u.session = :user')
+                        ->where('u.session = :session')
                         ->andWhere('u.roles LIKE :role')
                         ->setParameter('role', "%ROLE_USER%")
-                        ->setParameter('user', $mySession)
+                        ->setParameter('session', $mySession)
                         ->orderBy('u.lastname', 'ASC');
                 },
-             
+
             ];
 
-        
+            $form->add('user', EntityType::class, $formOptions, [
+                'attr' => [
+                    'class' => 'form-control form-select',
+                ],
 
-            
-                
-                $form->add('user', EntityType::class, $formOptions, [
-                    'attr' => [
-                        'class' => 'input100 form-control',
-                    ]
-                ]);
-            
+            ]);
         });
         $builder
 
             ->add('category', EntityType::class, [
-      
+
                 'class' => ProgrammingLanguage::class,
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'input100 form-control',
+                    'class' => 'form-control',
                 ]
             ])
             ->add('name', TextType::class, ['attr' => [
@@ -82,11 +79,14 @@ class GradeType extends AbstractType
             ]])
             ->add('comment', TextareaType::class, [
                 'attr' => [
-                'class' => 'input100 form-control',
-            ]])
+                    'class' => 'form-control mb-4',
+                ]
+            ])
 
             ->add('submit', SubmitType::class, [
-                'attr' => ['class' => 'login100-form-btn btn-primary'],
+                'attr' => [
+                    'class' => 'login100-form-btn btn-primary'
+                ],
                 'label' => 'Ajouter une note'
             ]);;
     }
@@ -98,4 +98,3 @@ class GradeType extends AbstractType
         ]);
     }
 }
-
