@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use DateTime;
-use PDOException;
 use App\Entity\Calendar;
-use App\Repository\UserRepository;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,15 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiController extends AbstractController
 {
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-        
-    }
-
     /**
-     * @Route("/api/{id}/edit", name="api_events_edit", methods={"PUT"})
+     * @Route("/api/{id}/edit", name="api_even_edit", methods={"PUT"})
      */
     public function majEvent(?Calendar $calendar, Request $request, EntityManagerInterface $em, CalendarRepository $calendars): Response
     { //Potentiellement un objet Calendar
@@ -31,8 +22,6 @@ class ApiController extends AbstractController
 
         //On Récupère les données
         $donnees = json_decode($request->getContent());
-
-       
 
         if (
             isset($donnees->title) && !empty($donnees->title) &&
@@ -67,6 +56,7 @@ class ApiController extends AbstractController
             $em->persist($calendar);
             $em->flush();
 
+<<<<<<< HEAD
             
 
             //On retourne le code
@@ -182,6 +172,8 @@ class ApiController extends AbstractController
 
             
 
+=======
+>>>>>>> master
             //On retourne le code
             return new Response('Ok', $code);
 
@@ -189,8 +181,7 @@ class ApiController extends AbstractController
 
             return new Response('Données incomplètes', 404);
         }
-        
 
         return $this->render('test/index.html.twig');
     }
-};
+}

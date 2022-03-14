@@ -1,8 +1,7 @@
-
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Calendar_test
+	Contact
 {% endblock %}
 
 {% block header %}{% endblock %}
@@ -12,6 +11,7 @@
 
 {% block body %}
 <div id="calendrier"></div>
+
 
 
 
@@ -34,7 +34,6 @@
 			},
 			events: {{data|raw}},
 			editable: true,
-			selectable: true,
 			eventResizableFromStart: true
 	})
 

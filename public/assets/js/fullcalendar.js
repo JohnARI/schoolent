@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('calendar2');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
