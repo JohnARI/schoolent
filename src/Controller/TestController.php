@@ -35,8 +35,9 @@ class TestController extends AbstractController
 
         $data = json_encode($booking);
 
-        return $this->render('test/index.html.twig', compact('data'));
+        return $this->render('test/test.html.twig', compact('data'));
         
     }
 
 }
+

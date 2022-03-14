@@ -40,11 +40,30 @@ class CalendarController extends AbstractController
     /**
      * @Route("/new", name="calendar_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, CalendarRepository $calendarRepository): Response
     {
         $calendar = new Calendar();
         $form = $this->createForm(CalendarType::class, $calendar);
         $form->handleRequest($request);
+        $user = $this->getUser(); 
+        $id_user = $this->getUser('id');
+
+        $events = $calendarRepository->findBy(['teacher_id'=>$id_user]);
+
+        foreach($events as $event){
+
+            $start = $event->getStart();
+            $end = $event->getEnd();
+        }
+      
+        // $interval = DateInterval::createFromDateString('1 day');
+        // $daterange = new DatePeriod($start,$interval,$end);
+        $start_date = $form['start']->getData();
+        $end_date = $form['end']->getData();
+       
+
+        // dd($daterange);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
 
