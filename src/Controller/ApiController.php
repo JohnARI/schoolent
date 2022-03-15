@@ -14,6 +14,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiController extends AbstractController
 {
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+        
+    }
     /**
      * @Route("/api/{id}/edit", name="api_even_edit", methods={"PUT"})
      */
@@ -121,7 +127,7 @@ class ApiController extends AbstractController
             // On Hydrate l'objet avec les données
             $calendar->setTitle($donnees->title);
             $calendar->setStart(new Datetime($donnees->start));
-            $calendar->setEnd(new DateTime($donnees->end));
+            $calendar->setEnd(new DateTime($donnees->end), strtotime('+ 1 days'));
             $calendar->setDescription($donnees->description);
             $calendar->setTeacherName($donnees->teacherName);
 
@@ -138,7 +144,10 @@ class ApiController extends AbstractController
                         ORDER BY u.id ASC'
                     )->setParameter('fullname', $moninfo);
 
-                    $id = $query->getSingleScalarResult();
+                $id = $query->getSingleScalarResult();
+
+                   //$id = $query->getSingleResult();
+                    //$id = $query->getResult();
 
                     settype($id, 'integer');
             
@@ -180,7 +189,43 @@ class ApiController extends AbstractController
             return new Response('Données incomplètes', 404);
         }
 
-        return $this->render('test/index.html.twig');
+        
+        
+    }
+
+    /**
+     * @Route("/api/{id}/delete", name="api_even_delete", methods={"PUT"})
+     */
+    public function majEventDelete(Calendar $calendarDelete, Request $request, CalendarRepository $calendar, $id): Response
+    { //Potentiellement un objet Calendar
+
+        
+        $this->entityManager->remove($calendarDelete);
+        $this->entityManager->flush();
+
+
+            $calendrier = $calendar->findAll();
+            $query = $this->entityManager->createQuery(
+                'SELECT c
+                    FROM App:Calendar c
+                WHERE c.title != :title
+                ORDER BY c.title ASC'
+            )->setParameter('title', 'indisponible');
+    
+            $calendar = $query->getResult();
+    
+            $calendars = new Calendar;
+            
+    
+
+
+            return $this->render('test/test.html.twig',[
+
+                'calendar' => $calendar,
+                'calendrier'=> $calendrier
+            ]);
+
+
     }
 }
 

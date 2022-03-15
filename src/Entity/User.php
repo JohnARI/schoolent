@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastname;
 
     /**
-     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $fullname;
 
@@ -133,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sent = new ArrayCollection();
         $this->received = new ArrayCollection();
         $this->checking = 1;
+        $this->getFullName();
     }
 
     public function getId(): ?int
@@ -259,8 +260,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFullName(): ?string
     {
-        return $this->getFirstName() . ' ' . $this->getLastname();
+        return $this->getLastName() . ' ' . $this->getFirstname();
     }
+
+    public function setFullName(string $fullname): self
+    {
+        $this->fullname = $fullname;
+
+        return $this;
+    }
+
+
 
     public function setLastName(string $lastname): self
     {
