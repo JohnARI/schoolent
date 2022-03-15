@@ -56,10 +56,10 @@ class GradeRepository extends ServiceEntityRepository
        public function findStats($id): array
        {
            $date = new \DateTime();
-           return $this->createQueryBuilder('r')
-              ->addSelect('MONTH(r.createdAt) as month , SUM(r.grade)/ COUNT(r.grade) as total')
-              ->where('r.user = :id')
-              ->andWhere('YEAR(r.createdAt) = YEAR(:dateNow)')
+           return $this->createQueryBuilder('g')
+              ->addSelect('MONTH(g.createdAt) as month , SUM(g.grade)/ COUNT(g.grade) as total')
+              ->where('g.user = :id')
+              ->andWhere('YEAR(g.createdAt) = YEAR(:dateNow)')
               ->setParameter('id', $id)
               ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
               ->groupBy('month')
@@ -68,6 +68,20 @@ class GradeRepository extends ServiceEntityRepository
               ->getResult()
            ;
      }
+
+     /**
+      * @return int|mixed
+      * @throws Exception
+      * @throws \Doctrine\DBAL\Exception
+      */
+      public function findGradeByUser($studentId): array
+      {
+          return $this->createQueryBuilder('g')
+          ->where('g.user = :user')
+          ->setParameter('user', $studentId)
+          ->getQuery()
+          ->getResult();
+    }
 
 
     /**
@@ -79,10 +93,10 @@ class GradeRepository extends ServiceEntityRepository
     public function findTotal($id): array
     {
         $date = new \DateTime();
-        return $this->createQueryBuilder('r')
-            ->addSelect('SUM(r.grade)/ COUNT(r.grade) as total')
-            ->where('r.user = :id')
-            ->andWhere('YEAR(r.createdAt) = YEAR(:dateNow)')
+        return $this->createQueryBuilder('g')
+            ->addSelect('SUM(g.grade)/ COUNT(g.grade) as total')
+            ->where('g.user = :id')
+            ->andWhere('YEAR(g.createdAt) = YEAR(:dateNow)')
             ->setParameter('id', $id)
             ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
             ->getQuery()
@@ -99,11 +113,11 @@ class GradeRepository extends ServiceEntityRepository
     public function findTotalRatinsByClassRoom($session): array
     {
         $date = new \DateTime();
-        return $this->createQueryBuilder('r')
-            ->addSelect('SUM(r.grade)/ COUNT(r.grade) as total')
-            ->join('r.user','u')
+        return $this->createQueryBuilder('g')
+            ->addSelect('SUM(g.grade)/ COUNT(g.grade) as total')
+            ->join('g.user','u')
             ->where('u.session = :session')
-            ->andWhere('YEAR(r.createdAt) = YEAR(:dateNow)')
+            ->andWhere('YEAR(g.createdAt) = YEAR(:dateNow)')
             ->setParameter('session', $session)
             ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
             ->getQuery()
@@ -123,14 +137,14 @@ class GradeRepository extends ServiceEntityRepository
     public function findTotalByClassRoom($session): array
     {
         $date = new \DateTime();
-        return $this->createQueryBuilder('r')
-            ->addSelect('COUNT(r.category) as category ,SUM(r.grade)/ COUNT(r.grade) as total')
-            ->join('r.user','u')
+        return $this->createQueryBuilder('g')
+            ->addSelect('COUNT(g.category) as category ,SUM(g.grade)/ COUNT(g.grade) as total')
+            ->join('g.user','u')
             ->where('u.session = :session')
-            ->andWhere('YEAR(r.createdAt) = YEAR(:dateNow)')
+            ->andWhere('YEAR(g.createdAt) = YEAR(:dateNow)')
             ->setParameter('session', $session)
             ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
-            ->groupBy('r.category')
+            ->groupBy('g.category')
             ->getQuery()
             ->getResult()
         ;
@@ -145,13 +159,13 @@ class GradeRepository extends ServiceEntityRepository
     public function findTotalByCategory($id): array
     {
         $date = new \DateTime();
-        return $this->createQueryBuilder('r')
-            ->addSelect('COUNT(r.category) as category ,SUM(r.grade)/ COUNT(r.grade) as total')
-            ->where('r.user = :id')
-            ->andWhere('YEAR(r.createdAt) = YEAR(:dateNow)')
+        return $this->createQueryBuilder('g')
+            ->addSelect('COUNT(g.category) as category ,SUM(g.grade)/ COUNT(g.grade) as total')
+            ->where('g.user = :id')
+            ->andWhere('YEAR(g.createdAt) = YEAR(:dateNow)')
             ->setParameter('id', $id)
             ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
-            ->groupBy('r.category')
+            ->groupBy('g.category')
             ->getQuery()
             ->getResult()
         ;
@@ -162,10 +176,10 @@ class GradeRepository extends ServiceEntityRepository
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
+            ->orderBy('g.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -176,8 +190,8 @@ class GradeRepository extends ServiceEntityRepository
     /*
     public function findOneBySomeField($value): ?Grade
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

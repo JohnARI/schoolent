@@ -10,6 +10,7 @@ use App\Entity\Session;
 use App\Form\GradeType;
 use App\Entity\Calendar;
 use App\Repository\UserRepository;
+use App\Repository\GradeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,8 +86,8 @@ class DashboardController extends AbstractController
      */
     public function teacher(UserRepository $userRepository, Request $request): Response
     {
-        $session = $this->entityManager->getRepository(Session::class)->findAll();
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
+        $session = $this->entityManager->getRepository(Session::class)->findAll();
         $mySession = $this->getUser()->getSession($session);
 
         $grade = new Grade();
@@ -96,6 +97,7 @@ class DashboardController extends AbstractController
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
 
+            $grade->setCreatedAt(new DateTimeImmutable());
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'L\'utilisateur a été modifié !');
@@ -117,15 +119,18 @@ class DashboardController extends AbstractController
      * Afficher la session, l'emploi du temps et le nom du professeur. 
      * @Route("/dashboard", name="dashboard-student")
      */
-    public function student(UserRepository $userRepository): Response
+    public function student(UserRepository $userRepository, GradeRepository $gradeRepository): Response
     {
 
         $teachers = $userRepository->findBySession('ROLE_TEACHER', $this->getUser()->getSession());
         $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
+        $studentId = $this->getUser()->getId();
+        $grades = $gradeRepository->findGradeByUser($studentId);
 
         return $this->render('dashboard/students-dashboard.html.twig', [
             'teachers' => $teachers,
             'students' => $students,
+            'grades' => $grades,
         ]);
     }
 

@@ -1,168 +1,221 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Dashboard Professeur
+Dashboard Professeur
 {% endblock %}
 {% set varStud = myStudents %}
 
 {% block body %}
 
-	{#
-	<!--app-content open--> #}
-	<div class="main-content app-content mt-0">
-		<div
-			class="side-app">
+{#
+<!--app-content open--> #}
+<div class="main-content app-content mt-0">
+	<div class="side-app">
 
-			{#
-			        <!-- CONTAINER --> #}
-			<div
-				class="main-container container-fluid">
+		{#
+		<!-- CONTAINER --> #}
+		<div class="main-container container-fluid">
 
-				{# Header #}
-				<div class="page-header">
-					<h1 class="page-title">Professeur</h1>
-				</div>
-				{# Fin header #}
-				{% block teacher %}
+			{# Header #}
+			<div class="page-header">
+				<h1 class="page-title">Professeur</h1>
+			</div>
+			{# Fin header #}
+			{% block teacher %}
 
-				{# Tableaux et modal #}
-				<!-- ROW OPEN -->
-								<div class="row">
-									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-										<a class="card bg-primary img-card box-primary-shadow">
-											{% embed "components/modal.html.twig" %}
-															{% set modalType = "modal-xl effect-flip-verticalshow" %}
-															{% set id = "xl-myStudent" %}
-															{% set buttonTitle = "Ajouter un utilisateur" %}
-															{% block button %}
-															<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
-																<div class="d-flex">
-																	<div class="text-white me-4">
-																		<h2 class="mb-0 number-font">{{ varStud | length }}</h2>
-																		<p class="text-white mb-0">Liste des étudiants</p>
-																	</div>
-																	
-																	<div class="ms-auto"> <i class="fa fa-user-o text-white fs-30 me-2 mt-2"></i> </div>
-																</div>
-															</button>
-															{% endblock %}
-															{% block modalTitle %}Tous les étudiants
-															{% endblock %}
-															{% block dashboard %}
-																{% include "/administration/admin/view/view_students.html.twig" %}
-															{% endblock %}
-														{% endembed %}
-											
-										</a>
-									</div>
-									<!-- COL END -->
-									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-										<a class="card bg-azure img-card box-azure-shadow">
-											{% embed "components/modal.html.twig" %}
-															{% set modalType = "modal-sm" %}
-															{% set id = "mySession" %}
-															{% block button %}
-															<button class="card-body text-start" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
-																<div class="d-flex">
-																	<div class="text-white">
-																	{% if app.user.session %}
-																		<h2 class="mb-0 number-font">{{ app.user.session}}</h2>
-																		{% else %}
-																			<h2 class="mb-0 number-font">Aucune session</h2>
-																		{% endif %}
-																		<p class="text-white mb-0">Session</p>
-																	</div>
-																	<div class="ms-auto"> <i class="fa fa-tags text-white fs-30 me-2 mt-2"></i> </div>
-																</div>
-															</button>
-															{% endblock %}
-															{% block modalTitle %}Session
-															{% endblock %}
-															{% block dashboard %}
-																<p>Bonjour {{app.user.fullname}} 
-																{% if app.user.session %}
-																Vous avez une session du <strong>{{ app.user.session.startSession | date("d/m/Y") }}</strong> au <strong>{{ app.user.session.endSession | date("d/m/Y") }}</strong> avec <strong>{{varStud | length }}</strong> étudiants
-																{% else %}
-																	Vous n'avez aucune session en cours
-																{% endif %}</p>
-															{% endblock %}
-														{% endembed %}
-											
-										</a>
-									</div>
-									<!-- COL END -->
-									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-										<div class="card bg-success img-card box-success-shadow">
-										
-															<div class="card-body">
-																<div class="d-flex">
-																	<div class="text-white">
-																	{% if app.user.payment %}
-																	
-																		<h2 class="mb-0 number-font text-start">{{app.user.payment}} / jour</h2>
-																		{% else %}
-																		<h2 class="mb-0 number-font text-start">0 / jour</h2>
-																		{% endif %}
-																			
-																		<p class="text-white mb-0">Rémunération</p>
-																	</div>
-																	<div class="ms-auto"> <i class="fa fa-dollar text-white fs-30 me-2 mt-2"></i> </div>
-																</div>
-															</div>
-															
-											
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-md-12 col-xl-6">
-											<div class="card">
-												<div class="card-header">
-													{{form_start(formGrade)}}
-													<h4 class="card-title">Notes</h4>
-												</div>
-												<div class="card-body">
-													
-														<div>
-															<div class="form-group">
-																<label class="form-label">Elève</label>
-																{{form_widget(formGrade.user)}}
-															</div>
-
-															<div class="form-group">
-																<label class="form-label">Cours</label>
-																{{form_widget(formGrade.category)}}
-															</div>
-															<div class="form-group">
-																<label class="form-label">Intitulé</label>
-																{{form_widget(formGrade.name)}}
-															</div>
-															<div class="form-group">
-																<label class="form-label">Note</label>
-																{{form_widget(formGrade.grade)}}
-															</div>
-															<div class="form-group">
-																<label class="form-label">Remarque</label>
-															{{form_widget(formGrade.comment)}}
-															</div>
-															
-															
-														</div>
-														{{form_widget(formGrade.submit)}}
-													
-													{{form_end(formGrade)}}
-												</div>
-											</div>
-										</div>
-									{# <!-- COL END --> #}
-								
+			{# Tableaux et modal #}
+			<!-- ROW OPEN -->
+			<div class="row">
+				<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+					<a class="card bg-primary img-card box-primary-shadow">
+						{% embed "components/modal.html.twig" %}
+						{% set modalType = "modal-xl effect-flip-verticalshow" %}
+						{% set id = "xl-myStudent" %}
+						{% set buttonTitle = "Ajouter un utilisateur" %}
+						{% block button %}
+						<button class="card-body text-start" data-bs-effect="effect-flip-vertical"
+							data-bs-toggle="modal" data-bs-target="#{{id}}">
+							<div class="d-flex">
+								<div class="text-white me-4">
+									<h2 class="mb-0 number-font">{{ varStud | length }}</h2>
+									<p class="text-white mb-0">Liste des étudiants</p>
 								</div>
-								{# <!-- ROW CLOSED --> #}
-								{# Fin tableaux et modal #}
-					
-					
+
+								<div class="ms-auto">
+									<i class="fa fa-user-o text-white fs-30 me-2 mt-2"></i>
+								</div>
+							</div>
+						</button>
+						{% endblock %}
+						{% block modalTitle %}Tous les étudiants
+						{% endblock %}
+						{% block dashboard %}
+						{% include "/administration/admin/view/view_students.html.twig" %}
+						{% endblock %}
+						{% endembed %}
+
+					</a>
+				</div>
+				<!-- COL END -->
+				<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+					<a class="card bg-azure img-card box-azure-shadow">
+						{% embed "components/modal.html.twig" %}
+						{% set modalType = "modal-sm" %}
+						{% set id = "mySession" %}
+						{% block button %}
+						<button class="card-body text-start" data-bs-effect="effect-flip-vertical"
+							data-bs-toggle="modal" data-bs-target="#{{id}}">
+							<div class="d-flex">
+								<div class="text-white">
+									{% if app.user.session %}
+									<h2 class="mb-0 number-font">{{ app.user.session}}</h2>
+									{% else %}
+									<h2 class="mb-0 number-font">Aucune session</h2>
+									{% endif %}
+									<p class="text-white mb-0">Session</p>
+								</div>
+								<div class="ms-auto">
+									<i class="fa fa-tags text-white fs-30 me-2 mt-2"></i>
+								</div>
+							</div>
+						</button>
+						{% endblock %}
+						{% block modalTitle %}Session
+						{% endblock %}
+						{% block dashboard %}
+						<p>Bonjour
+							{{app.user.fullname}}
+							{% if app.user.session %}
+							Vous avez une session du
+							<strong>{{ app.user.session.startSession | date("d/m/Y") }}</strong>
+							au
+							<strong>{{ app.user.session.endSession | date("d/m/Y") }}</strong>
+							avec
+							<strong>{{varStud | length }}</strong>
+							étudiants
+							{% else %}
+							Vous n'avez aucune session en cours
+							{% endif %}
+						</p>
+						{% endblock %}
+						{% endembed %}
+
+					</a>
+				</div>
+				<!-- COL END -->
+				<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+					<div class="card bg-success img-card box-success-shadow">
+
+						<div class="card-body">
+							<div class="d-flex">
+								<div class="text-white">
+									{% if app.user.payment %}
+
+									<h2 class="mb-0 number-font text-start">{{app.user.payment}}
+										/ jour</h2>
+									{% else %}
+									<h2 class="mb-0 number-font text-start">0 / jour</h2>
+									{% endif %}
+
+									<p class="text-white mb-0">Rémunération</p>
+								</div>
+								<div class="ms-auto">
+									<i class="fa fa-dollar text-white fs-30 me-2 mt-2"></i>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+				{% if app.user.session %}
+				<div class="row">
+					<div class="col-6">
+						<div class="card">
+							<div class="card-header">
+
+								<h4 class="card-title">Notes</h4>
+							</div>
+							<div class="card-body">
+
+								
+								
+								{{form_start(formGrade, { 'attr' : { 'class': 'ajax' } })}}
+								<div class="form-group">
+									<label class="form-label">Elève</label>
+									{{form_widget(formGrade.user)}}
+								</div>
+
+								<div class="form-group">
+									<label class="form-label">Cours</label>
+									{{form_widget(formGrade.category)}}
+								</div>
+								<div class="form-group">
+									<label class="form-label">Intitulé</label>
+									{{form_widget(formGrade.name)}}
+								</div>
+								<div class="form-group">
+									<label class="form-label">Note</label>
+									{{form_widget(formGrade.grade)}}
+								</div>
+								<div class="form-group">
+									<label class="form-label">Remarque</label>
+									{{form_widget(formGrade.comment)}}
+								</div>
+
+
+
+								{{form_widget(formGrade.submit)}}
+
+								{{form_end(formGrade)}}
+							</div>
+						</div>
+					</div>
+					{#
+					<!-- COL END --> #}
+					<div class="card col-6">
+						
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table border text-nowrap text-md-nowrap table-bordered mb-0">
+									<thead>
+										<tr>
+											<th>Elève</th>
+											<th>Note/matière</th>
+											<th>Moyenne</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for student in varStud %}
+										<tr>
+											<td>{{student.fullname}}</td>
+											<td>En cours</td>
+											<td>En cours</td>
+											{% endfor %}
+										</tr>
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				{% endif %}
+
+				{#
+				<!-- ROW CLOSED --> #}
+				{# Fin tableaux et modal #}
+
+
 				{% endblock %}
 			</div>
 		</div>
 	</div>
+	<script>
+		$('form.ajax').on('submit', function () {
+			return false;
+		})
+	</script>
 
-{% endblock %}
+	{% endblock %}

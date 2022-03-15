@@ -33,7 +33,11 @@ class GradeType extends AbstractType
     {
         $user = $this->security->getUser();
         $session = $this->entityManager->getRepository(Session::class)->findAll();
+        if ($user->getSession($session) != null) {
+
+        
         $mySession = $user->getSession($session)->getId();
+    
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($mySession) {
 
@@ -88,8 +92,9 @@ class GradeType extends AbstractType
                     'class' => 'login100-form-btn btn-primary'
                 ],
                 'label' => 'Ajouter une note'
-            ]);;
+            ]);
     }
+}
 
     public function configureOptions(OptionsResolver $resolver)
     {
