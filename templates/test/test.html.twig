@@ -63,28 +63,28 @@
 		window.onload = () => {
 
 
-var calendarEl = document.getElementById('calendar2');
+	var calendarEl = document.getElementById('calendar2');
 
-var calendar = new FullCalendar.Calendar(calendarEl, {
-headerToolbar: {
-left: 'prev,next today',
-center: 'title',
-right: 'dayGridMonth,timeGridWeek,timeGridDay'
-},
+	var calendar = new FullCalendar.Calendar(calendarEl, {
+	headerToolbar: {
+	left: 'prev,next today',
+	center: 'title',
+	right: 'dayGridMonth,timeGridWeek,timeGridDay'
+	},
 
-defaultView: 'month',
-navLinks: true, // can click day/week names to navigate views
-businessHours: true, // display business hours
-editable: true,
-selectable: true,
-selectMirror: true,
-droppable: true, // this allows things to be dropped onto the calendar
-select: function (arg) {
+	defaultView: 'month',
+	navLinks: true, // can click day/week names to navigate views
+	businessHours: true, // display business hours
+	editable: true,
+	selectable: true,
+	selectMirror: true,
+	droppable: true, // this allows things to be dropped onto the calendar
+	select: function (arg) {
 
-$('#calendarFomr').modal('show');
+	$('#calendarFomr').modal('show');
 
 
-$(document).ready(function(){
+	$(document).ready(function(){
 
 		$("#envoyerFormulaire").click(function(){
 

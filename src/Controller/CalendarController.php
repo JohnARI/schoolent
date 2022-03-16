@@ -8,9 +8,7 @@ use App\Form\CalendarType;
 use App\Repository\UserRepository;
 use App\Repository\CalendarRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Proxies\__CG__\App\Entity\User as EntityUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -82,45 +80,65 @@ class CalendarController extends AbstractController
 
     /**
      * @Route("/{id}", name="calendar_show", methods={"GET"})
+     * @param Calendar $calendar
+     * @return Response
+     * 
      */
-    public function show(CalendarRepository $calendar, UserRepository $userRepository, $id): Response
+    public function show(Request $request, CalendarRepository $calendar, UserRepository $userRepository, $id): Response
     {
 
-        $admins =   $userRepository->findByRole('ROLE_ADMIN');
-        $teachers = $userRepository->findByRole('ROLE_TEACHER');
         
         $user = $this->getUser(); 
-        $id_user = $this->getUser('id');
+        $id = $this->getUser('id');
         
 
-        if ($user->getRoles('ROLE_TEACHER')) {
+        if ($this->isGranted('ROLE_TEACHER')) {
 
                
 
-            $events = $calendar->findByTeacherId(['teacher_id'=>$id_user]);
+            
+
+            $calendars = new Calendar;
+            $form = $this->createForm(CalendarType::class, $calendars);
+            $form->handleRequest($request);
+            $calendrier = $calendar->findAll();
+            $calendar = $calendar->findBy(['teacher_id'=>$id]);
 
             // dd($events);
 
-            $booking = [];
-            foreach ($events as $event) {
+            // $booking = [];
+            // foreach ($events as $event) {
 
-                $booking[] = [
-                    'id' => $event->getId(),
-                    'start' => $event->getStart()->format('Y-m-d'),
-                    'end' => $event->getEnd()->format('Y-m-d'),
-                    'title' => $event->getTitle(),
-                    'description' => $event->getDescription(),
-                    'session' => $event->getSession(),
-                    'backgroundColor' => $event->getBackgroundColor(),
-                ];
+            //     $booking[] = [
+            //         'id' => $event->getId(),
+            //         'start' => $event->getStart()->format('Y-m-d'),
+            //         'end' => $event->getEnd()->format('Y-m-d'),
+            //         'title' => $event->getTitle(),
+            //         'description' => $event->getDescription(),
+            //         'session' => $event->getSession(),
+            //         'backgroundColor' => $event->getBackgroundColor(),
+            //     ];
+            // }
+
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                // dd($calendar);
+                $this->entityManager->persist($calendar);
+                $this->entityManager->flush();
+    
+                return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
             }
+    
 
 
-            $data = json_encode($booking);
+            return $this->render('calendar/show.html.twig',[
 
-        }
-        
-        if($user->getRoles('ROLE_ADMIN')){
+                'calendar' => $calendar,
+                'form'=> $form->createView(),
+                'calendrier'=> $calendrier
+            ]);
+
+        }else{
 
             $events = $calendar->findBy(['id'=>$id]);
 
@@ -141,7 +159,12 @@ class CalendarController extends AbstractController
             }
 
 
-            $data = json_encode($booking);
+            return $this->render('test/test.html.twig',[
+
+                'calendar' => $calendar,
+                'form'=> $form->createView(),
+                'calendrier'=> $calendrier
+            ]);
 
         }
 

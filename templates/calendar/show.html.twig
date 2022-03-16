@@ -10,6 +10,28 @@
 
 
 {% block body %}
+
+	<div
+		class="tab-pane active" id="users">
+		{#---------------------------------------------Modal-------------------------------------------- #}
+		{% embed "components/modal.html.twig" %}
+			{% set modalType = "modal-lg" %}
+			{% set id = "calendarFomr2" %}
+			{% set buttonTitle = "Ajouter un utilisateur" %}
+			{% block modalTitle %}Nouvelle évènement
+			{% endblock %}
+			{% block dashboard %}
+				{% include "calendar/_form.html.twig" %}
+			{% endblock %}
+		{% endembed %}
+		{#--------------------------------------------Fin modal------------------------------------------- #}
+
+
+	
+	</div>
+
+	{# --------------------------------------------------Calendar------------------------------------------ #}
+
 <div id="calendrier"></div>
 
 
@@ -33,9 +55,26 @@
 				end: 'dayGridMonth'
 			},
 			selectable: true,
-			events: {{data|raw}},
 			editable: true,
-			eventResizableFromStart: true
+			eventResizableFromStart: true,
+			select: function (arg) {
+
+			$('#calendarFomr2').modal('show');
+
+			calendar.unselect()
+
+			},
+			events: [{% for calendar in calendar %}{
+				id: '{{calendar.id}}',
+				title:'{{ calendar.title }}',
+				start: '{{ calendar.start |date('Y-m-d H:i:s') }}',
+				end: '{{ calendar.end |date('Y-m-d H:i:s') }}',
+				description: '{{ calendar.description }}',
+				backgroundColor: '{{ calendar.backgroundColor }}'
+
+				},{% endfor %}]
+
+
 	})
 
 		calendar.on('eventChange', (e) => {
