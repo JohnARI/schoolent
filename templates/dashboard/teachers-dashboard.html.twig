@@ -182,15 +182,13 @@ Dashboard Professeur
 										<tr>
 											<th>Elève</th>
 											<th>Note/matière</th>
-											<th>Moyenne</th>
 										</tr>
 									</thead>
 									<tbody>
-										{% for student in varStud %}
+										{% for grade in gradeStudents %}
 										<tr>
-											<td>{{student.fullname}}</td>
-											<td>En cours</td>
-											<td>En cours</td>
+											<td>{{grade.user}}</td>
+											<td>{{grade.grade}} / {{grade.category}}</td>
 											{% endfor %}
 										</tr>
 										
@@ -213,7 +211,8 @@ Dashboard Professeur
 		</div>
 	</div>
 	<script>
-		$('form.ajax').on('submit', function () {
+		$('form.ajax').on('submit', function (e) {
+			e.preventDefault();
 			return false;
 		})
 	</script>

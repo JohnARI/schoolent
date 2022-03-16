@@ -31,7 +31,7 @@ class DashboardController extends AbstractController
      * Afficher les utilsateurs : le nombre d'administrateurs, d'élèves, et professeurs et leurs calendriers respectifs(élèves et professeurs).
      * @Route("admin/dashboard", name="dashboard-admin")
      */
-    public function admin(UserRepository $userRepository, Request $request): Response
+    public function admin(UserRepository $userRepository, Request $request, GradeRepository $gradeRepository): Response
     {      
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
@@ -44,6 +44,7 @@ class DashboardController extends AbstractController
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $mySession = $this->getUser()->getSession($session);
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
+        $gradeStudents = $gradeRepository->findByUser($myStudents);
 
         $grade = new Grade();
 
@@ -77,6 +78,8 @@ class DashboardController extends AbstractController
             'mySessions' => $mySession,
             'myStudents' => $myStudents,
             'formGrade' => $formGrade->createView(),
+            'gradeStudents' => $gradeStudents,
+
         ]);
     }
 

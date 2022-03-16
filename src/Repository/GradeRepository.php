@@ -125,9 +125,6 @@ class GradeRepository extends ServiceEntityRepository
         ;
     }
 
-   
-    
-  
      /**
      * Calcule la moyenne general pour l annéé en cour par category 
      * @return int|mixed
