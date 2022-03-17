@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
-
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MessageRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
+ * @ORM\Table(indexes={@Index(name="created_at_index", columns={"created_at"})})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Message
 {
+    use Timestamp;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -21,115 +25,74 @@ class Message
     /**
      * @ORM\Column(type="text")
      */
-    private $message;
+    private $content;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="messages")
      */
-    private $createdAt;
+    private $user;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\ManyToOne(targetEntity="Conversation", inversedBy="messages")
      */
-    private $isRead;
+    private $conversation;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sent")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $sender;
+    private $mine;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="received")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $recipient;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $file;
-
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
-        $this->isRead= 0;
-    }
-    
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getMessage(): ?string
+    public function getContent(): ?string
     {
-        return $this->message;
+        return $this->content;
     }
 
-    public function setMessage(string $message): self
+    public function setContent(string $content): self
     {
-        $this->message = $message;
+        $this->content = $content;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getUser(): ?User
     {
-        return $this->createdAt;
+        return $this->user;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setUser(?User $user): self
     {
-        $this->createdAt = $createdAt;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getIsRead(): ?bool
+    public function getConversation(): ?Conversation
     {
-        return $this->isRead;
+        return $this->conversation;
     }
 
-    public function setIsRead(bool $isRead): self
+    public function setConversation(?Conversation $conversation): self
     {
-        $this->isRead = $isRead;
+        $this->conversation = $conversation;
 
         return $this;
     }
 
-    public function getSender(): ?User
+    /**
+     * @return mixed
+     */
+    public function getMine()
     {
-        return $this->sender;
+        return $this->mine;
     }
 
-    public function setSender(?User $sender): self
+    /**
+     * @param mixed $mine
+     */
+    public function setMine($mine): void
     {
-        $this->sender = $sender;
-
-        return $this;
-    }
-
-    public function getRecipient(): ?User
-    {
-        return $this->recipient;
-    }
-
-    public function setRecipient(?User $recipient): self
-    {
-        $this->recipient = $recipient;
-
-        return $this;
-    }
-
-    public function getFile(): ?string
-    {
-        return $this->file;
-    }
-
-    public function setFile(?string $file): self
-    {
-        $this->file = $file;
-
-        return $this;
+        $this->mine = $mine;
     }
 }

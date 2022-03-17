@@ -94,15 +94,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $calendars;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender", orphanRemoval=true)
-     */
-    private $sent;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipient", orphanRemoval=true)
-     */
-    private $received;
 
     /**
      * @ORM\Column(type="datetime")
@@ -119,6 +110,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $sexe;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Participant", mappedBy="user")
+     */
+    private $participants;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="user")
+     */
+    private $messages;
 
 
     public function __construct()
@@ -130,9 +130,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->notifications = new ArrayCollection();
         $this->grades = new ArrayCollection();
         $this->calendars = new ArrayCollection();
-        $this->sent = new ArrayCollection();
-        $this->received = new ArrayCollection();
         $this->checking = 1;
+        $this->participants = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -412,29 +412,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Message[]
+     * @return Collection|Participant[]
      */
-    public function getSent(): Collection
+    public function getParticipants(): Collection
     {
-        return $this->sent;
+        return $this->participants;
     }
 
-    public function addSent(Message $sent): self
+    public function addParticipant(Participant $participant): self
     {
-        if (!$this->sent->contains($sent)) {
-            $this->sent[] = $sent;
-            $sent->setSender($this);
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+            $participant->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeSent(Message $sent): self
+    public function removeParticipant(Participant $participant): self
     {
-        if ($this->sent->removeElement($sent)) {
+        if ($this->participants->removeElement($participant)) {
             // set the owning side to null (unless already changed)
-            if ($sent->getSender() === $this) {
-                $sent->setSender(null);
+            if ($participant->getUser() === $this) {
+                $participant->setUser(null);
             }
         }
 
@@ -444,32 +444,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection|Message[]
      */
-    public function getReceived(): Collection
+    public function getMessages(): Collection
     {
-        return $this->received;
+        return $this->messages;
     }
 
-    public function addReceived(Message $received): self
+    public function addMessage(Message $message): self
     {
-        if (!$this->received->contains($received)) {
-            $this->received[] = $received;
-            $received->setRecipient($this);
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeReceived(Message $received): self
+    public function removeMessage(Message $message): self
     {
-        if ($this->received->removeElement($received)) {
+        if ($this->messages->removeElement($message)) {
             // set the owning side to null (unless already changed)
-            if ($received->getRecipient() === $this) {
-                $received->setRecipient(null);
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
             }
         }
 
         return $this;
     }
+
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
