@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Payment;
 use App\Entity\Session;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -142,6 +144,15 @@ class EditUserType extends AbstractType
                     return [$rolesString];
                 }
             ));
+
+            $builder->addEventListener(
+                FormEvents::POST_SET_DATA,
+                function (FormEvent $event) {
+                    $form = $event->getForm();
+                    $data = $event->getData();
+                    $form->get('picture')->setData($data->getPicture());
+                }
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

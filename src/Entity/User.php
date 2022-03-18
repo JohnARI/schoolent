@@ -119,6 +119,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $sexe;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Grade::class, mappedBy="teacher")
+     */
+    private $gradesTeacher;
+
 
 
     public function __construct()
@@ -133,6 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sent = new ArrayCollection();
         $this->received = new ArrayCollection();
         $this->checking = 1;
+        $this->gradesTeacher = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -510,5 +516,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this->getFullname();
+    }
+
+    /**
+     * @return Collection<int, Grade>
+     */
+    public function getGradesTeacher(): Collection
+    {
+        return $this->gradesTeacher;
+    }
+
+    public function addGradesTeacher(Grade $gradesTeacher): self
+    {
+        if (!$this->gradesTeacher->contains($gradesTeacher)) {
+            $this->gradesTeacher[] = $gradesTeacher;
+            $gradesTeacher->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGradesTeacher(Grade $gradesTeacher): self
+    {
+        if ($this->gradesTeacher->removeElement($gradesTeacher)) {
+            // set the owning side to null (unless already changed)
+            if ($gradesTeacher->getTeacher() === $this) {
+                $gradesTeacher->setTeacher(null);
+            }
+        }
+
+        return $this;
     }
 }

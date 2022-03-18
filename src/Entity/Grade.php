@@ -47,6 +47,12 @@ class Grade
      */
     private $category;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="gradesTeacher")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $teacher;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +126,18 @@ class Grade
     public function setCategory(?ProgrammingLanguage $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getTeacher(): ?user
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(?user $teacher): self
+    {
+        $this->teacher = $teacher;
 
         return $this;
     }

@@ -40,7 +40,7 @@ security:
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/dashboard, roles: ROLE_USER }
-         - { path: ^/teacher, roles: ROLE_TEACHER}
+         - { path: ^/teacher, roles: [ROLE_TEACHER, ROLE_ADMIN]}
     
     role_hierarchy:
         ROLE_USER : ['ROLE_USER']

@@ -4,37 +4,40 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\User;
+use App\Entity\Grade;
 use App\Entity\Course;
 use DateTimeImmutable;
 use App\Entity\Session;
+use App\Form\GradeType;
 use App\Entity\Calendar;
 use App\Form\CourseType;
 use App\Service\Mailjet;
 use App\Form\SessionType;
 use App\Form\EditUserType;
 use App\Form\RegisterType;
+use App\Form\EditGradeType;
 use App\Form\EditSessionType;
+use App\Service\FileUploader;
 use App\Form\EditCalendarType;
+use App\Form\CalendarAdminType;
 use App\Repository\UserRepository;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
 use App\Form\AddProgrammingLanguageType;
-use App\Form\CalendarAdminType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\EditProgrammingLanguageType;
 use App\Notification\NotificationService;
-use App\Service\FileUploader;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class AdministrationController extends AbstractController
 {
@@ -69,7 +72,7 @@ class AdministrationController extends AbstractController
         //     $item->expiresAfter(20);
         //     return $this->fonctionLongue();
         // });
-        
+
         // Tableaux
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
@@ -225,7 +228,7 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
-    public function editUser($id, Request $request, SluggerInterface $slugger, string $projectDir): Response
+    public function editUser($id, Request $request, string $projectDir): Response
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
@@ -257,18 +260,18 @@ class AdministrationController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/profil/{id}", name="profil_user")
      */
     public function profilUser($id): Response
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
 
-        
+
 
         return $this->render('profil/profil_user.html.twig', [
             'user' => $user,
-        
+
         ]);
     }
 
@@ -290,6 +293,43 @@ class AdministrationController extends AbstractController
         $this->entityManager->flush();
         $this->addFlash('success', 'L\'utilisateur a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+    }
+
+    /**
+     * @Route("/teacher/edit/grade/{id}", name="edit_grade")
+     */
+    public function editGrade($id, Request $request): Response
+    {
+        $grade = $this->entityManager->getRepository(Grade::class)->find($id);
+
+
+        $formGrade = $this->createForm(EditGradeType::class, $grade);
+        $formGrade->handleRequest($request);
+        if ($formGrade->isSubmitted() && $formGrade->isValid()) {
+
+            $this->entityManager->persist($grade);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'La note a été modifié !');
+            return $this->redirect($request->getUri());
+        }
+
+        return $this->render('administration/admin/edit/edit_grade.html.twig', [
+
+            'formGrade' => $formGrade->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/teacher/delete/grade/{id}", name="delete_grade")
+     */
+    public function deleteGrade(Grade $grade, Request $request, string $projectDir): Response
+    {
+
+
+        $this->entityManager->remove($grade);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'La note a été suprimmé !');
+        return $this->redirect($request->getUri());
     }
 
     /**
@@ -453,6 +493,4 @@ class AdministrationController extends AbstractController
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'Le cours a été supprimé');
     }
-
-   
 }

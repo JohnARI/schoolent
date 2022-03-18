@@ -33,6 +33,10 @@
                                                         <th>Matière</th>
                                                         <th>Note</th>
                                                         <th>Remarque</th>
+                                                        <th>Professeur</th>
+                                                        <th>Date</th>
+
+
                                                     </tr>
                                                 </thead>
                                                 <tbody>{% for grade in grades %}
@@ -40,6 +44,8 @@
                                                         <td>{{grade.category}}</td>
                                                         <td>{{grade.grade}}</td>
                                                         <td>{{grade.comment}}</td>
+                                                        <td>{{grade.teacher}}</td>
+                                                        <td>{{grade.createdAt | date('d-m-Y')}}</td>
                                                     </tr>{% endfor %}
                                                 </tbody>
                                             </table>

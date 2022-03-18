@@ -32,7 +32,7 @@ class DashboardController extends AbstractController
      * @Route("admin/dashboard", name="dashboard-admin")
      */
     public function admin(UserRepository $userRepository, Request $request, GradeRepository $gradeRepository): Response
-    {      
+    {
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
@@ -45,14 +45,17 @@ class DashboardController extends AbstractController
         $mySession = $this->getUser()->getSession($session);
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
         $gradeStudents = $gradeRepository->findByUser($myStudents);
+        $teacher = $this->getUser();
+        $gradeTeacher = $gradeRepository->findByTeacher($teacher);
 
         $grade = new Grade();
 
         $formGrade = $this->createForm(GradeType::class, $grade);
         $formGrade->handleRequest($request);
-        
+
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
+            $grade->setTeacher($teacher);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
@@ -79,6 +82,7 @@ class DashboardController extends AbstractController
             'myStudents' => $myStudents,
             'formGrade' => $formGrade->createView(),
             'gradeStudents' => $gradeStudents,
+            'gradeTeacher' => $gradeTeacher,
 
         ]);
     }
@@ -87,34 +91,36 @@ class DashboardController extends AbstractController
      * Afficher la liste des élèves par session, son emploi du temps, le nombre d'intervention et sa rémunération.
      * @Route("teacher/dashboard", name="dashboard-teacher")
      */
-    public function teacher(UserRepository $userRepository, Request $request): Response
+    public function teacher(UserRepository $userRepository, Request $request, GradeRepository $gradeRepository): Response
     {
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $mySession = $this->getUser()->getSession($session);
+        $gradeStudents = $gradeRepository->findByUser($myStudents);
+        $gradeTeacher = $gradeRepository->findByTeacher($teacher);
+        $teacher = $this->getUser();
+
+        
 
         $grade = new Grade();
-        
         $formGrade = $this->createForm(GradeType::class, $grade);
         $formGrade->handleRequest($request);
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
-
             $grade->setCreatedAt(new DateTimeImmutable());
+            $grade->setTeacher($teacher);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
-            $this->addFlash('success', 'L\'utilisateur a été modifié !');
+            $this->addFlash('success', 'La note a été attribué');
             return $this->redirect($request->getUri());
         }
-
-
-
-
 
         return $this->render('dashboard/teachers-dashboard.html.twig', [
             'myStudents' => $myStudents,
             'mySessions' => $mySession,
             'formGrade' => $formGrade->createView(),
+            'gradeStudents' => $gradeStudents,
+            'gradeTeacher' => $gradeTeacher,
         ]);
     }
 
@@ -127,8 +133,10 @@ class DashboardController extends AbstractController
 
         $teachers = $userRepository->findBySession('ROLE_TEACHER', $this->getUser()->getSession());
         $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
-        $studentId = $this->getUser()->getId();
-        $grades = $gradeRepository->findGradeByUser($studentId);
+        if ($this->getUser()->getRole() == 'Eleve') {
+            $studentId = $this->getUser()->getId();
+            $grades = $gradeRepository->findGradeByUser($studentId);
+        }
 
         return $this->render('dashboard/students-dashboard.html.twig', [
             'teachers' => $teachers,

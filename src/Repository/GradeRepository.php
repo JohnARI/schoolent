@@ -83,6 +83,20 @@ class GradeRepository extends ServiceEntityRepository
           ->getResult();
     }
 
+    /**
+      * @return int|mixed
+      * @throws Exception
+      * @throws \Doctrine\DBAL\Exception
+      */
+      public function findGradeByTeacher($teacher): array
+      {
+          return $this->createQueryBuilder('g')
+          ->where('g.teacher = :teacher')
+          ->setParameter('teacher', $teacher)
+          ->getQuery()
+          ->getResult();
+    }
+
 
     /**
      * Calcule la moyenne general pour l annéé en cour

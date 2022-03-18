@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Modifier une note
+{% endblock %}
+{% block header %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block body %}
+
+	<!-- BACKGROUND-IMAGE -->
+	<div
+		class="login-img">
+
+		<!-- PAGE -->
+		<div class="page">
+			<div class="">
+				<!-- Theme-Layout -->
+
+				<!-- CONTAINER OPEN -->
+					<div class="col col-login mx-auto mt-7"> <div class="text-center">
+						<img src="../assets/images/brand/logo-white.png" class="header-brand-img m-0" alt="">
+					</div>
+				</div>
+				<div class="container-login100">
+					<div class="wrap-login100 p-6 row">
+						<span class="login100-form-title">
+							Modifier une note
+						</span>
+						{{form_start(formGrade, { 'attr' : { 'id': 'ajax' } })}}
+	
+		<div class="form-group">
+			<label class="form-label">Cours</label>
+			{{form_widget(formGrade.category)}}
+		</div>
+		<div class="form-group">
+			<label class="form-label">Intitulé</label>
+			{{form_widget(formGrade.name)}}
+		</div>
+		<div class="form-group">
+			<label class="form-label">Note</label>
+			{{form_widget(formGrade.grade)}}
+		</div>
+		<div class="form-group">
+			<label class="form-label">Remarque</label>
+			{{form_widget(formGrade.comment)}}
+		</div>
+
+
+		{{form_widget(formGrade.submit)}}
+
+		{{form_end(formGrade)}}
+						
+					</div>
+				</div>
+				<!-- CONTAINER CLOSED -->
+			</div>
+		</div>
+		<!-- END PAGE -->
+
+	</div>
+	<!-- BACKGROUND-IMAGE CLOSED -->
+{% endblock %}
