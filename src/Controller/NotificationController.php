@@ -47,8 +47,9 @@ class NotificationController extends AbstractController
      * Supprimer une notification
      * @Route("/dashboard/notification/{id}/delete", name="notification_delete",methods={"GET"})
      */
-    public function clearNotification(Notification $notification, Request $request): Response
+    public function clearNotification(Notification $notification, $id): Response
     {
+        
         $this->entityManager->remove($notification);
         $this->entityManager->flush();
         
@@ -57,6 +58,33 @@ class NotificationController extends AbstractController
             'message' => 'la notification est supprimée',
             'notifications' => $this->entityManager->getRepository(Notification::class)->count(['user' => $this->getUser()]),
         ], 200);
-        // return $this->redirect($request->get('redirect') ?? '/');
+    }
+
+    /**
+     * Switch notifications reading Ajax
+     * @Route("/admin/post",name="isReadingNotifs")
+     */
+    public function isReadingNotifications(): Response
+    {
+        
+        if (!$this->getUser()->getNotifications()) return $this->json([
+            'Code' => 403,
+            'message' => "Unauthorized"
+        ], 403);
+
+        foreach ($this->getUser()->getNotifications() as $notification) {
+            // dd($isRead->getIsRead());
+            if ($notification->getIsRead() == false) {
+                $notification->setIsRead(true);
+                $this->entityManager->persist($notification);
+                $this->entityManager->flush();
+            }
+        }
+
+        return $this->json([
+            'code' => 200, 
+            'message' => 'success, messages lus',
+            'notifications' => $this->getUser()->getNotifications(),
+        ], 200);
     }
 }

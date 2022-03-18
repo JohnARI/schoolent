@@ -21,6 +21,7 @@ class ContactController extends AbstractController
     */
     public function new(Request $request, EntityManagerInterface $entityManager, Mailjet $mailjet): Response
     {
+        
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);

@@ -29,9 +29,10 @@ class DashboardController extends AbstractController
      * Afficher les utilsateurs : le nombre d'administrateurs, d'élèves, et professeurs et leurs calendriers respectifs(élèves et professeurs).
      * @Route("admin/dashboard", name="dashboard-admin")
      */
-    public function admin(UserRepository $userRepository): Response
+    public function admin(UserRepository $userRepository, Request $request): Response
     {
-
+        $grade = new Grade();
+        $formGrade = $this->createForm(GradeType::class, $grade);
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $students = $this->entityManager->getRepository(User::class)->findByRole('ROLE_USER');
         $teachers = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TEACHER');
@@ -43,6 +44,19 @@ class DashboardController extends AbstractController
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $mySession = $this->getUser()->getSession($session);
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
+
+        // dd($dateByMonth);
+
+        if ($formGrade->isSubmitted() && $formGrade->isValid()) {
+
+            $this->entityManager->persist($grade);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'L\'utilisateur a été modifié !');
+            return $this->redirect($request->getUri());
+        }
+
+
+        
 
         // $calendarByMonth = json_encode($calendarByMonth);
 
@@ -62,6 +76,7 @@ class DashboardController extends AbstractController
             'dateByMonth' => $dateByMonth,
             'mySessions' => $mySession,
             'myStudents' => $myStudents,
+            'formGrade' => $formGrade->createView(),
         ]);
     }
 
@@ -92,7 +107,7 @@ class DashboardController extends AbstractController
         return $this->render('dashboard/teachers-dashboard.html.twig', [
             'myStudents' => $myStudents,
             'mySessions' => $mySession,
-            'formGrade' => $formGrade->createView()
+            'formGrade' => $formGrade->createView(),
         ]);
     }
 

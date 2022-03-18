@@ -179,27 +179,31 @@ return confirm('Voulez-vous vraiment supprimé cette technologie ?');
 
 </script>
 
+
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-// <script>
-// 	function onClickDelete(e){
-// 		e.prevenetDefault();
-		
-// 		const url = this.href;
-// 		const viewNotif = this.querySelectorAll('span.notif-view');
-
-// 		axios.get(url).then(function(response){
-// 			// console.log(response);
-// 			const notifs = response.data.notifications;
-// 			viewNotif.textContent = notifs; 
-// 		});
-// 	}
-// 	document.querySelectorAll('a.delete-notif').forEach(function(link){
-// 		link.addEventListener('click', onClickDelete);
-// 	})
-// </script>
-
 <script>
+
+    {# $("a.zaz").click(function(){
+        const span = this.querySelector('span');
+
+        const GREEN_ICON = 'pulse notif-view';
+        const RED_ICON = 'pulse-danger notif-view';
+
+        if (span.className = RED_ICON) {
+            span.className = GREEN_ICON
+        }
+    }); #}
+    
+    $("a.zaz").click(function(){
+        
+        $.ajax({
+            type: "POST",
+            url: "{{path('isReadingNotifs')}}",
+            success: function () {
+                $("span.pulse-danger").removeClass("pulse-danger").addClass("pulse");
+            }
+        });
+    });
 
     // afficher les notifications en asynchrone en suprimmant une notification
     Array.from(document.querySelectorAll('a.delete-notif')).forEach(function (link) {
@@ -207,17 +211,21 @@ return confirm('Voulez-vous vraiment supprimé cette technologie ?');
     });
     async function onClickDelete(event) {
         event.preventDefault();
+        var element = $(this);
         const url = this.href;
         
         const count = Array.from(document.querySelectorAll('span.notif-view'));
-
+        
         try {
             const result = await axios.get(url);	
             const data = result.data;
-            
+
             count.forEach(count => {
                 count.textContent = data.notifications;
-            });
+            }); 
+
+            element.parent("#notif-div").remove();
+            
             
         } catch (error) {
             // error
@@ -226,35 +234,27 @@ return confirm('Voulez-vous vraiment supprimé cette technologie ?');
     }
 
     // afficher les notifications en asynchrone en ajoutant une notification
-    {# function loadDoc() {
+    {# $(".edit-calendar22").click(function(){
 
-        setInterval(() => {
+        
         var xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
+                
                 const count = document.querySelectorAll("span.notif-view").forEach(count => {
                     count.innerHTML = this.responseText;
                 });
             } 
         };
-        $.ajax({
-		url: '{{ path("notification_delete") }}',
-		type: 'DELETE',
-		success: function(data) {
-			$('#zaz').html(data);
-		}
-	});
     
-        let url ="{{path('notification')}}";
+        let url ="{{path('isReadingNotifs')}}";
         
             xhttp.open("GET", url, true);
             xhttp.send();
-        }, 500);  
-    }
-    loadDoc(); #}
-    </script>
-
-    <script>
+       
+    }); #}
     
     </script>
+
+

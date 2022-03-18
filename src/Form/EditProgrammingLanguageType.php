@@ -23,8 +23,9 @@ class EditProgrammingLanguageType extends AbstractType
                     'class' => 'input100 form-control',
                 ]
             ])
-            ->add('picture', TextType::class, [    
+            ->add('picture', FileType::class, [    
                 'required' => true,
+                'data_class' => null,
                 // 'constraints'=> [
 
                 //     new Image([

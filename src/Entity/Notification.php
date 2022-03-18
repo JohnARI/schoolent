@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 /**
  * @ORM\Entity(repositoryClass=NotificationRepository::class)
@@ -28,6 +29,7 @@ class Notification
     private $createdAt;
 
     /**
+     * @Ignore()
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="notifications")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -37,6 +39,11 @@ class Notification
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $link;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isRead;
 
     public function __construct()
     {
@@ -98,6 +105,18 @@ class Notification
     public function setLink(?string $link): self
     {
         $this->link = $link;
+
+        return $this;
+    }
+
+    public function getIsRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(?bool $isRead): self
+    {
+        $this->isRead = $isRead;
 
         return $this;
     }
