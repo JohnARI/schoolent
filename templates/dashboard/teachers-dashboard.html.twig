@@ -129,7 +129,7 @@
 						</div>
 						{% if app.user.session %}
 							
-								<div class="card col-6">
+								<div class="card">
 
 									<div class="card-body">
 										<div class="table-responsive">
@@ -207,7 +207,17 @@
 			</div>
 		</div>
 		<script>
-		
+		$('#ajax').submit(function(e) {
+
+    e.preventDefault();
+    let url = "{{ path('dashboard-teacher') }}";
+    let formSerialize = $(this).serialize();
+    
+    $.post(url, formSerialize, function(response) {
+        //your callback here
+        alert(response);
+    }, 'JSON');
+});
 		</script>
 
 	{% endblock %}

@@ -45,8 +45,8 @@ class DashboardController extends AbstractController
         $mySession = $this->getUser()->getSession($session);
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
         $gradeStudents = $gradeRepository->findByUser($myStudents);
-        $teacher = $this->getUser();
-        $gradeTeacher = $gradeRepository->findByTeacher($teacher);
+        $myId = $this->getUser();
+        $gradeTeacher = $gradeRepository->findByTeacher($myId);
 
         $grade = new Grade();
 
@@ -55,7 +55,7 @@ class DashboardController extends AbstractController
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
-            $grade->setTeacher($teacher);
+            $grade->setTeacher($myId);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
@@ -97,10 +97,8 @@ class DashboardController extends AbstractController
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $mySession = $this->getUser()->getSession($session);
         $gradeStudents = $gradeRepository->findByUser($myStudents);
-        $gradeTeacher = $gradeRepository->findByTeacher($teacher);
-        $teacher = $this->getUser();
-
-        
+        $myId = $this->getUser();
+        $gradeTeacher = $gradeRepository->findByTeacher($myId);
 
         $grade = new Grade();
         $formGrade = $this->createForm(GradeType::class, $grade);
@@ -108,11 +106,11 @@ class DashboardController extends AbstractController
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
-            $grade->setTeacher($teacher);
+            $grade->setTeacher($myId);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
-            return $this->redirect($request->getUri());
+            return new Response(json_encode(['status'=>'success']));
         }
 
         return $this->render('dashboard/teachers-dashboard.html.twig', [
