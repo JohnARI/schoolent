@@ -454,5 +454,4 @@ class AdministrationController extends AbstractController
         $this->addFlash('success', 'Le cours a été supprimé');
     }
 
-   
 }

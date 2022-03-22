@@ -37,6 +37,9 @@ class CalendarController extends AbstractController
 
     /**
      * @Route("/new", name="calendar_new", methods={"GET", "POST"})
+     * @param Calendar $calendar
+     * @return Response
+     * 
      */
     public function new(Request $request, EntityManagerInterface $entityManager, CalendarRepository $calendarRepository): Response
     {
@@ -80,8 +83,6 @@ class CalendarController extends AbstractController
 
     /**
      * @Route("/{id}", name="calendar_show", methods={"GET"})
-     * @param Calendar $calendar
-     * @return Response
      * 
      */
     public function show(Request $request, CalendarRepository $calendar, UserRepository $userRepository, $id): Response
@@ -99,7 +100,10 @@ class CalendarController extends AbstractController
             
 
             $calendars = new Calendar;
-            $form = $this->createForm(CalendarType::class, $calendars);
+            $form = $this->createForm(CalendarType::class, $calendars,[
+                'action'=>$this->generateUrl('calendar_new'),
+                'method'=>'POST'
+            ]);
             $form->handleRequest($request);
             $calendrier = $calendar->findAll();
             $calendar = $calendar->findBy(['teacher_id'=>$id]);
