@@ -88,11 +88,13 @@ class GradeRepository extends ServiceEntityRepository
       * @throws Exception
       * @throws \Doctrine\DBAL\Exception
       */
-      public function findGradeByTeacher($teacher): array
+      public function findGradeByTeacher($myId, $mySession): array
       {
           return $this->createQueryBuilder('g')
           ->where('g.teacher = :teacher')
-          ->setParameter('teacher', $teacher)
+          ->andWhere('g.session = :session')
+          ->setParameter('teacher', $myId)
+          ->setParameter('session', $mySession)
           ->getQuery()
           ->getResult();
     }

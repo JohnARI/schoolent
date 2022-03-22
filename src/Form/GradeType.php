@@ -72,26 +72,27 @@ class GradeType extends AbstractType
                 'class' => ProgrammingLanguage::class,
                 'choice_label' => 'name',
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control input-sm',
                 ]
             ])
             ->add('name', TextType::class, ['attr' => [
-                'attr' => 'input100 form-control',
+                'attr' => 'form-control input-sm',
             ]])
             ->add('grade', NumberType::class, ['attr' => [
-                'class' => 'input100 form-control',
+                'class' => 'form-control input-sm',
             ]])
             ->add('comment', TextareaType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
+                    'class' => 'form-control input-sm',
                 ]
             ])
 
             ->add('submit', SubmitType::class, [
                 'attr' => [
-                    'class' => 'login100-form-btn btn-primary'
+                    'class' => 'btn btn-primary',                   
                 ],
-                'label' => 'Ajouter une note'
+                'label' => 'Ajouter',
+
             ]);
     }
 }

@@ -49,10 +49,16 @@ class Session
      */
     private $calendars;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Grade::class, mappedBy="session")
+     */
+    private $grades;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
         $this->calendars = new ArrayCollection();
+        $this->grades = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,4 +185,34 @@ class Session
     // {
     //     return $this->name;
     // }
+
+    /**
+     * @return Collection<int, Grade>
+     */
+    public function getGrades(): Collection
+    {
+        return $this->grades;
+    }
+
+    public function addGrade(Grade $grade): self
+    {
+        if (!$this->grades->contains($grade)) {
+            $this->grades[] = $grade;
+            $grade->setSession($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGrade(Grade $grade): self
+    {
+        if ($this->grades->removeElement($grade)) {
+            // set the owning side to null (unless already changed)
+            if ($grade->getSession() === $this) {
+                $grade->setSession(null);
+            }
+        }
+
+        return $this;
+    }
 }

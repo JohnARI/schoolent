@@ -46,7 +46,7 @@ class DashboardController extends AbstractController
         $myStudents = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
         $gradeStudents = $gradeRepository->findByUser($myStudents);
         $myId = $this->getUser();
-        $gradeTeacher = $gradeRepository->findByTeacher($myId);
+        $gradeTeacher = $gradeRepository->findGradeByTeacher($myId, $mySession);
 
         $grade = new Grade();
 
@@ -56,6 +56,7 @@ class DashboardController extends AbstractController
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
             $grade->setTeacher($myId);
+            $grade->setSession($mySession);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
@@ -107,6 +108,7 @@ class DashboardController extends AbstractController
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
             $grade->setTeacher($myId);
+            $grade->setSession($mySession);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');

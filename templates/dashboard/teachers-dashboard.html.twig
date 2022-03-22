@@ -133,41 +133,43 @@
 
 									<div class="card-body">
 										<div class="table-responsive">
-											<table class="table border text-nowrap text-md-nowrap table-bordered mb-0" id= "grade">
-									{% embed "components/modal.html.twig" %}
-									{% set modalType = "modal-lg effect-flip-verticalshow" %}
-									{% set id = "xl-grades" %}
-									{% set buttonTitle = "Ajouter une note" %}
-									{% block button %}
-										<button class="btn btn-primary mb-4" data-bs-effect="effect-flip-vertical" data-bs-toggle="modal" data-bs-target="#{{id}}">
-											Ajouter une note
-										</button>
-									{% endblock %}
-									{% block modalTitle %}Attribuer une note
-									{% endblock %}
-									{% block dashboard %}
-										{% include "/administration/admin/add/add_grades.html.twig" %}
-									{% endblock %}
-								{% endembed %}
-												<thead>
-													<tr>
-														<th>Elève</th>
-														<th>Note/matière</th>
+                                            <table class="table border text-nowrap text-md-nowrap table-hover mb-0">
+                                                <thead>
+                                                    <tr>
+                                                    
+                                                        <th>Elève</th>
+														<th>Intitulé</th>
+                                                        <th>Note</th>
+                                                        <th>Matière</th>
 														<th>Professeur</th>
+														<th>Remarque</th>
 														<th>Actions</th>
-		
-													</tr>
-												</thead>
-												<tbody>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+												<tr>
+													{{form_start(formGrade, { 'attr' : { 'id': 'ajax' } })}}
+												    <th>{{form_widget(formGrade.user)}}</th>
+													<th>{{form_widget(formGrade.name)}}</th>
+													<th>{{form_widget(formGrade.grade)}}</th>
+													<th>{{form_widget(formGrade.category)}}</th>
+													<th>{{app.user.fullname}}</th>
+													<th>{{form_widget(formGrade.comment)}}</th>
+													<th>{{form_widget(formGrade.submit)}}</th>
+													{{form_end(formGrade)}}
+												</tr>
 													{% for grade in gradeTeacher %}
-														<tr>
-															<td>{{grade.user}}</td>
-															<td>{{grade.grade}}
-																/
-																{{grade.category}}</td>
-																<td>{{grade.teacher}}</td>
-									
-										<td name="bstable-actions">
+                                                    <tr>
+														
+													
+                                                       
+                                                        <td>{{grade.user}}</td>
+                                                        <td>{{grade.name}}</td>
+                                                        <td>{{grade.grade}}</td>
+														<td>{{grade.category}}</td>
+														<td>{{grade.teacher}}</td>
+														<td>{{grade.comment}}</td>
+														<td name="bstable-actions">
 											<div
 												class="btn-list">
 												{# Bouton modifier #}
@@ -183,14 +185,11 @@
 												{# fin bouton supprimer #}
 											</div>
 										</td>
-						
-										
-														{% endfor %}
-													</tr>
-
-												</tbody>
-											</table>
-										</div>
+                                                    </tr>
+													{% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
 									</div>
 								</div>
 
