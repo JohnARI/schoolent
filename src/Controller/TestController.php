@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use DatePeriod;
+use DateInterval;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\CalendarRepository;
@@ -101,6 +103,70 @@ class TestController extends AbstractController
 
             'calendar' => $calendar,
         ]);
+
+    }
+
+
+
+    /**
+     * @Route("/test2", name="test2", methods={"GET", "POST"})
+     */
+    public function index2(CalendarRepository $calendar, Request $request): Response
+    {
+
+        $newData = json_decode($request->getContent());
+        $start = new \DateTime('2022-02-18 00:00:00') ;
+        $end = new \DateTime('2022-03-21 00:00:00') ;
+        $interval = DateInterval::createFromDateString('1 day');
+        $daterange = new DatePeriod($start,$interval,$end);
+        
+       $test = new \DateTime('2022-02-28 00:00:00');
+
+       $monTest = $test->format('Y-m-d');
+        // dd($daterange);
+
+        foreach($daterange as $date1){
+
+            echo $date1->format('Y-m-d').'<br>';
+
+            $date[] = $date1->format('Y-m-d');
+
+
+
+            
+         }
+
+        //  echo '<pre>'; print_r($date); echo '</pre>';
+         echo '<br>';
+         echo '<br>';
+
+        //  echo '<pre>'; print_r($daterange); echo '</pre>';
+
+        //  dd($date);
+
+         if(in_array($monTest, $date, false)){
+
+            echo 'Vous etes bien dans l\'interval';
+
+        }else{
+
+            echo 'Vous n\'etes pas dans l\'interval';
+        };
+         
+         // reverse the array
+         
+        //  $daterange = array_reverse(iterator_to_array($daterange));
+                  
+        //  foreach($daterange as $date1){
+        //     echo $date1->format('Y-m-d').'<br>';
+        //  }
+
+     
+
+        dd($newData);
+
+        return $this->render('test/test2.html.twig');
+
 
     }
 

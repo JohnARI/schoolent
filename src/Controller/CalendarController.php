@@ -55,6 +55,7 @@ class CalendarController extends AbstractController
 
             $start = $event->getStart();
             $end = $event->getEnd();
+            
         }
       
         // $interval = DateInterval::createFromDateString('1 day');

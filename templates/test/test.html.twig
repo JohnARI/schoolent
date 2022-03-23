@@ -36,6 +36,31 @@
 	</div>
 	{#-------------------------------------------------Fin Calendar-----------------------------------------#}
 
+	{#----------------------------------------------- .Launch Modal info Button--------------------------------------#}
+
+<!-- .modal -->
+<div class="modal fade" id="Mysmallmodal">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">
+                	Information
+                </h4>                                                             
+			</div> 
+			<div class="modal-body">
+				{% for calendar in calendar %}
+				{{calendar.title}} {{calendar.teacherName}}
+				{% endfor %}
+			</div>   
+		</div>                                                                       
+	</div>                                      
+</div>
+
+
+{#-----------------------------------------------Fin Modal info Button------------------------------------------#}
+
+
+
 	{# ---------------------------------------------------DELETE-------------------------------------------- #}
 	{# {% for calendar in calendar %}
 	<form method="post" action="{{ path('calendar_delete', {'id': calendar.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" style="position:fixed; top:30%; left:50%; background-color:lightGray; z-index:1000; color:black; display:none" id="delete" >
@@ -114,10 +139,21 @@
 },
 				eventClick: function (arg) {
 				if (confirm('Are you sure you want to delete this event?')) {
+
+
+					arg.event.remove()
 				}
 
-				arg.event.remove()
+				
 				},
+				eventOverlap: function(stillEvent, movingEvent) {
+    			return stillEvent.allDay && movingEvent.allDay;
+  				},
+
+				eventMouseEnter:function( mouseEnterInfo ) {
+
+					$('#Mysmallmodal').modal('show');
+				 },
 				editable: true,
 				dayMaxEvents: true, // allow "more" link when too many events
 				events: [{% for calendar in calendar %}{
@@ -130,7 +166,7 @@
 
 				},{% endfor %}]
 
-
+			
 				})
 
 				calendar.on('eventAdd', (e) => {
@@ -196,7 +232,22 @@
 				xhr.send(JSON.stringify(donnees))
 
 
+				});
+
+				$.ajax
+				({
+				type: "POST",
+				url: "/test2",
+				dataType: "json",
+				data: ['MERCI','BONJOUR'],
+				success: function(server_response)
+				{
+				
+				$("#reponse").html(server_response)
+				}
 				})
+
+				
 
 
 
