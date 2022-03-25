@@ -8,13 +8,13 @@
 {% block body %}
 
 	{#
-	<!--app-content open--> #}
+		<!--app-content open--> #}
 	<div class="main-content app-content mt-0">
 		<div
 			class="side-app">
 
 			{#
-					<!-- CONTAINER --> #}
+								<!-- CONTAINER --> #}
 			<div
 				class="main-container container-fluid">
 
@@ -128,28 +128,28 @@
 							</div>
 						</div>
 						{% if app.user.session %}
-							
-								<div class="card">
 
-									<div class="card-body">
-										<div class="table-responsive">
-                                            <table class="table border text-nowrap text-md-nowrap table-hover mb-0">
-                                                <thead>
-                                                    <tr>
-                                                    
-                                                        <th>Elève</th>
-														<th>Intitulé</th>
-                                                        <th>Note</th>
-                                                        <th>Matière</th>
-														<th>Professeur</th>
-														<th>Remarque</th>
-														<th>Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+							<div class="card">
+
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table border text-nowrap text-md-nowrap table-hover mb-0">
+											<thead>
+												<tr>
+
+													<th>Elève</th>
+													<th>Intitulé</th>
+													<th>Note</th>
+													<th>Matière</th>
+													<th>Professeur</th>
+													<th>Remarque</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+											<tbody>
 												<tr>
 													{{form_start(formGrade, { 'attr' : { 'id': 'ajax' } })}}
-												    <th>{{form_widget(formGrade.user)}}</th>
+													<th>{{form_widget(formGrade.user)}}</th>
 													<th>{{form_widget(formGrade.name)}}</th>
 													<th>{{form_widget(formGrade.grade)}}</th>
 													<th>{{form_widget(formGrade.category)}}</th>
@@ -158,65 +158,74 @@
 													<th>{{form_widget(formGrade.submit)}}</th>
 													{{form_end(formGrade)}}
 												</tr>
-													{% for grade in gradeTeacher %}
-                                                    <tr>
+												{% for grade in gradeTeacher %}
+
+													<tr class='clickable-row' data-href='{{path('profil_user', {'id': grade.user.id} ) }}'>
+
+
 														
-													
-                                                       
-                                                        <td>{{grade.user}}</td>
-                                                        <td>{{grade.name}}</td>
-                                                        <td>{{grade.grade}}</td>
+															<td>{{grade.user}}</td>
+														
+														<td>{{grade.name}}</td>
+														<td>{{grade.grade}}</td>
 														<td>{{grade.category}}</td>
 														<td>{{grade.teacher}}</td>
 														<td>{{grade.comment}}</td>
-														<td name="bstable-actions">
-											<div
-												class="btn-list">
-												{# Bouton modifier #}
-												<a href="{{path('edit_grade',{'id': grade.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
-													<span class="fe fe-edit"></span>
-												</a>
-												{# fin bouton modifier #}
 
-												{# Bouton supprimer #}
-												<a href="{{path('delete_grade',{'id': grade.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger deleteUser">
-													<span class="fe fe-trash-2"></span>
-												</a>
-												{# fin bouton supprimer #}
-											</div>
-										</td>
-                                                    </tr>
-													{% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
+														<td name="bstable-actions">
+															<div
+																class="btn-list">
+																{# Bouton modifier #}
+																<a href="{{path('edit_grade',{'id': grade.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+																	<span class="fe fe-edit"></span>
+																</a>
+																{# fin bouton modifier #}
+
+																{# Bouton supprimer #}
+																<a href="{{path('delete_grade',{'id': grade.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger deleteUser">
+																	<span class="fe fe-trash-2"></span>
+																</a>
+																{# fin bouton supprimer #}
+															</div>
+														</td>
+													</tr>
+</a>
+												{% endfor %}
+											</tbody>
+										</table>
 									</div>
 								</div>
-
 							</div>
-						{% endif %}
 
-						{#
-										<!-- ROW CLOSED --> #}
-						{# Fin tableaux et modal #}
+						</div>
+					{% endif %}
+
+					{#
+															<!-- ROW CLOSED --> #}
+					{# Fin tableaux et modal #}
 
 
-					{% endblock %}
-				</div>
+				{% endblock %}
 			</div>
 		</div>
-		<script>
-		$('#ajax').submit(function(e) {
+	</div>
+	<script>
+		$('#ajax').submit(function (e) {
 
-    e.preventDefault();
-    let url = "{{ path('dashboard-teacher') }}";
-    let formSerialize = $(this).serialize();
-    
-    $.post(url, formSerialize, function(response) {
-        //your callback here
-        alert(response);
-    }, 'JSON');
+e.preventDefault();
+let url = "{{ path('dashboard-teacher') }}";
+let formSerialize = $(this).serialize();
+
+$.post(url, formSerialize, function (response) { // your callback here
+alert(response);
+}, 'JSON');
 });
-		</script>
 
-	{% endblock %}
+
+
+ $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+	</script>
+
+{% endblock %}

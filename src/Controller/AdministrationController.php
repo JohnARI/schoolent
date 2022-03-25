@@ -231,21 +231,20 @@ class AdministrationController extends AbstractController
     public function editUser($id, Request $request, string $projectDir): Response
     {
         $user = $this->entityManager->getRepository(User::class)->find($id);
-
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
-        $fileName = $user->getPicture();
+        // $fileName = $user->getPicture();
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $file = $form->get('picture')->getData();
+            // $file = $form->get('picture')->getData();
 
-            if ($file) {
-                $newFilename = $this->fileUploader->upload($file, '/user');
-                $user->setPicture($newFilename);
-            } elseif (is_null($file)) {
-                $filesystem = new Filesystem();
-                $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
-            }
+            // if ($file) {
+            //     $newFilename = $this->fileUploader->upload($file, '/user');
+            //     $user->setPicture($newFilename);
+            // } elseif (is_null($file)) {
+            //     $filesystem = new Filesystem();
+            //     $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
+            // }
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);

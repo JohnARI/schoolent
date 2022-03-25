@@ -100,7 +100,6 @@ class DashboardController extends AbstractController
         $gradeStudents = $gradeRepository->findByUser($myStudents);
         $myId = $this->getUser();
         $gradeTeacher = $gradeRepository->findByTeacher($myId);
-
         $grade = new Grade();
         $formGrade = $this->createForm(GradeType::class, $grade);
         $formGrade->handleRequest($request);

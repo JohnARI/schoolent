@@ -1,10 +1,6 @@
 {% block addUsers %}
 
-	<div class="container-login100">
-		<div class="wrap-login100 p-6 row">
-			<span class="login100-form-title">
-				Ajouter un utilisateur
-			</span>
+
 			<div class="col">
 				{{form_start(formUser)}}
 				{% for message in app.flashes('contact_success') %}
@@ -78,7 +74,6 @@
 			</div>
 			{{form_end(formUser)}}
 
-		</div>
-	</div>
+
 
 {% endblock %}
