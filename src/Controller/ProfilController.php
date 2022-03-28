@@ -3,8 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Grade;
+use DateTimeImmutable;
+use App\Entity\Session;
+use App\Form\GradeType;
 use App\Service\Mailjet;
 use App\Form\EditProfilType;
+use App\Entity\ProgrammingLanguage;
 use App\Form\EditProfilPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +27,7 @@ class ProfilController extends AbstractController
         $this->passwordHasher = $passwordHasher;
         $this->mailjet = $mailjet;
     }
-    
+
     /**
      * @Route("/profil", name="profil")
      */
@@ -40,17 +45,17 @@ class ProfilController extends AbstractController
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            
+
             $this->addFlash('success', 'Utilisateur mis à jour avec succès');
             return $this->redirect($request->getUri());
         }
 
-        
+
         if ($editUserForm->isSubmitted() && $editUserForm->isValid()) {
             $this->addFlash('success', 'Utilisateur mis à jour avec succès');
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            
+
             return $this->redirect($request->getUri());
         }
 
@@ -58,7 +63,43 @@ class ProfilController extends AbstractController
 
             'editUserForm' => $editUserForm->createView(),
             'editUserPasswordForm' => $editUserPasswordForm->createView(),
-            
+
+        ]);
+    }
+
+    /**
+     * @Route("/profil/{id}", name="profil_user")
+     */
+    public function profilUser($id, Request $request): Response
+    {
+        $user = $this->entityManager->getRepository(User::class)->find($id);
+        $grades = $this->entityManager->getRepository(Grade::class)->findBy(['user' => $user]);
+        $session = $this->entityManager->getRepository(Session::class)->findAll();
+        $mySession = $this->getUser()->getSession($session);
+        $myId = $this->getUser();
+        $grade = new Grade();
+
+        $formGrade = $this->createForm(GradeType::class, $grade);
+        $formGrade->handleRequest($request);
+
+        if ($formGrade->isSubmitted() && $formGrade->isValid()) {
+            $grade->setCreatedAt(new DateTimeImmutable());
+            $grade->setTeacher($myId);
+            $grade->setSession($mySession);
+            $this->entityManager->persist($grade);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'La note a été attribué');
+            return $this->redirect($request->getUri());
+        }
+
+
+
+        return $this->render('profil/profil_user.html.twig', [
+            'user' => $user,
+            'grades' => $grades,
+            'formGrade' => $formGrade->createView(),
+
+
         ]);
     }
 }

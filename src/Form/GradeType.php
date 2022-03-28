@@ -84,6 +84,7 @@ class GradeType extends AbstractType
             ->add('comment', TextareaType::class, [
                 'attr' => [
                     'class' => 'form-control input-sm',
+                    'rows' => '1',
                 ]
             ])
 

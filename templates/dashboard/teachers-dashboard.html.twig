@@ -110,10 +110,10 @@
 										<div class="text-white">
 											{% if app.user.payment %}
 
-												<h2 class="mb-0 number-font text-start">{{app.user.payment}}
+												<h2 class="mb-0 number-font text-start">{{app.user.payment}}€
 													/ jour</h2>
 											{% else %}
-												<h2 class="mb-0 number-font text-start">0 / jour</h2>
+												<h2 class="mb-0 number-font text-start">0€ / jour</h2>
 											{% endif %}
 
 											<p class="text-white mb-0">Rémunération</p>
@@ -149,34 +149,49 @@
 											<tbody>
 												<tr>
 													{{form_start(formGrade, { 'attr' : { 'id': 'ajax' } })}}
-													<th>{{form_widget(formGrade.user)}}</th>
-													<th>{{form_widget(formGrade.name)}}</th>
-													<th>{{form_widget(formGrade.grade)}}</th>
-													<th>{{form_widget(formGrade.category)}}</th>
-													<th>{{app.user.fullname}}</th>
-													<th>{{form_widget(formGrade.comment)}}</th>
-													<th>{{form_widget(formGrade.submit)}}</th>
+													<td>{{form_widget(formGrade.user)}}</td>
+													<td>{{form_widget(formGrade.name)}}</td>
+													<td>{{form_widget(formGrade.grade)}}</td>
+													<td>{{form_widget(formGrade.category)}}</td>
+													<td>{{app.user.fullname}}</td>
+													<td>{{form_widget(formGrade.comment)}}</td>
+													<td>{{form_widget(formGrade.submit)}}</td>
 													{{form_end(formGrade)}}
 												</tr>
 												{% for grade in gradeTeacher %}
 
-													<tr class='clickable-row' data-href='{{path('profil_user', {'id': grade.user.id} ) }}'>
+													<tr {# class='clickable-row' data-href='{{path('profil_user', {'id': grade.user.id} ) }}' #}>
 
 
 														
-															<td>{{grade.user}}</td>
+															<td><a href="{{path('profil_user', {'id': grade.user.id} ) }}">{{grade.user}}</a></td>
 														
 														<td>{{grade.name}}</td>
 														<td>{{grade.grade}}</td>
 														<td>{{grade.category}}</td>
 														<td>{{grade.teacher}}</td>
-														<td>{{grade.comment}}</td>
+														<td>
+															{% embed "components/modal.html.twig" %}
+									{% set modalType = "modal-sm" %}
+									{% set id = "comments" %}
+									{% block button %}
+									{% if grade.comment | length > 30 %}<button data-bs-toggle="modal" data-bs-target="#{{id}}">{% endif %}{{grade.comment | length > 30 ? grade.comment|slice(0, 30) ~ '...' : grade.comment}}{% if grade.comment | length > 30 %}
+														</button>{% endif %}
+									{% endblock %}
+									{% block modalTitle %}Remarque
+									{% endblock %}
+									{% block dashboard %}
+									
+										<textarea class="mx-auto d-flex justify-content-center">{{grade.comment}}</textarea>
+									{% endblock %}
+								{% endembed %}
+								</td>
 
 														<td name="bstable-actions">
 															<div
 																class="btn-list">
 																{# Bouton modifier #}
-																<a href="{{path('edit_grade',{'id': grade.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary">
+																<a href="{{path('edit_grade',{'id': grade.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary" target="_blank">
 																	<span class="fe fe-edit"></span>
 																</a>
 																{# fin bouton modifier #}
@@ -189,7 +204,6 @@
 															</div>
 														</td>
 													</tr>
-</a>
 												{% endfor %}
 											</tbody>
 										</table>
