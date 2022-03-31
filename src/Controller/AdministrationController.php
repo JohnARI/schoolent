@@ -66,7 +66,7 @@ class AdministrationController extends AbstractController
     public function viewAll(Request $request, PasswordGenerator $passwordGenerator): Response
     {
     
-        $view_all = $this->cache->get('view_all_data', function(ItemInterface $item){
+        $results = $this->cache->get('view_all_data', function(ItemInterface $item){
             $item->expiresAfter(3600);
             return [ 
                 'users' => $this->entityManager->getRepository(User::class)->findAll(),
@@ -109,6 +109,7 @@ class AdministrationController extends AbstractController
 
             // vider le cache aprés chaque modification
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' .$session .' qui debutera le '. date_format($sessionStart, 'd-m-y') . ' Au ' . date_format($sessionEnd, 'd-m-y') . '. ' . 'Voici votre mot de passe temporaire :'   . $temporaryPassword . ' et veillez à le modifier dans votre espace profil.');
             $this->notification->sendNotification('Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' .$session .' qui debutera le '. date_format($sessionStart, 'd-m-y') . ' au ' . date_format($sessionEnd, 'd-m-y'), $user);
@@ -136,6 +137,7 @@ class AdministrationController extends AbstractController
             $this->entityManager->flush();
 
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             $this->addFlash('success', 'Un nouveau programme a été ajouté !');
             return $this->redirect($request->getUri());
@@ -156,6 +158,7 @@ class AdministrationController extends AbstractController
             $this->entityManager->flush();
 
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             return $this->redirect($request->getUri());
             $this->addFlash('success', 'Une nouvelle session a été ajoutée !');
@@ -190,6 +193,7 @@ class AdministrationController extends AbstractController
 
             // reinitialiser le cache à chaque modification
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
 
             $this->notification->sendNotification("Vous avez une nouvelle intervention sur le cours de: " . $cours . ' ' .$programmingLanguages . " du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . ' avec la session ' . $nameSession, $teacher);
@@ -226,6 +230,7 @@ class AdministrationController extends AbstractController
 
             // reinitialiser le cache à chaque modification
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             $this->addFlash('success', 'Un nouveau cours ajouté !');
             return $this->redirect($request->getUri());
@@ -238,36 +243,36 @@ class AdministrationController extends AbstractController
             'formCourse' => $formCourse->createView(),
             'formTechno' => $formTechno->createView(),
 
-            'view_all' => $view_all,
+            'results' => $results,
         ]);
     }
 
     /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
-    public function editUser($id, Request $request, string $projectDir): Response
+    public function editUser(User $user, Request $request, string $projectDir): Response
     {
+        // string $projectDir : la variable est declarée dans bind services.yaml
+        $oldFileName = $user->getPicture();
+        $fileSystem = new Filesystem();
         
-        // $user = $cache->get('user', function(ItemInterface $item) use($id){
-        //     $item->expiresAfter(3600);
-        //     return $this->entityManager->getRepository(User::class)->find($id);
-        // });
-
-        $user = $this->entityManager->getRepository(User::class)->find($id);
-
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
-        $fileName = $user->getPicture();
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
+            
             $file = $form->get('picture')->getData();
-
-            if ($file) {
+    
+            if ($file != null) {
+                if ($oldFileName != null) {
+                    // $projectDir = $this->getParameter('kernel.project_dir');
+                    $fileSystem->remove($projectDir . '/public/uploads/user/' . $oldFileName);
+                }
+                
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
-            } elseif (is_null($file)) {
-                $filesystem = new Filesystem();
-                $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
+            } else {            
+                $user->setpicture($oldFileName);
             }
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
@@ -276,14 +281,15 @@ class AdministrationController extends AbstractController
 
             // reinitialiser le cache à chaque modification
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             $this->addFlash('success', 'L\'utilisateur a été modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
         return $this->render('administration/admin/edit/edit_user.html.twig', [
-
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'user'      => $user,
         ]);
     }
 
@@ -322,6 +328,7 @@ class AdministrationController extends AbstractController
 
         // reinitialiser le cache à chaque modification
         $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
 
         $this->addFlash('success', 'L\'utilisateur a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
@@ -332,12 +339,10 @@ class AdministrationController extends AbstractController
      */
     public function editTechnologie($id, Request $request): Response
     {
-        // $technologie = $cache->get('technologie', function(ItemInterface $item) use($id){
-        //     $item->expiresAfter(3600);
-        //     return $this->entityManager->getRepository(ProgrammingLanguage::class)->find($id);
-        // });
 
         $technologie = $this->entityManager->getRepository(ProgrammingLanguage::class)->find($id);
+        $oldFileName = $technologie->getPicture();
+        $fileSystem = new Filesystem();
 
         $form = $this->createForm(EditProgrammingLanguageType::class, $technologie);
         $form->handleRequest($request);
@@ -345,10 +350,17 @@ class AdministrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $technoPicture = $form->get('picture')->getData();
-
-            if ($technoPicture) {
+    
+            if ($technoPicture != null) {
+                if ($oldFileName != null) {
+                    $projectDir = $this->getParameter('kernel.project_dir');
+                    $fileSystem->remove($projectDir . '/public/uploads/techno/' . $oldFileName);
+                }
+                
                 $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
                 $technologie->setPicture($newFilename);
+            } else {            
+                $technologie->setpicture($oldFileName);
             }
 
             $this->entityManager->persist($technologie);
@@ -356,6 +368,7 @@ class AdministrationController extends AbstractController
 
             // reinitialiser le cache à chaque modification
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             $this->addFlash('success', 'Le programme a été modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
@@ -386,6 +399,7 @@ class AdministrationController extends AbstractController
 
         // reinitialiser le cache à chaque modification
         $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
 
         $this->addFlash('success', 'Le programme a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
@@ -425,6 +439,7 @@ class AdministrationController extends AbstractController
 
             // reinitialiser le cache à chaque modification
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             $this->notification->sendNotification("Votre intervention a été modifiée : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
             $this->mailjet->sendEmail($teacher, "Votre planning vient d'être mis à jour. Nouvelle intervention sur " . $cours .' '. $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Nom de session " . $nameSession . ".");
@@ -433,8 +448,6 @@ class AdministrationController extends AbstractController
                 $this->notification->sendNotification("Votre convocation a été a été modifié pour le cours: " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.', $student);
                 $this->mailjet->sendEmail($student, "votre convocation vient d'être mis à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.');
             }
-
-            
 
             $this->addFlash('success', 'La date a été modifiée !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
@@ -455,6 +468,7 @@ class AdministrationController extends AbstractController
 
         // reinitialiser le cache à chaque modification
         $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La date a été supprimée');
@@ -474,6 +488,7 @@ class AdministrationController extends AbstractController
 
             // reinitialiser le cache à chaque modification
             $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
             $this->addFlash('success', 'La session a été modifiée !');
@@ -494,6 +509,7 @@ class AdministrationController extends AbstractController
 
         // reinitialiser le cache à chaque modification
         $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La session a été supprimée');
@@ -517,6 +533,7 @@ class AdministrationController extends AbstractController
 
         // reinitialiser le cache à chaque modification
         $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'Le cours a été supprimé');

@@ -110,15 +110,13 @@ class EditUserType extends AbstractType
             ->add('picture', FileType::class, [    
                 'required' => false,
                 'data_class' => null,
-                // 'constraints'=> [
-
-                //     new Image([
-                //         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
-                //         'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
-                //     ])
-                // ]
-
-
+                'constraints'=> [
+                    new Image([
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
+                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg',
+                        'maxSize' => '2024k',
+                    ])
+                ]
 
             ])
 

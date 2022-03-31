@@ -17,7 +17,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for admin in admins %}
+			{% for admin in results.admins %}
 				<tr>
 				{% if admin.picture %}
 						<td><a href="{{path('profil_user', {'id': admin.id} ) }}"><img style="height:100px;width:100px;" src="{{ asset('uploads/user/' ~ admin.picture)}}" alt="Photo de profil"></a></td>

@@ -15,7 +15,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for session in sessions %}
+				{% for session in results.sessions %}
 					<tr>
 						<td>{{ session.name }}</td>
 						<td>{{ session.startSession|date("d/m/Y") }}</td>

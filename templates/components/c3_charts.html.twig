@@ -3,13 +3,13 @@
 
 var ctx = document.getElementById("chart-monthly").getContext('2d');;
 
-var labels = [{%for data in dateByMonth %} 
+var labels = [{%for data in results.dateByMonth %} 
             {% set trans_month_hash = {"January": "Janvier", "February": "Février", "March": "Mars",
                                         "April": "Avril", "May": "Mai", "June": "Juin", "August": "Aout",
                                         "September": "Septembre", "October": "Octobre", "December": "Decembre"} 
             %} "{{ trans_month_hash[data.0.start | date('F')] }}", {% endfor %}];
 
-var data = [{%for data in dateByMonth %}{{ data.total }}, {% endfor %}];
+var data = [{%for data in results.dateByMonth %}{{ data.total }}, {% endfor %}];
 
 var myBarChart = new Chart(ctx, {
     type: 'bar',
@@ -74,8 +74,8 @@ var chart = c3.generate({
     data: {
         columns: [
             
-            ['data2', {{studentsMan | length}}],
-            ['data1', {{studentsWoman | length}}],
+            ['data2', {{ results.studentsMan | length}}],
+            ['data1', {{ results.studentsWoman | length}}],
         ],
         type: 'donut', // default type of chart
         colors: {
@@ -83,8 +83,8 @@ var chart = c3.generate({
             data2: '#145DF7'
         },
         names: { // name of each serie
-            'data2': 'Homme : {{studentsMan | length}}',
-            'data1': 'Femme : {{studentsWoman | length}}'
+            'data2': 'Homme : {{results.studentsMan | length}}',
+            'data1': 'Femme : {{results.studentsWoman | length}}'
         }
     },
     axis: {},
