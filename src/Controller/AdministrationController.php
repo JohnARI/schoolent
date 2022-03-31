@@ -19,6 +19,7 @@ use App\Form\EditGradeType;
 use App\Form\EditSessionType;
 use App\Service\FileUploader;
 use App\Form\EditCalendarType;
+use App\Form\CalendarAdminType;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
 use App\Form\AddProgrammingLanguageType;
@@ -32,7 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AdministrationController extends AbstractController
@@ -53,7 +53,7 @@ class AdministrationController extends AbstractController
      */
     public function viewUsers(): Response
     {
-        $users = $this->cache->get('users_all', function(ItemInterface $item){
+        $users = $this->cache->get('users_all', function (ItemInterface $item) {
             $item->expiresAfter(3600);
             return $this->entityManager->getRepository(User::class)->findAll();
         });
@@ -68,20 +68,20 @@ class AdministrationController extends AbstractController
      */
     public function viewAll(Request $request, PasswordGenerator $passwordGenerator): Response
     {
-    
-        $results = $this->cache->get('view_all_data', function(ItemInterface $item){
+
+        $results = $this->cache->get('view_all_data', function (ItemInterface $item) {
             $item->expiresAfter(3600);
-            return [ 
+            return [
                 'users' => $this->entityManager->getRepository(User::class)->findAll(),
                 'programmingLanguages' => $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll(),
                 'sessions' => $this->entityManager->getRepository(Session::class)->findAll(),
                 'calendars' => $this->entityManager->getRepository(Calendar::class)->findAll(),
                 'courses' => $this->entityManager->getRepository(Course::class)->findAll(),
                 'students' => $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession()),
-                ];
-         });
+            ];
+        });
 
-        
+
         // Tableaux
 
         // Fin tableaux
@@ -114,8 +114,8 @@ class AdministrationController extends AbstractController
             $this->cache->delete('view_all_data');
             $this->cache->delete('dashboard');
 
-            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' .$session .' qui debutera le '. date_format($sessionStart, 'd-m-y') . ' Au ' . date_format($sessionEnd, 'd-m-y') . '. ' . 'Voici votre mot de passe temporaire :'   . $temporaryPassword . ' et veillez à le modifier dans votre espace profil.');
-            $this->notification->sendNotification('Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' .$session .' qui debutera le '. date_format($sessionStart, 'd-m-y') . ' au ' . date_format($sessionEnd, 'd-m-y'), $user);
+            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' Au ' . date_format($sessionEnd, 'd-m-y') . '. ' . 'Voici votre mot de passe temporaire :'   . $temporaryPassword . ' et veillez à le modifier dans votre espace profil.');
+            $this->notification->sendNotification('Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' au ' . date_format($sessionEnd, 'd-m-y'), $user);
             $this->addFlash('success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
             //Message de succès
             return $this->redirect($request->getUri());
@@ -199,7 +199,7 @@ class AdministrationController extends AbstractController
             $this->cache->delete('dashboard');
 
 
-            $this->notification->sendNotification("Vous avez une nouvelle intervention sur le cours de: " . $cours . ' ' .$programmingLanguages . " du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . ' avec la session ' . $nameSession, $teacher);
+            $this->notification->sendNotification("Vous avez une nouvelle intervention sur le cours de: " . $cours . ' ' . $programmingLanguages . " du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . ' avec la session ' . $nameSession, $teacher);
 
             $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Intervention sur " . $cours . " " . $programmingLanguages . ".  avec la session " . $nameSession . ".");
             if ($student) {
@@ -258,23 +258,23 @@ class AdministrationController extends AbstractController
         // string $projectDir : la variable est declarée dans bind services.yaml
         $oldFileName = $user->getPicture();
         $fileSystem = new Filesystem();
-        
+
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $file = $form->get('picture')->getData();
-    
+
             if ($file != null) {
                 if ($oldFileName != null) {
                     // $projectDir = $this->getParameter('kernel.project_dir');
                     $fileSystem->remove($projectDir . '/public/uploads/user/' . $oldFileName);
                 }
-                
+
                 $newFilename = $this->fileUploader->upload($file, '/user');
                 $user->setPicture($newFilename);
-            } else {            
+            } else {
                 $user->setpicture($oldFileName);
             }
 
@@ -374,16 +374,16 @@ class AdministrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $technoPicture = $form->get('picture')->getData();
-    
+
             if ($technoPicture != null) {
                 if ($oldFileName != null) {
                     $projectDir = $this->getParameter('kernel.project_dir');
                     $fileSystem->remove($projectDir . '/public/uploads/techno/' . $oldFileName);
                 }
-                
+
                 $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
                 $technologie->setPicture($newFilename);
-            } else {            
+            } else {
                 $technologie->setpicture($oldFileName);
             }
 
@@ -437,7 +437,7 @@ class AdministrationController extends AbstractController
         $students = new User();
 
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
-        
+
 
         $formCalendar = $this->createForm(EditCalendarType::class, $calendar[0]);
         $formCalendar->handleRequest($request);
@@ -466,7 +466,7 @@ class AdministrationController extends AbstractController
             $this->cache->delete('dashboard');
 
             $this->notification->sendNotification("Votre intervention a été modifiée : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
-            $this->mailjet->sendEmail($teacher, "Votre planning vient d'être mis à jour. Nouvelle intervention sur " . $cours .' '. $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Nom de session " . $nameSession . ".");
+            $this->mailjet->sendEmail($teacher, "Votre planning vient d'être mis à jour. Nouvelle intervention sur " . $cours . ' ' . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Nom de session " . $nameSession . ".");
 
             foreach ($students as $student) {
                 $this->notification->sendNotification("Votre convocation a été a été modifié pour le cours: " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.', $student);
