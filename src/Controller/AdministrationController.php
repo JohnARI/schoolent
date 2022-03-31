@@ -19,8 +19,6 @@ use App\Form\EditGradeType;
 use App\Form\EditSessionType;
 use App\Service\FileUploader;
 use App\Form\EditCalendarType;
-use App\Form\CalendarAdminType;
-use App\Repository\UserRepository;
 use App\Service\PasswordGenerator;
 use App\Entity\ProgrammingLanguage;
 use App\Form\AddProgrammingLanguageType;
@@ -32,23 +30,22 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AdministrationController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet, FileUploader $fileUploader, NotificationService $notification)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet, FileUploader $fileUploader, NotificationService $notification, CacheInterface $cache)
     {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
         $this->mailjet = $mailjet;
         $this->fileUploader = $fileUploader;
         $this->notification = $notification;
+        $this->cache = $cache;
     }
 
     /**
@@ -56,7 +53,10 @@ class AdministrationController extends AbstractController
      */
     public function viewUsers(): Response
     {
-        $users = $this->entityManager->getRepository(User::class)->findAll();
+        $users = $this->cache->get('users_all', function(ItemInterface $item){
+            $item->expiresAfter(3600);
+            return $this->entityManager->getRepository(User::class)->findAll();
+        });
 
         return $this->render('administration/admin/view_users.html.twig', [
             'users' => $users,
@@ -66,20 +66,23 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/view-all", name="view-all")
      */
-    public function viewAll(Request $request, PasswordGenerator $passwordGenerator, CacheInterface $cache, UserRepository $userRepository): Response
+    public function viewAll(Request $request, PasswordGenerator $passwordGenerator): Response
     {
-        // $text = $cache->get('texte_details', function(ItemInterface $item){
-        //     $item->expiresAfter(20);
-        //     return $this->fonctionLongue();
-        // });
+    
+        $results = $this->cache->get('view_all_data', function(ItemInterface $item){
+            $item->expiresAfter(3600);
+            return [ 
+                'users' => $this->entityManager->getRepository(User::class)->findAll(),
+                'programmingLanguages' => $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll(),
+                'sessions' => $this->entityManager->getRepository(Session::class)->findAll(),
+                'calendars' => $this->entityManager->getRepository(Calendar::class)->findAll(),
+                'courses' => $this->entityManager->getRepository(Course::class)->findAll(),
+                'students' => $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession()),
+                ];
+         });
 
+        
         // Tableaux
-        $users = $this->entityManager->getRepository(User::class)->findAll();
-        $programmingLanguages = $this->entityManager->getRepository(ProgrammingLanguage::class)->findAll();
-        $sessions = $this->entityManager->getRepository(Session::class)->findAll();
-        $calendars = $this->entityManager->getRepository(Calendar::class)->findAll();
-        $courses = $this->entityManager->getRepository(Course::class)->findAll();
-        $students = $userRepository->findBySession('ROLE_USER', $this->getUser()->getSession());
 
         // Fin tableaux
 
@@ -93,6 +96,11 @@ class AdministrationController extends AbstractController
 
             // Ajout de photo
             $file = $formUser->get('picture')->getData();
+            $session = $formUser->get('session')->getData();
+            $sessionStart = $formUser->get('session')->getData()->getStartSession();
+            $sessionEnd = $formUser->get('session')->getData()->getEndSession();
+
+            // dd($session);
 
             if ($file) {
                 $newFilename = $this->fileUploader->upload($file, '/user');
@@ -102,14 +110,19 @@ class AdministrationController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! Voici votre mot de passe temporaire :'   . $temporaryPassword);
+            // vider le cache aprés chaque modification
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
+            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' .$session .' qui debutera le '. date_format($sessionStart, 'd-m-y') . ' Au ' . date_format($sessionEnd, 'd-m-y') . '. ' . 'Voici votre mot de passe temporaire :'   . $temporaryPassword . ' et veillez à le modifier dans votre espace profil.');
+            $this->notification->sendNotification('Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' .$session .' qui debutera le '. date_format($sessionStart, 'd-m-y') . ' au ' . date_format($sessionEnd, 'd-m-y'), $user);
             $this->addFlash('success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
             //Message de succès
             return $this->redirect($request->getUri());
         }
         // Fin add user
-        // Add techno
 
+        // Add techno
         $techno = new ProgrammingLanguage();
 
         $formTechno = $this->createForm(AddProgrammingLanguageType::class, $techno);
@@ -125,13 +138,16 @@ class AdministrationController extends AbstractController
 
             $this->entityManager->persist($techno);
             $this->entityManager->flush();
+
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
             $this->addFlash('success', 'Un nouveau programme a été ajouté !');
             return $this->redirect($request->getUri());
         }
         // Fin add techno
 
         // Add session
-
         $session = new Session();
 
         $formSession = $this->createForm(SessionType::class, $session);
@@ -143,13 +159,16 @@ class AdministrationController extends AbstractController
 
             $this->entityManager->persist($session);
             $this->entityManager->flush();
+
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
             return $this->redirect($request->getUri());
             $this->addFlash('success', 'Une nouvelle session a été ajoutée !');
         }
         // Fin add session
 
         // Add Calendar
-
         $calendar = new Calendar();
         $student = new User();
 
@@ -175,9 +194,14 @@ class AdministrationController extends AbstractController
             $this->entityManager->persist($calendar);
             $this->entityManager->flush();
 
-            $this->notification->sendNotification("Vous avez un nouveau cours de: " . $programmingLanguages . "du" . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
+            // reinitialiser le cache à chaque modification
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
 
-            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . "intervention sur " . $cours . " " . $programmingLanguages . " Nom de session " . $nameSession . ".");
+
+            $this->notification->sendNotification("Vous avez une nouvelle intervention sur le cours de: " . $cours . ' ' .$programmingLanguages . " du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . ' avec la session ' . $nameSession, $teacher);
+
+            $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Intervention sur " . $cours . " " . $programmingLanguages . ".  avec la session " . $nameSession . ".");
             if ($student) {
                 foreach ($students as $student) {
                     $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours . " " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.');
@@ -206,63 +230,76 @@ class AdministrationController extends AbstractController
 
             $this->entityManager->persist($course);
             $this->entityManager->flush();
+
+            // reinitialiser le cache à chaque modification
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
             $this->addFlash('success', 'Un nouveau cours ajouté !');
             return $this->redirect($request->getUri());
         }
 
         return $this->render('administration/admin/view_all.html.twig', [
-            'users' => $users,
-            'programmingLanguages' => $programmingLanguages,
-            'sessions' => $sessions,
-            'calendars' => $calendars,
             'formUser' => $formUser->createView(),
             'formCalendar' => $formCalendar->createView(),
             'formSession' => $formSession->createView(),
             'formCourse' => $formCourse->createView(),
             'formTechno' => $formTechno->createView(),
-            'courses' => $courses,
-            'students' => $students,
+
+            'results' => $results,
         ]);
     }
 
     /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
-    public function editUser($id, Request $request, string $projectDir): Response
+    public function editUser(User $user, Request $request, string $projectDir): Response
     {
-        $user = $this->entityManager->getRepository(User::class)->find($id);
+        // string $projectDir : la variable est declarée dans bind services.yaml
+        $oldFileName = $user->getPicture();
+        $fileSystem = new Filesystem();
+        
         $form = $this->createForm(EditUserType::class, $user);
         $form->handleRequest($request);
-        // $fileName = $user->getPicture();
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // $file = $form->get('picture')->getData();
-
-            // if ($file) {
-            //     $newFilename = $this->fileUploader->upload($file, '/user');
-            //     $user->setPicture($newFilename);
-            // } elseif (is_null($file)) {
-            //     $filesystem = new Filesystem();
-            //     $filesystem->remove($projectDir . '/public/uploads/user/' . $fileName);
-            // }
+            
+            $file = $form->get('picture')->getData();
+    
+            if ($file != null) {
+                if ($oldFileName != null) {
+                    // $projectDir = $this->getParameter('kernel.project_dir');
+                    $fileSystem->remove($projectDir . '/public/uploads/user/' . $oldFileName);
+                }
+                
+                $newFilename = $this->fileUploader->upload($file, '/user');
+                $user->setPicture($newFilename);
+            } else {            
+                $user->setpicture($oldFileName);
+            }
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+
+            // reinitialiser le cache à chaque modification
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
             $this->addFlash('success', 'L\'utilisateur a été modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
 
         return $this->render('administration/admin/edit/edit_user.html.twig', [
-
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'user'      => $user,
         ]);
     }
 
     /**
      * @Route("/admin/delete/user/{id}", name="delete_user")
      */
-    public function deleteUser(User $user, Request $request, string $projectDir): Response
+    public function deleteUser(User $user, Request $request): Response
     {
         $fileName = $user->getPicture();
 
@@ -275,6 +312,11 @@ class AdministrationController extends AbstractController
 
         $this->entityManager->remove($user);
         $this->entityManager->flush();
+
+        // reinitialiser le cache à chaque modification
+        $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
+
         $this->addFlash('success', 'L\'utilisateur a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
@@ -319,10 +361,12 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/edit/technologie/{id}", name="edit_technologie", methods={"GET|POST"})
      */
-    public function editTechnologie($id, Request $request, SluggerInterface $slugger): Response
+    public function editTechnologie($id, Request $request): Response
     {
 
         $technologie = $this->entityManager->getRepository(ProgrammingLanguage::class)->find($id);
+        $oldFileName = $technologie->getPicture();
+        $fileSystem = new Filesystem();
 
         $form = $this->createForm(EditProgrammingLanguageType::class, $technologie);
         $form->handleRequest($request);
@@ -330,14 +374,26 @@ class AdministrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $technoPicture = $form->get('picture')->getData();
-
-            if ($technoPicture) {
+    
+            if ($technoPicture != null) {
+                if ($oldFileName != null) {
+                    $projectDir = $this->getParameter('kernel.project_dir');
+                    $fileSystem->remove($projectDir . '/public/uploads/techno/' . $oldFileName);
+                }
+                
                 $newFilename = $this->fileUploader->upload($technoPicture, '/techno');
                 $technologie->setPicture($newFilename);
+            } else {            
+                $technologie->setpicture($oldFileName);
             }
 
             $this->entityManager->persist($technologie);
             $this->entityManager->flush();
+
+            // reinitialiser le cache à chaque modification
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
             $this->addFlash('success', 'Le programme a été modifié !');
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         }
@@ -365,6 +421,10 @@ class AdministrationController extends AbstractController
         $this->entityManager->remove($technologie);
         $this->entityManager->flush();
 
+        // reinitialiser le cache à chaque modification
+        $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
+
         $this->addFlash('success', 'Le programme a été suprimmé !');
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
     }
@@ -372,10 +432,12 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/edit/calendar/{id}", name="edit_calendar",methods={"GET|POST"})
      */
-    public function editCalendar($id, Request $request, UserRepository $userRepository): Response
+    public function editCalendar($id, Request $request): Response
     {
         $students = new User();
+
         $calendar = $this->entityManager->getRepository(Calendar::class)->findBy(['id' => $id]);
+        
 
         $formCalendar = $this->createForm(EditCalendarType::class, $calendar[0]);
         $formCalendar->handleRequest($request);
@@ -399,10 +461,15 @@ class AdministrationController extends AbstractController
             $this->entityManager->persist($calendar[0]);
             $this->entityManager->flush();
 
+            // reinitialiser le cache à chaque modification
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
             $this->notification->sendNotification("Votre intervention a été modifiée : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.'), $teacher);
-            $this->mailjet->sendEmail($teacher, "Votre planning vient d'être mis à jour. Nouvelle intervention sur " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Nom de session " . $nameSession . ".");
+            $this->mailjet->sendEmail($teacher, "Votre planning vient d'être mis à jour. Nouvelle intervention sur " . $cours .' '. $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Nom de session " . $nameSession . ".");
 
             foreach ($students as $student) {
+                $this->notification->sendNotification("Votre convocation a été a été modifié pour le cours: " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.', $student);
                 $this->mailjet->sendEmail($student, "votre convocation vient d'être mis à jour pour le cours " . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.');
             }
 
@@ -423,6 +490,10 @@ class AdministrationController extends AbstractController
         $this->entityManager->remove($calendar);
         $this->entityManager->flush();
 
+        // reinitialiser le cache à chaque modification
+        $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
+
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La date a été supprimée');
     }
@@ -438,6 +509,11 @@ class AdministrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($session);
             $this->entityManager->flush();
+
+            // reinitialiser le cache à chaque modification
+            $this->cache->delete('view_all_data');
+            $this->cache->delete('dashboard');
+
             return $this->redirect($request->get('redirect') ?? '/admin/view-all');
             $this->addFlash('success', 'La session a été modifiée !');
         }
@@ -454,6 +530,11 @@ class AdministrationController extends AbstractController
     {
         $this->entityManager->remove($session);
         $this->entityManager->flush();
+
+        // reinitialiser le cache à chaque modification
+        $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
+
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'La session a été supprimée');
     }
@@ -473,6 +554,10 @@ class AdministrationController extends AbstractController
 
         $this->entityManager->remove($course);
         $this->entityManager->flush();
+
+        // reinitialiser le cache à chaque modification
+        $this->cache->delete('view_all_data');
+        $this->cache->delete('dashboard');
 
         return $this->redirect($request->get('redirect') ?? '/admin/view-all');
         $this->addFlash('success', 'Le cours a été supprimé');

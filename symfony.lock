@@ -255,6 +255,9 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "sonata-project/intl-bundle": {
+        "version": "2.11.2"
+    },
     "symfony/asset": {
         "version": "v5.4.3"
     },
@@ -551,6 +554,9 @@
     "symfony/string": {
         "version": "v5.4.3"
     },
+    "symfony/templating": {
+        "version": "v5.4.3"
+    },
     "symfony/translation": {
         "version": "5.4",
         "recipe": {
@@ -625,8 +631,23 @@
     "theseer/tokenizer": {
         "version": "1.2.1"
     },
+    "twig/extensions": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
+        },
+        "files": [
+            "./config/packages/twig_extensions.yaml"
+        ]
+    },
     "twig/extra-bundle": {
         "version": "v3.3.8"
+    },
+    "twig/intl-extra": {
+        "version": "v3.3.5"
     },
     "twig/twig": {
         "version": "v3.3.8"

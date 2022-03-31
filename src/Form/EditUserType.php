@@ -19,8 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+
 
 class EditUserType extends AbstractType
 {
@@ -113,15 +112,13 @@ class EditUserType extends AbstractType
             ->add('picture', FileType::class, [    
                 'required' => false,
                 'data_class' => null,
-                // 'constraints'=> [
-
-                //     new Image([
-                //         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
-                //         'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
-                //     ])
-                // ]
-
-
+                'constraints'=> [
+                    new Image([
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
+                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg',
+                        'maxSize' => '2024k',
+                    ])
+                ]
 
             ])
 
