@@ -5,10 +5,12 @@
 			Ajouter une note
 		</span>
 		{{form_start(formGrade, { 'attr' : { 'id': 'ajax' } })}}
+		{% block addUser %}
 		<div class="form-group">
 			<label class="form-label">Elève</label>
 			{{form_widget(formGrade.user)}}
 		</div>
+		{% endblock %}
 
 		<div class="form-group">
 			<label class="form-label">Cours</label>

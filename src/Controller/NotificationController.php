@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Notification;
-use App\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

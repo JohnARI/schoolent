@@ -11,7 +11,6 @@ use App\Form\GradeType;
 use App\Entity\Calendar;
 use App\Repository\UserRepository;
 use App\Repository\GradeRepository;
-use Container9xqfWPa\getUserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,6 +72,7 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/admins-dashboard.html.twig', [
             'results' => $results,
+            'myStudents' => $myStudents,
             'formGrade' => $formGrade->createView(),
         ]);
     }
@@ -111,6 +111,7 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/teachers-dashboard.html.twig', [
             'results' => $results,
+            'myStudents' => $myStudents,
             'formGrade' => $formGrade->createView(),
         ]);
     }

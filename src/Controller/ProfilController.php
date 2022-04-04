@@ -6,10 +6,9 @@ use App\Entity\User;
 use App\Entity\Grade;
 use DateTimeImmutable;
 use App\Entity\Session;
-use App\Form\GradeType;
 use App\Service\Mailjet;
 use App\Form\EditProfilType;
-use App\Entity\ProgrammingLanguage;
+use App\Form\GradeProfilType;
 use App\Form\EditProfilPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,13 +78,14 @@ class ProfilController extends AbstractController
         $myId = $this->getUser();
         $grade = new Grade();
 
-        $formGrade = $this->createForm(GradeType::class, $grade);
+        $formGrade = $this->createForm(GradeProfilType::class, $grade);
         $formGrade->handleRequest($request);
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
             $grade->setTeacher($myId);
             $grade->setSession($mySession);
+            $grade->setUser($user);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');

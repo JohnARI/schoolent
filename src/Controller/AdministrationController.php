@@ -8,7 +8,6 @@ use App\Entity\Grade;
 use App\Entity\Course;
 use DateTimeImmutable;
 use App\Entity\Session;
-use App\Form\GradeType;
 use App\Entity\Calendar;
 use App\Form\CourseType;
 use App\Service\Mailjet;
@@ -49,22 +48,7 @@ class AdministrationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/view-users", name="view-users")
-     */
-    public function viewUsers(): Response
-    {
-        $users = $this->cache->get('users_all', function (ItemInterface $item) {
-            $item->expiresAfter(3600);
-            return $this->entityManager->getRepository(User::class)->findAll();
-        });
-
-        return $this->render('administration/admin/view_users.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    /**
-     * @Route("/admin/view-all", name="view-all")
+     * @Route("/admin/administration", name="view-all")
      */
     public function viewAll(Request $request, PasswordGenerator $passwordGenerator): Response
     {
@@ -80,11 +64,6 @@ class AdministrationController extends AbstractController
                 'students' => $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession()),
             ];
         });
-
-
-        // Tableaux
-
-        // Fin tableaux
 
         // Add user
         $temporaryPassword = $passwordGenerator->passwordAleatoire(20);
@@ -287,7 +266,7 @@ class AdministrationController extends AbstractController
             $this->cache->delete('dashboard');
 
             $this->addFlash('success', 'L\'utilisateur a été modifié !');
-            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+            return $this->redirect($request->get('redirect') ?? '/admin/administration');
         }
 
         return $this->render('administration/admin/edit/edit_user.html.twig', [
@@ -318,7 +297,7 @@ class AdministrationController extends AbstractController
         $this->cache->delete('dashboard');
 
         $this->addFlash('success', 'L\'utilisateur a été suprimmé !');
-        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+        return $this->redirect($request->get('redirect') ?? '/admin/administration');
     }
 
     /**
@@ -395,7 +374,7 @@ class AdministrationController extends AbstractController
             $this->cache->delete('dashboard');
 
             $this->addFlash('success', 'Le programme a été modifié !');
-            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+            return $this->redirect($request->get('redirect') ?? '/admin/administration');
         }
 
         return $this->render('administration/admin/edit/edit_technologies.html.twig', [
@@ -426,7 +405,7 @@ class AdministrationController extends AbstractController
         $this->cache->delete('dashboard');
 
         $this->addFlash('success', 'Le programme a été suprimmé !');
-        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+        return $this->redirect($request->get('redirect') ?? '/admin/administration');
     }
 
     /**
@@ -474,7 +453,7 @@ class AdministrationController extends AbstractController
             }
 
             $this->addFlash('success', 'La date a été modifiée !');
-            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+            return $this->redirect($request->get('redirect') ?? '/admin/administration');
         }
 
         return $this->render('administration/admin/edit/edit_calendar.html.twig', [
@@ -494,7 +473,7 @@ class AdministrationController extends AbstractController
         $this->cache->delete('view_all_data');
         $this->cache->delete('dashboard');
 
-        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+        return $this->redirect($request->get('redirect') ?? '/admin/administration');
         $this->addFlash('success', 'La date a été supprimée');
     }
 
@@ -514,7 +493,7 @@ class AdministrationController extends AbstractController
             $this->cache->delete('view_all_data');
             $this->cache->delete('dashboard');
 
-            return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+            return $this->redirect($request->get('redirect') ?? '/admin/administration');
             $this->addFlash('success', 'La session a été modifiée !');
         }
 
@@ -535,7 +514,7 @@ class AdministrationController extends AbstractController
         $this->cache->delete('view_all_data');
         $this->cache->delete('dashboard');
 
-        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+        return $this->redirect($request->get('redirect') ?? '/admin/administration');
         $this->addFlash('success', 'La session a été supprimée');
     }
 
@@ -559,7 +538,7 @@ class AdministrationController extends AbstractController
         $this->cache->delete('view_all_data');
         $this->cache->delete('dashboard');
 
-        return $this->redirect($request->get('redirect') ?? '/admin/view-all');
+        return $this->redirect($request->get('redirect') ?? '/admin/administration');
         $this->addFlash('success', 'Le cours a été supprimé');
     }
 }

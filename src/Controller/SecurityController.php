@@ -94,22 +94,4 @@ class SecurityController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    // function passwordAleatory($nbChar)
-    // {
-    //     $chaine = "mnoTUzS5678kVvwxy9WXYZRNCDEFrslq41GtuaHIJKpOPQA23LcdefghiBMbj0";
-    //     srand((float)microtime() * 1000000);
-    //     $pass = '';
-    //     for ($i = 0; $i < $nbChar; $i++) {
-    //         $pass .= $chaine[rand() % strlen($chaine)];
-    //     }
-    //     return $pass;
-    // }
-
-    // function passgen2($nbChar)
-    // {
-    //     return substr(str_shuffle(
-    //         'abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    //     ), 1, $nbChar);
-    // }
 }

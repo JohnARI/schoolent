@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Form\UserPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,12 +29,12 @@ class UserPasswordController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){  
             
             // $oldPswd = 
-            $newPswd = $form->get('password')->getData(); 
+            $newPwd = $form->get('password')->getData(); 
 
-            // if ($newPswd->isPasswordValid($user, $oldPswd)) {
+            // if ($newPwd->isPasswordValid($user, $oldPswd)) {
 
             $user->setPassword(
-                $this->passwordHasher->hashPassword($user, $newPswd) 
+                $this->passwordHasher->hashPassword($user, $newPwd) 
             );
 
             $this->entityManager->persist($user);
