@@ -126,8 +126,8 @@ class ApiController extends AbstractController
 
             // On Hydrate l'objet avec les données
             $calendar->setTitle($donnees->title);
-            $calendar->setStart(new Datetime($donnees->start));
-            $calendar->setEnd(new DateTime($donnees->end), strtotime('+ 1 days'));
+            $calendar->setStart(new Datetime($donnees->start)); //, strtotime('-1 days'));
+            $calendar->setEnd(new DateTime($donnees->end));
             $calendar->setDescription($donnees->description);
             $calendar->setTeacherName($donnees->teacherName);
 

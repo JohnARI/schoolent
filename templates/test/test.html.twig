@@ -111,12 +111,24 @@
 
 	$(document).ready(function(){
 
+		let donnees = {
+				'start' : arg.start,
+				'end' : arg.end,
+			}
+			$.ajax({
+        type: 'PUT',
+        url: '/test2',
+        data: {json: JSON.stringify(donnees)},
+        dataType: 'json'            
+    })
+
 		$("#envoyerFormulaire").click(function(){
 
 			var title = $("#title").val();
 			var description = $("#description").val();
 			var teacherName = $("#teacher").val();
 
+			
 			calendar.addEvent({
 
 						title: title,
@@ -130,12 +142,14 @@
 
 
 			
-			
-		});
-}),
+			calendar.unselect()
+		})
+
+		
+})
 
 
-		calendar.unselect()
+		
 },
 				eventClick: function (arg) {
 				if (confirm('Are you sure you want to delete this event?')) {
@@ -150,10 +164,10 @@
     			return stillEvent.allDay && movingEvent.allDay;
   				},
 
-				eventMouseEnter:function( mouseEnterInfo ) {
+				/*eventMouseEnter:function( mouseEnterInfo ) {
 
 					$('#Mysmallmodal').modal('show');
-				 },
+				 },*/
 				editable: true,
 				dayMaxEvents: true, // allow "more" link when too many events
 				events: [{% for calendar in calendar %}{
@@ -234,22 +248,20 @@
 
 				});
 
-				$.ajax
-				({
-				type: "POST",
-				url: "/test2",
-				dataType: "json",
-				data: ['MERCI','BONJOUR'],
-				success: function(server_response)
-				{
-				
-				$("#reponse").html(server_response)
-				}
-				})
+		/*calendar.select( start, (e) => {
+		let donnees = {
+			"start": e.event.start,
+			"end" : e.event.end
+		}
+		
+			$.ajax({
+        type: 'POST',
+        url: '/test2',
+        data: {json: JSON.stringify(donnees)},
+        dataType: 'json'            
+    })
 
-				
-
-
+	});*/
 
 }
 	</script>
