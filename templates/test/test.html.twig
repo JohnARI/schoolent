@@ -107,19 +107,20 @@
 	select: function (arg) {
 
 	$('#calendarFomr').modal('show');
+	
 
 
 	$(document).ready(function(){
 
-		let donnees = {
+		let donnee = {
 				'start' : arg.start,
 				'end' : arg.end,
 			}
 			$.ajax({
-        type: 'PUT',
+        type: 'GET',
         url: '/test2',
-        data: {json: JSON.stringify(donnees)},
-        dataType: 'json'            
+        data: {donnees: JSON.stringify(donnee)},
+        dataType: 'donnees'            
     })
 
 		$("#envoyerFormulaire").click(function(){
