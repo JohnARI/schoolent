@@ -24,7 +24,7 @@ class TestController extends AbstractController
     }
 
     /**
-     * @Route("/test", name="test")
+     * @Route("/test", name="test", methods={"GET", "POST"})
      */
     public function index(?Calendar $calendarr, CalendarRepository $calendar, Request $request): Response
     {
@@ -40,7 +40,7 @@ class TestController extends AbstractController
         $urlEnd = substr($url,43,-2);
 
     }
-        $calendrier = $calendar->findAll();
+       
         $query = $this->entityManager->createQuery(
             'SELECT c
                 FROM App:Calendar c
@@ -51,25 +51,22 @@ class TestController extends AbstractController
         $calendar = $query->getResult();
         $calendars = new Calendar;
         $form = $this->createForm(CalendarType::class, $calendars);
-
-        //------------------------------------------------TEST----------------------------------------------
+        $calendier = $this->calendarRepository->findAll();
+        $code=201;//Si aucun select
+        $codeSelect='';
         
-        // $moninfo = 'Test10 Testo';
-
-        // $query = $this->entityManager->createQuery(
-        //     'SELECT u.id
-        //         FROM App:User u
-        //     WHERE u.fullname = :fullname
-        //     ORDER BY u.id ASC'
-        // )->setParameter('fullname', $moninfo);
-
-        // $id = $query->getSingleScalarResult();
-
-        // settype($id, 'integer');
-  
-        // dd($id);
 
         
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder->select('c.start','c.end')
+        ->from(Calendar::class, 'c');
+    
+        $query = $queryBuilder->getQuery();
+    
+        $intervalBdd = $query->getResult();
+
+       
+    
 
         
 
@@ -87,18 +84,56 @@ class TestController extends AbstractController
     //    $monTest = $test->format('Y-m-d');
         // dd($donnees);
 
-        
+        if(in_array($daterange, $intervalBdd, false)){
 
+            $codeSelect = 202;
 
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('c.start','c.end')
-        ->from(Calendar::class, 'c');
+        }else{
 
-        $query = $queryBuilder->getQuery();
-
-        $calendar1 = $query->getResult();
+            $codeSelect = 203;
+        }
 
         
+
+
+        if($codeSelect == 202){
+
+            foreach($daterange as $newTest){
+        
+                
+                    
+                $newTest->format('Y-m-d H:i:s');//J'inspecte les dates du select(intervalle) et je m'assure de bien y être
+        
+                $dateTest[] = $newTest->format('Y-m-d H:i:s');
+        
+        
+                $queryBuilder = $this->entityManager->createQueryBuilder();
+                $queryBuilder->select('c.start','c.end','c.teacher_name')
+                ->from(Calendar::class, 'c')
+                ->add('where', "c.start IN ( :date) OR c.end IN ( :date)")
+                ->setParameter('date', $dateTest);
+        
+                $query = $queryBuilder->getQuery();
+        
+                $calendar1 = $query->getResult();
+        
+            }
+        
+        }elseif($codeSelect == 203){
+        
+    
+        
+            $calendar1 = $intervalBdd;
+        
+        
+        }else{
+
+            echo 'Veuillez selectionner des dates';
+        }
+        
+        /**"array_rand" sélectionne une ou plusieurs valeurs au hasard dans un tableau et retourne la ou les clés de ces valeurs. 
+         * Cette fonction utilise un pseudo générateur de nombre aléatoire, 
+         * ce qui ne convient pas pour de la cryptographie. */
 
         $dateInit = array_rand($calendar1,1);
         $dateSqlInit = $calendar1[$dateInit]['start'];
@@ -123,13 +158,17 @@ class TestController extends AbstractController
         // echo $input[$rand_keys[2]] . "\n";
         // echo $input[$rand_keys[1]] . "\n";
 
+        $date[]="";
+
         foreach($daterange as $date2){
 
             // echo $date2->format('Y-m-d H:i:s').'<br>';
 
             $date[] = $date2->format('Y-m-d H:i:s');
     
-         }
+        }
+
+        $date[] = $date2->format('Y-m-d H:i:s');
 
         //  echo '<pre>'; print_r($date); echo '</pre>';
         //  echo '<br>';
@@ -139,14 +178,15 @@ class TestController extends AbstractController
 
         //  dd($date);
 
-         if(in_array($startDate, $date, false) || in_array($endDate, $date, false)){
+        if(in_array($startDate, $date, false) || in_array($endDate, $date, false)){
 
             // echo 'Vous etes bien dans l\'interval';
+            $code = 200;
 
             $queryBuilder = $this->entityManager->createQueryBuilder();
             $queryBuilder->select('c.teacher_name')
                 ->from(Calendar::class, 'c')
-                ->add('where', "c.start not IN ( :date) OR c.end not IN ( :date)")
+                ->add('where', "c.start not IN ( :date) AND c.end not IN ( :date)")
                 ->setParameter('date', $date);
 
                 $query = $queryBuilder->getQuery();
@@ -159,12 +199,14 @@ class TestController extends AbstractController
 
                     'calendar' => $calendar,
                     'form'=> $form->createView(),
-                    'calendrier'=> $calendario
+                    'calendrier'=> $calendario,
+                    'code'=>$code,
                 ]);
 
         }else{
 
             // echo 'Vous n\'etes pas dans l\'interval';
+            $code = 200; //J'ai mis à jour
 
             $queryBuilder = $this->entityManager->createQueryBuilder();
             $queryBuilder->select('c.teacher_name')
@@ -176,17 +218,28 @@ class TestController extends AbstractController
 
 
             // echo '<pre>'; print_r($calendario); echo '</pre>';
+
+            return $this->render('test/test.html.twig',[
+
+                'calendar' => $calendar,
+                'form'=> $form->createView(),
+                'calendrier'=> $calendario,
+                'code'=>$code,
+            ]);
         }
 
-        return $this->render('test/test.html.twig',[
-
-            'calendar' => $calendar,
-            'form'=> $form->createView(),
-            'calendrier'=> $calendario,
-        ]);
+        
 
 
         
+    }else{
+
+
+
+        $daterange = new \DateTime();
+        $daterange->format('Y-m-d H:i:s');
+
+    
     };
          
 
@@ -199,7 +252,8 @@ class TestController extends AbstractController
 
             'calendar' => $calendar,
             'form'=> $form->createView(),
-            'calendrier'=> $calendrier,
+            'code'=>$code,
+            'calendrier'=>$calendier,
         ]);
 
         

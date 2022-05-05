@@ -33,9 +33,11 @@
 
 					<label for="teacher" class="form-label">Enseignant</label>
 					<select type="text" name="teacher" id="teacher" class="form-control">
+					{% if code == 200 %}
 						{% for calendar in calendrier %}
-							<option>{{calendar.teacherName}}</option>
+							<option>{{calendar.teacher_name}}</option>
 						{% endfor %}
+					{% endif %}
 					</select>
 					<div class="d-flex justify-content-center">
 						<button type="submit" class="btn btn-primary mt-3" id="envoyerFormulaire">Ajouter</button>

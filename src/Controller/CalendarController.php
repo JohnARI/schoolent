@@ -146,6 +146,8 @@ class CalendarController extends AbstractController
         }else{
 
             $events = $calendar->findBy(['id'=>$id]);
+            $form->handleRequest($request);
+            $calendrier = $calendar->findAll();
 
             // dd($events);
 
