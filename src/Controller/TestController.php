@@ -26,12 +26,13 @@ class TestController extends AbstractController
     /**
      * @Route("/test", name="test", methods={"GET", "POST"})
      */
-    public function index(?Calendar $calendarr, CalendarRepository $calendar, Request $request): Response
+    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request): Response
     {
 
         $request = json_decode($request->getContent());
         
-        if (isset($_GET['donnees'])){
+        
+    if (isset($_GET['donnees'])){
 
 
         
@@ -51,9 +52,9 @@ class TestController extends AbstractController
         $calendar = $query->getResult();
         $calendars = new Calendar;
         $form = $this->createForm(CalendarType::class, $calendars);
-        $calendier = $this->calendarRepository->findAll();
-        $code=201;//Si aucun select
-        $codeSelect='';
+       
+        $code="";//initialisation
+        $codeSelect='';//initialisation
         
 
         
@@ -67,7 +68,7 @@ class TestController extends AbstractController
 
        
     
-
+        // dd($intervalBdd);
         
 
         if(isset($url)){
@@ -82,7 +83,7 @@ class TestController extends AbstractController
     //    $test = new \DateTime('2022-02-28 00:00:00');
 
     //    $monTest = $test->format('Y-m-d');
-        // dd($donnees);
+    //   dd($daterange);
 
         if(in_array($daterange, $intervalBdd, false)){
 
@@ -238,6 +239,8 @@ class TestController extends AbstractController
 
         $daterange = new \DateTime();
         $daterange->format('Y-m-d H:i:s');
+        $calendrier = $calendary->findAll();
+        $code = 201;
 
     
     };
@@ -253,11 +256,10 @@ class TestController extends AbstractController
             'calendar' => $calendar,
             'form'=> $form->createView(),
             'code'=>$code,
-            'calendrier'=>$calendier,
+            'calendary'=>$calendrier,
+            
         ]);
 
-        
-        
     }
 
 

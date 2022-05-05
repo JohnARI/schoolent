@@ -37,6 +37,10 @@
 						{% for calendar in calendrier %}
 							<option>{{calendar.teacher_name}}</option>
 						{% endfor %}
+					{% elseif code == 201 %}
+						{% for calendar in calendary %}
+							<option>{{calendar.teacherName}}</option>
+						{% endfor %}
 					{% endif %}
 					</select>
 					<div class="d-flex justify-content-center">
