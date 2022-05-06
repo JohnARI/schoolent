@@ -53,11 +53,14 @@ class TestController extends AbstractController
         $code="";//initialisation
         $codeSelect='';//initialisation
         
+        
 
         
         
         
     if (isset($_GET['donnees'])){
+
+        // dd('test');
 
         /** Je met ma requête ajax(GET) dans une variable :
          * Etant donnée qu'ell est en string() je délimite la bout concernant a START
