@@ -107,11 +107,68 @@
 	select: function (arg) {
 
 
-	 //location.reload();
 
-	$('#calendarFomr').modal('show');
+		let urlVerif = document.location.href;
+		let urlcompte = urlVerif.length;
+		let start = JSON.stringify(arg.start);
+		let end = JSON.stringify(arg.end);
+		
+
+		function calendrierShow(){
+				$('#calendarFomr').modal('show')
+			}
+
+
+		function changeUrl(href){
+			$('#calendar2').load(href);
+			href = (href == "") ? "/" : href;
+			uri = window.location.href;
+			window.location.href = uri[0] + "/" + href;
+		}
 	
+	
+	function initialisation(){
 
+		let maClosure = () => {
+		
+																		    //?donnees={"start":"2022-04-10T22:00:00.000Z",end:"2022-04-15T22:00:00.000Z"}
+		let urlmodif = window.history.pushState('api', 'New Page Title', '/api?donnees={"start"'+':'+ start+','+'"end"'+':'+ end+'}');
+
+
+		let urlVerifmodif = document.location.href;
+
+		
+
+		if(urlVerif != urlVerifmodif){
+
+
+			
+			//changeUrl(url);
+			//setTimeout(location.reload(), 5000); #}
+			calendrierShow();
+
+
+			}else{
+
+			setTimeout(calendrierShow, 2000);
+
+			}
+
+
+		}
+
+    	return maClosure;
+	}
+
+	let debut = initialisation();
+
+
+	debut();
+
+
+	//changeUrl(url);
+
+	
 
 	$(document).ready(function(){
 
@@ -121,10 +178,15 @@
 			}
 			$.ajax({
         type: 'GET',
-        url: '/test',
+        url: '/api',
         data: {donnees: JSON.stringify(donnee)},
         dataType: 'donnees'            
     })
+	//%7B"start"%3A"2022-05-09T22%3A00%3A00.000Z"%2C"end"%3A"2022-05-12T22%3A00%3A00.000Z"%7D
+	
+
+
+	$('body').load(url);
 
 		$("#envoyerFormulaire").click(function(){
 
@@ -155,6 +217,9 @@
 
 		
 },
+
+
+
 				eventClick: function (arg) {
 				if (confirm('Are you sure you want to delete this event?')) {
 
@@ -266,6 +331,9 @@
     })
 
 	});*/
+
+	calendrierShow();
+	
 
 }
 	</script>

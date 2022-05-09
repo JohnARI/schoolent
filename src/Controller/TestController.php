@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TestController extends AbstractController
 {
@@ -26,18 +27,22 @@ class TestController extends AbstractController
     /**
      * @Route("/test", name="test", methods={"GET", "POST"})
      */
-    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request, $_route): Response
+    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request): Response
     {
 
-        // $request = json_decode($request->getContent());
+        $url = $request->query->get('donnees');
+          
+        $urlStart = substr($url,10,24);
+        $urlEnd = substr($url,43,-2);
 
-        // $referer = (string) $request->headers->get('referer'); // get the referer, it can be empty!
+        $test = array($urlStart,$urlEnd);
+    
 
-        // $refererPathInfo = Request::create($referer)->getPathInfo();
+        // if(!isset($url)){
 
-        // $routeInfos = $this->router->match($refererPathInfo);
+        return $this->redirectToRoute('api_test');
 
-        // dd($request);
+        // }
 
         $query = $this->entityManager->createQuery(
             'SELECT c
@@ -46,391 +51,262 @@ class TestController extends AbstractController
             ORDER BY c.title ASC'
         )->setParameter('title', 'indisponible');
         $calendar = $query->getResult();
-
         $calendars = new Calendar;
         $form = $this->createForm(CalendarType::class, $calendars);
         $calendrier = $calendary->findAll();
         $code="";//initialisation
-        $codeSelect='';//initialisation
-        
-        
+     
 
-        
-        
-        
-    if (isset($_GET['donnees'])){
 
-        // dd('test');
+        // if($request->isXmlHttpRequest()) {
+        //     var_dump("ok");
+        //     $test = $request->request->get('donnees');
+        // }
 
-        /** Je met ma requête ajax(GET) dans une variable :
-         * Etant donnée qu'ell est en string() je délimite la bout concernant a START
-         * Et le bout concernant END
-         */
-        $url = $_GET['donnees'];
-        $urlStart = substr($url,10,24);
-        $urlEnd = substr($url,43,-2);
-
-    }
        
-
-        
-
-        //Mon intervalle de date issue de la BDD
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('c, MIN(c.start)')
-        ->from(Calendar::class, 'c');
-        $query = $queryBuilder->getQuery();
-        $minStartBdd = $query->getResult();
-        $DateS = $minStartBdd[0][1];
-        $DateDebut = new \DateTime($DateS);
-       
-
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('c, MAX(c.end)')
-        ->from(Calendar::class, 'c');
-        $query = $queryBuilder->getQuery();
-        $maxEndBdd = $query->getResult();
-        $DateE = $maxEndBdd[0][1];
-        $DateFin = new \DateTime($DateE);
-
-        $zoneDateBdd = DateInterval::createFromDateString('1 day');
-        $intervalBdd = new DatePeriod($DateDebut,$zoneDateBdd,$DateFin);
-
-    
-
-        
-
-        
-
-        if(isset($url)){// Si dates selectionnées
-
-        // $calendarr->setStart(new \Datetime($donnees->start));
-        // $calendarr->setEnd(new \DateTime($donnees->end));
-        $start = new \DateTime($urlStart);
-        $end = new \DateTime($urlEnd);
-        $interval = DateInterval::createFromDateString('1 day');
-        $daterange = new DatePeriod($start,$interval,$end);
-        
-    //    $test = new \DateTime('2022-02-28 00:00:00');
-
-    //    $monTest = $test->format('Y-m-d');
-
-        foreach($intervalBdd as $zoneDate){
-
-
-            // echo $zoneDate->format('Y-m-d H:i:s').'<br>';
-
-           $intervalBddNew[] = $zoneDate->format('Y-m-d H:i:s');
-        }
-
-
-        // dd($intervalBddNew);
-
-        if(($start >= $intervalBddNew || $start <=  $intervalBddNew ) || ($end >= $intervalBddNew || $end <= $intervalBddNew)){
-
-            $code = 200;
-
-            // dd($intervalBddNew);
-
-
-            foreach($daterange as $newTest){
-        
-                
-                    
-                $newTest->format('Y-m-d H:i:s');//J'inspecte les dates du select(intervalle) et je m'assure de bien y être
-        
-                $dateTest[] = $newTest->format('Y-m-d H:i:s');
         
         
-                $queryBuilder = $this->entityManager->createQueryBuilder();
-                $queryBuilder->select('c.start','c.end','c.teacher_name')
-                ->from(Calendar::class, 'c')
-                ->add('where', "c.start IN ( :date) OR c.end IN ( :date)")
-                ->setParameter('date', $dateTest);
         
-                $query = $queryBuilder->getQuery();
-        
-                $calendar1 = $query->getResult();
-        
-            }
-
-            
-        /**"array_rand" sélectionne une ou plusieurs valeurs au hasard dans un tableau et retourne la ou les clés de ces valeurs. 
-         * Cette fonction utilise un pseudo générateur de nombre aléatoire, 
-         * ce qui ne convient pas pour de la cryptographie. */
-
-        $dateInit = array_rand($calendar1,1);
-        $dateSqlInit = $calendar1[$dateInit]['start'];
-        $dateSqlInit->format('Y-m-d');
-        $startDate = $dateSqlInit->format('Y-m-d H:i:s');
-
-        $dateFin = array_rand($calendar1,1);
-        $dateSqlFin = $calendar1[$dateFin]['end'];
-        $dateSqlFin->format('Y-m-d');
-        $endDate = $dateSqlFin->format('Y-m-d H:i:s');
-
-        echo $startDate;
-        echo '<br>';
-        echo $endDate;
-
-    
-
-        foreach($daterange as $date2){
-
-            //         // echo $date2->format('Y-m-d H:i:s').'<br>';
-        
-             $date[] = $date2->format('Y-m-d H:i:s');
-            
-        }
+        if (!empty($url)){
 
 
-        // dd($date);
 
-        //($startDate >= $date || $startDate <=  $date ) || ($endDate >= $date || $end <= $date)
-        if(in_array($startDate, $date, false) || in_array($endDate, $date, false)){
+            // $routerName = $request->getRequestUri();
 
-            // echo 'Vous etes bien dans l\'interval';
-            $code = 200;
+            // dd($routerName);
 
-            // dd($date);
+            //dd($t1);
 
+            /** Je met ma requête ajax(GET) dans une variable :
+             * Etant donnée qu'ell est en string() je délimite la bout concernant a START
+             * Et le bout concernant END
+             */
+            $urlStart = substr($url,10,24);
+            $urlEnd = substr($url,43,-2);
+            $test = array($urlStart,$urlEnd);
+            $start = new \DateTime($urlStart);
+            $end = new \DateTime($urlEnd);
+            $interval = DateInterval::createFromDateString('1 day');
+            $daterange = new DatePeriod($start,$interval,$end);
+
+
+
+            /**
+             * L'ensemble de mes dates de la BDD
+             * Je vais choisir des dates aléatoires à partir de la BDD
+             */
             $queryBuilder = $this->entityManager->createQueryBuilder();
-            $queryBuilder->select('c.teacher_name')
-                ->from(Calendar::class, 'c')
-                ->add('where', "c.start not IN ( :date) AND c.end not IN ( :date)")
-                ->setParameter('date', $date);
-
-                $query = $queryBuilder->getQuery();
-
-                $calendario = $query->getResult();
-
-                // echo '<pre>'; print_r($calendario); echo '</pre>';
-
-                return $this->render('test/test.html.twig',[
-
-                    'calendar' => $calendar,
-                    'form'=> $form->createView(),
-                    'calendrier'=> $calendario,
-                    'code'=>$code,
-                ]);
-
-            }
-
-
-        }else{
-
-            $code = 200;
-
-
-
-            $queryBuilder = $this->entityManager->createQueryBuilder();
-            $queryBuilder->select('c.teacher_name')
+            $queryBuilder->select('c.start,c.end')
             ->from(Calendar::class, 'c');
-
             $query = $queryBuilder->getQuery();
+            $maBddDates = $query->getResult();
 
-            $calendario = $query->getResult();
+            $dateInit = array_rand($maBddDates,1);
+            $dateSqlInit = $maBddDates[$dateInit]['start'];
+            $dateSqlInit->format('Y-m-d');
+            $startDate = $dateSqlInit->format('Y-m-d H:i:s');
+
+            $dateFin = array_rand($maBddDates,1);
+            $dateSqlFin = $maBddDates[$dateFin]['end'];
+            $dateSqlFin->format('Y-m-d');
+            $endDate = $dateSqlFin->format('Y-m-d H:i:s');
 
 
-            // echo '<pre>'; print_r($calendario); echo '</pre>';
+
+
+            
+
+            //Mon intervalle de date issue de la BDD
+
+            //Debut interval
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder->select('c, MIN(c.start)')
+            ->from(Calendar::class, 'c');
+            $query = $queryBuilder->getQuery();
+            $minStartBdd = $query->getResult();
+            $DateS = $minStartBdd[0][1];
+            $DateDebut = new \DateTime($DateS);
+        
+
+            //Fin interval
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder->select('c, MAX(c.end)')
+            ->from(Calendar::class, 'c');
+            $query = $queryBuilder->getQuery();
+            $maxEndBdd = $query->getResult();
+            $DateE = $maxEndBdd[0][1];
+            $DateFin = new \DateTime($DateE);
+
+        
+            //Délimitation de l'interval à partir de DateDebut et DateFin
+            $zoneDateBdd = DateInterval::createFromDateString('1 day');
+            $intervalBdd = new DatePeriod($DateDebut,$zoneDateBdd,$DateFin);
+
+        
+
+        
+            foreach($intervalBdd as $zoneDate){
+
+                // echo $zoneDate->format('Y-m-d H:i:s').'<br>';
+
+                //mettre mon interval de dates BDD dans un tableau
+
+            $intervalBddNew[] = $zoneDate->format('Y-m-d H:i:s');
+            }
+
+
+                // dd($intervalBddNew);
+
+                /**
+                 * Verifier si les dates selectionnées dans le calendrier sont dans notre intevalle de dates BDD
+                 */
+                if(($start >= $intervalBddNew || $start <=  $intervalBddNew ) || ($end >= $intervalBddNew || $end <= $intervalBddNew)){
+
+                        $code = 200;
+
+                        // dd($intervalBddNew);
+
+
+                            foreach($daterange as $newTest){
+                    
+                            
+                                
+                            $newTest->format('Y-m-d H:i:s');//J'inspecte les dates du select(daterange) et je m'assure de bien y être
+                    
+                            $dateTest[] = $newTest->format('Y-m-d H:i:s');
+
+                            }
+                    
+                            $queryBuilder = $this->entityManager->createQueryBuilder();
+                            $queryBuilder->select('c.start','c.end','c.teacher_name')
+                            ->from(Calendar::class, 'c')
+                            ->add('where', "c.start IN ( :date) OR c.end IN ( :date)")
+                            ->setParameter('date', $dateTest);
+                    
+                            $query = $queryBuilder->getQuery();
+                            $calendar1 = $query->getResult();
+
+                            /**"array_rand" sélectionne une ou plusieurs valeurs au hasard dans un tableau et retourne la ou les clés de ces valeurs. 
+                             * Cette fonction utilise un pseudo générateur de nombre aléatoire, 
+                             * ce qui ne convient pas pour de la cryptographie. */
+
+                            if(!empty($calendar1)){
+
+                            $dateInit = array_rand($calendar1,1);
+                            $dateSqlInit = $calendar1[$dateInit]['start'];
+                            $dateSqlInit->format('Y-m-d');
+                            $startDate = $dateSqlInit->format('Y-m-d H:i:s');
+
+                            $dateFin = array_rand($calendar1,1);
+                            $dateSqlFin = $calendar1[$dateFin]['end'];
+                            $dateSqlFin->format('Y-m-d');
+                            $endDate = $dateSqlFin->format('Y-m-d H:i:s');
+
+                            echo $startDate;
+                            echo '<br>';
+                            echo $endDate;
+
+                            }
+
+
+                            // dd($date);
+
+                            //($startDate >= $date || $startDate <=  $date ) || ($endDate >= $date || $end <= $date)
+                            // if(in_array($startDate, $dateTest, false) || in_array($endDate, $dateTest, false)){
+
+                            // echo 'Vous etes bien dans l\'interval';
+                                    $code = 200;
+
+                                    // dd($date);
+
+                                        $queryBuilder = $this->entityManager->createQueryBuilder();
+                                        $queryBuilder->select('c.teacher_name')
+                                            ->from(Calendar::class, 'c')
+                                            ->add('where', "c.start not IN ( :date) AND c.end not IN ( :date)")
+                                            ->setParameter('date', $dateTest);
+
+                                            $query = $queryBuilder->getQuery();
+
+                                            $calendario = $query->getResult();
+
+                                            // echo '<pre>'; print_r($calendario); echo '</pre>';
+
+                                
+
+                                            return $this->render('test/test.html.twig',[
+
+                                                'calendar' => $calendar,
+                                                'form'=> $form->createView(),
+                                                'calendrier'=> $calendario,
+                                                'code'=>$code,
+                                            ]);
+
+                }
+                else
+                {
+
+                            $code = 201;
+
+
+                            // echo '<pre>'; print_r($calendario); echo '</pre>';
+
+                            return $this->render('test/test.html.twig',[
+
+                                'calendar' => $calendar,
+                                'form'=> $form->createView(),
+                                'calendary'=> $calendrier,
+                                'code'=>$code,
+                            ]);
+                        
+
+                }
+
+         //------------------------------------------------TEST----------------------------------------------
+
+        }
+        else
+        {
+
+
+            
+            
+
+
+            $code = 201;
 
             return $this->render('test/test.html.twig',[
 
                 'calendar' => $calendar,
                 'form'=> $form->createView(),
-                'calendrier'=> $calendario,
                 'code'=>$code,
+                'calendary'=>$calendrier,
+                
             ]);
-        
+
+
+
+            // $url = $t1;
+            // $urlStart = substr($url,10,24);
+            // $urlEnd = substr($url,43,-2);
+            // $test = array($urlStart,$urlEnd);
+          
+            // $url2 = $this->generateUrl('test',$test);
+            
+           
+            // dd($url2);
+
+
+            // return $this->redirect($this->generateUrl('test',$test));
+
+
+
 
         }
 
-
-
-
         
 
 
-    //     if($codeSelect == 202){
-
-    //         foreach($daterange as $newTest){
-        
-                
-                    
-    //             $newTest->format('Y-m-d H:i:s');//J'inspecte les dates du select(intervalle) et je m'assure de bien y être
-        
-    //             $dateTest[] = $newTest->format('Y-m-d H:i:s');
-        
-        
-    //             $queryBuilder = $this->entityManager->createQueryBuilder();
-    //             $queryBuilder->select('c.start','c.end','c.teacher_name')
-    //             ->from(Calendar::class, 'c')
-    //             ->add('where', "c.start IN ( :date) OR c.end IN ( :date)")
-    //             ->setParameter('date', $dateTest);
-        
-    //             $query = $queryBuilder->getQuery();
-        
-    //             $calendar1 = $query->getResult();
-        
-    //         }
-        
-    //     }elseif($codeSelect == 203){
-        
-    
-        
-    //         $calendar1 = $intervalBdd;
-        
-        
-    //     }else{
-
-    //         echo 'Veuillez selectionner des dates';
-    //     }
-        
-    //     /**"array_rand" sélectionne une ou plusieurs valeurs au hasard dans un tableau et retourne la ou les clés de ces valeurs. 
-    //      * Cette fonction utilise un pseudo générateur de nombre aléatoire, 
-    //      * ce qui ne convient pas pour de la cryptographie. */
-
-    //     $dateInit = array_rand($calendar1,1);
-    //     $dateSqlInit = $calendar1[$dateInit]['start'];
-    //     $dateSqlInit->format('Y-m-d');
-    //     $startDate = $dateSqlInit->format('Y-m-d H:i:s');
-
-    //     $dateFin = array_rand($calendar1,1);
-    //     $dateSqlFin = $calendar1[$dateFin]['end'];
-    //     $dateSqlFin->format('Y-m-d');
-    //     $endDate = $dateSqlFin->format('Y-m-d H:i:s');
-
-    //     echo $startDate;
-    //     echo '<br>';
-    //     echo $endDate;
-        
-    //     // echo '<br>';
-    //     // echo '<br>';
-
-
-    //     // $input = array("Neo", "Morpheus", "Trinity", "Cypher", "Tank");
-    //     // $rand_keys = array_rand($input, 2);
-    //     // echo $input[$rand_keys[2]] . "\n";
-    //     // echo $input[$rand_keys[1]] . "\n";
-
-    //     $date[]="";
-
-    //     foreach($daterange as $date2){
-
-    //         // echo $date2->format('Y-m-d H:i:s').'<br>';
-
-    //         $date[] = $date2->format('Y-m-d H:i:s');
-    
-    //     }
-
-    //     $date[] = $date2->format('Y-m-d H:i:s');
-
-    //     //  echo '<pre>'; print_r($date); echo '</pre>';
-    //     //  echo '<br>';
-    //     //  echo '<br>';
-
-    //     // echo '<pre>'; print_r($calendar); echo '</pre>';
-
-    //     //  dd($date);
-
-    //     if(in_array($startDate, $date, false) || in_array($endDate, $date, false)){
-
-    //         // echo 'Vous etes bien dans l\'interval';
-    //         $code = 200;
-
-    //         $queryBuilder = $this->entityManager->createQueryBuilder();
-    //         $queryBuilder->select('c.teacher_name')
-    //             ->from(Calendar::class, 'c')
-    //             ->add('where', "c.start not IN ( :date) AND c.end not IN ( :date)")
-    //             ->setParameter('date', $date);
-
-    //             $query = $queryBuilder->getQuery();
-
-    //             $calendario = $query->getResult();
-
-    //             // echo '<pre>'; print_r($calendario); echo '</pre>';
-
-    //             return $this->render('test/test.html.twig',[
-
-    //                 'calendar' => $calendar,
-    //                 'form'=> $form->createView(),
-    //                 'calendrier'=> $calendario,
-    //                 'code'=>$code,
-    //             ]);
-
-    //     }else{
-
-    //         // echo 'Vous n\'etes pas dans l\'interval';
-    //         $code = 200; //J'ai mis à jour
-
-    //         $queryBuilder = $this->entityManager->createQueryBuilder();
-    //         $queryBuilder->select('c.teacher_name')
-    //         ->from(Calendar::class, 'c');
-
-    //         $query = $queryBuilder->getQuery();
-
-    //         $calendario = $query->getResult();
-
-
-    //         // echo '<pre>'; print_r($calendario); echo '</pre>';
-
-    //         return $this->render('test/test.html.twig',[
-
-    //             'calendar' => $calendar,
-    //             'form'=> $form->createView(),
-    //             'calendrier'=> $calendario,
-    //             'code'=>$code,
-    //         ]);
-    //     }
-
-        
-
-
-        
-    // }else{
-
-
-
-    //     $daterange = new \DateTime();
-    //     $daterange->format('Y-m-d H:i:s');
-    //     $calendrier = $calendary->findAll();
-    //     $code = 201;
-
-    
-    // };
-         
-
-         //------------------------------------------------TEST----------------------------------------------
-
-    }else{
-
-        $code = 201;
-
-        return $this->render('test/test.html.twig',[
-
-            'calendar' => $calendar,
-            'form'=> $form->createView(),
-            'code'=>$code,
-            'calendary'=>$calendrier,
-            
-        ]);
-
-
-
-
-
-
-    }
-
-
-        return $this->render('test/test.html.twig',[
-
-            'calendar' => $calendar,
-            'form'=> $form->createView(),
-            'code'=>$code,
-            
-        ]);
-
+        return $this->redirectToRoute('test');
         // unset($_GET['donnees']);
     
     }
@@ -676,6 +552,7 @@ class TestController extends AbstractController
 // echo $input[$rand_keys[2]] . "\n";
 // echo $input[$rand_keys[1]] . "\n";
 
+            
             
 
 
