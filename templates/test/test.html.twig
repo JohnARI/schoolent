@@ -91,16 +91,20 @@
 	var calendarEl = document.getElementById('calendar2');
 
 	let urlVerif = document.location.href;
+
+	localStorage['url'] = urlVerif;
+
+	let urlInit = localStorage['url'];
+
 	/*function calendrierShow(){
 				$('#calendarFomr').modal('show')
 			};*/
 
-	if(urlVerif == '/api'){
+		function changeUrl(href){
 
-			console.log('Hello');
-		};
-
-	$('#calendarFomr').modal('show');
+			href = (href == "") ? "/" : href;
+			window.location.href = href;
+		}
 
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 	headerToolbar: {
@@ -120,14 +124,79 @@
 
 
 
+		localStorage["start"] = arg.start;
+		localStorage["end"] = arg.end;
+
+		function start(){
+
+			let maClosure = () => {
+			
+				let start = arg.start;
+			}
+
+			return maClosure;
+		}
+
+		let startmod = start();
+
+		function end(){
+
+			let maClosure = () => {
+			
+				let end = arg.end;
+			}
+
+			return maClosure;
+		}
+
+		let endmod = start();
+
+
+
+
 		let urlVerif = document.location.href;
 		let urlcompte = urlVerif.length;
-		let start = JSON.stringify(arg.start);
-		let end = JSON.stringify(arg.end);
+		var start = JSON.stringify(arg.start);
+		var end = JSON.stringify(arg.end);
+		
+		
+		
+		function setCookie(nom, valeur, expire){
+				document.cookie = nom + ' = ' + escape(valeur) + '  ' +
+				((expire == undefined) ? '' : ('; expires = ' + expire.toGMTString()));
+				}
+
+			var dtExpire = new Date();
+			dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
+
+
+				setCookie('start', arg.start, dtExpire);
+				setCookie('end', arg.end, dtExpire);
+
+				function getCookie(name){
+				if(document.cookie.length == 0)
+				return null;
+
+			var regSepCookie = new RegExp('(; )', 'g');
+			var cookies = document.cookie.split(regSepCookie);
+
+				for(var i = 0; i < cookies.length; i++){
+			var regInfo = new RegExp('=', 'g');
+			var infos = cookies[i].split(regInfo);
+			if(infos[0] == name){
+			return unescape(infos[1]);
+			}
+       	}
+       return null;
+      }
+
+		
+		
+
 		
 
 		function calendrierShow(){
-				$('#calendarFomr').modal('show');
+				$('#calendarForm').modal('show');
 			}
 
 
@@ -163,14 +232,16 @@
 			if (confirm('Vous souhaitez entrer un nouvel évènement ?')) {
 
 
-					location.reload();
+					calendrierShow();
+
+					
 				}
 			
 
 
 			}else{
 
-					setTimeout(calendrierShow, 2000);
+					//setTimeout(calendrierShow, 2000);
 
 			}
 
@@ -180,14 +251,17 @@
     	return maClosure;
 	}
 
-	let debut = initialisation();
+	//calendrierShow();
+
+
+	let debut = initialisation()
 
 
 	debut();
 
 
 	
-	setTimeout(calendrierShow, 3000);
+	
 	
 
 	$(document).ready(function(){
@@ -228,7 +302,9 @@
 
 
 			
-			calendar.unselect()
+			calendar.unselect();
+
+			
 		})
 
 		
@@ -272,7 +348,57 @@
 			
 				})
 
-				$('#calendarFomr').modal('show');
+					$.ajax(this.href, {
+                       
+                        success: function() {
+
+							if(urlVerif.length > 50){
+								
+                           		$('#calendarForm').modal('show');
+						   
+
+								let url = document.location.href;
+          
+        						let urlStart = substr(url,10,24);
+        						let urlEnd = substr(url,43,-2);
+
+								console.log(urlStart);
+								console.log(urlEnd);
+
+
+						   		$("#envoyerFormulaire").click(function(){
+
+									var title = $("#title").val();
+									var description = $("#description").val();
+									var teacherName = $("#teacher").val();
+
+			
+									calendar.addEvent({
+
+										title: title,
+										start: getCookie('start'),
+										end: getCookie('end'),
+										allDay: arg.allDay,
+										teacherName: teacherName,
+										description: description,
+
+									})
+
+									calendar.unselect();
+
+
+						   		})
+
+						   	}
+
+							
+                        }
+
+
+						
+                    });
+
+				//$('#calendarFomr').modal('show');
 
 				calendar.on('eventAdd', (e) => {
 				let url = '/api/edit'
@@ -356,15 +482,7 @@
 
 	});*/
 
-	$.ajax(this.href, {
-                       
-                        success: function() {
-
-							if(urlVerif.length > 50){
-                           $('#calendarForm').modal('show');
-						   }
-                        },
-                    });
+	//setTimeout(changeUrl(urlInit),10000);
 	
 
 }
