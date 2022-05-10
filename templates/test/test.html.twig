@@ -158,20 +158,43 @@
 		let urlcompte = urlVerif.length;
 		var start = JSON.stringify(arg.start);
 		var end = JSON.stringify(arg.end);
+		var dtExpire = new Date();
+   		dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
+		document.cookie = "start= "+arg.start+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
+		document.cookie = "end= "+arg.end+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
+
 		
+		function getCookie(name){
+			if(document.cookie.length == 0)
+			return null;
+
+			var regSepCookie = new RegExp('(; )', 'g');
+			var cookies = document.cookie.split(regSepCookie);
+
+			for(var i = 0; i < cookies.length; i++){
+			var regInfo = new RegExp('=', 'g');
+			var infos = cookies[i].split(regInfo);
+			if(infos[0] == name){
+				return unescape(infos[1]);
+			}
+			}
+        return null;
+  	    }
 		
-		
-		function setCookie(nom, valeur, expire){
-				document.cookie = nom + ' = ' + escape(valeur) + '  ' +
-				((expire == undefined) ? '' : ('; expires = ' + expire.toGMTString()));
-				}
+		/*function setCookie(nom, valeur, expire, chemin, domaine, securite){
+     		document.cookie = nom + ' = ' + escape(valeur) + '  ' +
+               ((expire == undefined) ? '' : ('; expires = ' + expire.toGMTString())) +
+               ((chemin == undefined) ? '' : ('; path = ' + chemin)) +
+               ((domaine == undefined) ? '' : ('; domain = ' + domaine)) +
+               ((securite == true) ? '; secure' : '');
+   			}
 
 			var dtExpire = new Date();
 			dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
 
 
 				setCookie('start', arg.start, dtExpire);
-				setCookie('end', arg.end, dtExpire);
+				
 
 				function getCookie(name){
 				if(document.cookie.length == 0)
@@ -188,10 +211,8 @@
 			}
        	}
        return null;
-      }
+      }*/
 
-		
-		
 
 		
 
@@ -234,7 +255,7 @@
 
 					calendrierShow();
 
-					
+
 				}
 			
 

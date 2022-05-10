@@ -280,9 +280,18 @@ class ApiController extends AbstractController
         //     var_dump("ok");
         //     $test = $request->request->get('donnees');
         // }
-        $test = $_GET;
 
-        // dd($test);
+        
+        // $test = $_COOKIE['start
+        // '];
+
+        // if(!empty($test)){
+
+        //     dd($test);
+
+        // }
+
+        
        
         $routerName = $request->getRequestUri();
 
