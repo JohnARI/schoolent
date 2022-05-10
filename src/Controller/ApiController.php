@@ -244,10 +244,10 @@ class ApiController extends AbstractController
     public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request): Response
     {
 
-        $url = $request->query->get('donnees');
+        // $url = $request->query->get('donnees');
           
-        $urlStart = substr($url,10,24);
-        $urlEnd = substr($url,43,-2);
+        // $urlStart = substr($url,10,24);
+        // $urlEnd = substr($url,43,-2);
 
         // $test = array($urlStart,$urlEnd);
     
@@ -296,10 +296,17 @@ class ApiController extends AbstractController
         $routerName = $request->getRequestUri();
 
         // dd($routerName);
+
+
+        // header("Content-Type: text/plain");
+
+        $urlStart = (isset($_GET["start"])) ? $_GET["start"] : NULL;
+        $urlEnd = (isset($_GET["end"])) ? $_GET["end"] : NULL;
+
         
+        //dd($urlStart);
         
-        
-        if ($routerName!='/api'){
+        if ($urlStart && $urlEnd){
 
 
 
@@ -313,15 +320,15 @@ class ApiController extends AbstractController
              * Etant donnée qu'ell est en string() je délimite la bout concernant a START
              * Et le bout concernant END
              */
-            $url = $_GET['donnees'];
-            $urlStart = substr($url,10,24);
-            $urlEnd = substr($url,43,-2);
+            // $url = $_GET['donnees'];
+            $urlStart = substr($urlStart,1,-1);
+            $urlEnd = substr($urlEnd,1,-1);
             $start = new \DateTime($urlStart);
             $end = new \DateTime($urlEnd);
             $interval = DateInterval::createFromDateString('1 day');
             $daterange = new DatePeriod($start,$interval,$end);
 
-
+            // dd($daterange);
 
             /**
              * L'ensemble de mes dates de la BDD
@@ -408,6 +415,7 @@ class ApiController extends AbstractController
                             $dateTest[] = $newTest->format('Y-m-d H:i:s');
 
                             }
+                            
                     
                             $queryBuilder = $this->entityManager->createQueryBuilder();
                             $queryBuilder->select('c.start','c.end','c.teacher_name')

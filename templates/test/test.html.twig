@@ -124,8 +124,8 @@
 
 
 
-		localStorage["start"] = arg.start;
-		localStorage["end"] = arg.end;
+		//localStorage["start"] = arg.start;
+		//localStorage["end"] = arg.end;
 
 		function start(){
 
@@ -156,8 +156,8 @@
 
 		let urlVerif = document.location.href;
 		let urlcompte = urlVerif.length;
-		var start = JSON.stringify(arg.start);
-		var end = JSON.stringify(arg.end);
+		var startS = JSON.stringify(arg.start);
+		var endS = JSON.stringify(arg.end);
 		var dtExpire = new Date();
    		dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
 		document.cookie = "start= "+arg.start+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
@@ -229,14 +229,14 @@
 		} */
 
 		
-	
+		calendrierShow();
 	
 	function initialisation(){
 
 		let maClosure = () => {
 		
 		//?donnees={"start":"2022-04-10T22:00:00.000Z",end:"2022-04-15T22:00:00.000Z"}
-		let urlmodif = window.history.pushState('api', 'New Page Title', '/api?donnees={"start"'+':'+ start+','+'"end"'+':'+ end+'}');
+		let urlmodif = window.history.pushState('api', 'New Page Title', '/api?donnees={"start"'+':'+ startS+','+'"end"'+':'+ endS+'}');
 
 
 		let urlVerifmodif = document.location.href;
@@ -287,16 +287,23 @@
 
 	$(document).ready(function(){
 
-		let donnee = {
-				'start' : arg.start,
-				'end' : arg.end,
+		
+		var xhr = new XMLHttpRequest;
+	
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+					callback(xhr.responseText);
+				}
+			};
+
+			let donnees = {
+			'start' : startS,
+			'end' : endS
 			}
-			$.ajax({
-        type: 'GET',
-        url: '/api',
-        data: {donnees: JSON.stringify(donnee)},
-        dataType: 'donnees'            
-    })
+
+			xhr.open("GET", "/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
+			xhr.send(JSON.stringify(donnees));
+		
 	//%7B"start"%3A"2022-05-09T22%3A00%3A00.000Z"%2C"end"%3A"2022-05-12T22%3A00%3A00.000Z"%7D
 	
 
@@ -369,55 +376,6 @@
 			
 				})
 
-					$.ajax(this.href, {
-                       
-                        success: function() {
-
-							if(urlVerif.length > 50){
-								
-                           		$('#calendarForm').modal('show');
-						   
-
-								let url = document.location.href;
-          
-        						let urlStart = substr(url,10,24);
-        						let urlEnd = substr(url,43,-2);
-
-								console.log(urlStart);
-								console.log(urlEnd);
-
-
-						   		$("#envoyerFormulaire").click(function(){
-
-									var title = $("#title").val();
-									var description = $("#description").val();
-									var teacherName = $("#teacher").val();
-
-			
-									calendar.addEvent({
-
-										title: title,
-										start: getCookie('start'),
-										end: getCookie('end'),
-										allDay: arg.allDay,
-										teacherName: teacherName,
-										description: description,
-
-									})
-
-									calendar.unselect();
-
-
-						   		})
-
-						   	}
-
-							
-                        }
-
-
-						
-                    });
 
 				//$('#calendarFomr').modal('show');
 
