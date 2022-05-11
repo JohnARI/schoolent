@@ -57,6 +57,8 @@
 </div>
 
 
+
+
 {#-----------------------------------------------Fin Modal info Button------------------------------------------#}
 
 
@@ -90,22 +92,13 @@
 
 	var calendarEl = document.getElementById('calendar2');
 
+	let cookieStart = '{{cookieStart}}';	
+	let cookieEnd = '{{cookieEnd}}';	
 	let urlVerif = document.location.href;
-
-	localStorage['url'] = urlVerif;
-
-	let urlInit = localStorage['url'];
-
-	/*function calendrierShow(){
-				$('#calendarFomr').modal('show')
-			};*/
-
-		function changeUrl(href){
-
-			href = (href == "") ? "/" : href;
-			window.location.href = href;
-		}
-
+	let urlcompte = urlVerif.length;
+	let searchParams = new URLSearchParams(window.location.search);
+	let UrlParamStart = searchParams.get('start');
+	let UrlParamEnd = searchParams.get('end');
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 	headerToolbar: {
 	left: 'prev,next today',
@@ -121,34 +114,6 @@
 	selectMirror: true,
 	droppable: true, // this allows things to be dropped onto the calendar
 	select: function (arg) {
-
-
-		function start(){
-
-			let maClosure = () => {
-			
-				let start = arg.start;
-			}
-
-			return maClosure;
-		}
-
-		let startmod = start();
-
-		function end(){
-
-			let maClosure = () => {
-			
-				let end = arg.end;
-			}
-
-			return maClosure;
-		}
-
-		let endmod = start();
-
-
-
 
 		let urlVerif = document.location.href;
 		let urlcompte = urlVerif.length;
@@ -181,54 +146,11 @@
         return null;
   	    }
 		
-		/*function setCookie(nom, valeur, expire, chemin, domaine, securite){
-     		document.cookie = nom + ' = ' + escape(valeur) + '  ' +
-               ((expire == undefined) ? '' : ('; expires = ' + expire.toGMTString())) +
-               ((chemin == undefined) ? '' : ('; path = ' + chemin)) +
-               ((domaine == undefined) ? '' : ('; domain = ' + domaine)) +
-               ((securite == true) ? '; secure' : '');
-   			}
-
-			var dtExpire = new Date();
-			dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
-
-
-				setCookie('start', arg.start, dtExpire);
-				
-
-				function getCookie(name){
-				if(document.cookie.length == 0)
-				return null;
-
-			var regSepCookie = new RegExp('(; )', 'g');
-			var cookies = document.cookie.split(regSepCookie);
-
-				for(var i = 0; i < cookies.length; i++){
-			var regInfo = new RegExp('=', 'g');
-			var infos = cookies[i].split(regInfo);
-			if(infos[0] == name){
-			return unescape(infos[1]);
-			}
-       	}
-       return null;
-      }*/
-
-
-		
-
+	
 		function calendrierShow(){
 				$('#calendarForm').modal('show');
 			}
 
-
-		/* function changeUrl(href){
-			$('#calendarForm').load(href);
-			href = (href == "") ? "/" : href;
-			uri = window.location.href;
-			window.location.href = uri[0] + "/" + href;
-		} */
-
-		
 		calendrierShow();
 	
 	function initialisation(){
@@ -246,20 +168,12 @@
 		if(urlVerif != urlVerifmodif){
 
 
-			
-			//changeUrl(url);
-			//setTimeout(location.reload(), 5000);
-
 			if (confirm('Vous souhaitez entrer un nouvel évènement ?')) {
-
 
 					calendrierShow();
 
-
 				}
 			
-
-
 			}else{
 
 					//setTimeout(calendrierShow, 2000);
@@ -280,10 +194,6 @@
 
 	debut();
 
-
-	
-	
-	
 
 	$(document).ready(function(){
 
@@ -365,6 +275,63 @@
 
 			
 				})
+
+				function information() {
+        		var cookieStart = "";
+        		var cookieEnd = "";
+        		$.ajax({
+            		type: "PUT",
+            		url: "/api",
+            		data: { cookieStart: cookieStart, cookieEnd: cookieEnd }
+        			})
+    			}
+
+
+				$.ajax(this.href, {
+                       
+                        success: function() {
+
+							if(urlcompte > 50){
+								
+                           		$('#calendarForm').modal('show');
+						   
+
+
+						   		$("#envoyerFormulaire").click(function(){
+
+									var title = $("#title").val();
+									var description = $("#description").val();
+									var teacherName = $("#teacher").val();
+
+			
+									calendar.addEvent({
+
+										title: title,
+										start: cookieStart,
+										end: cookieEnd,
+										allDay: arg.allDay,
+										teacherName: teacherName,
+										description: description,
+
+									})
+
+									calendar.unselect();
+
+
+						   		})
+
+
+
+
+
+						   	}
+
+							
+                        }
+
+
+						
+                    });
 
 
 				//$('#calendarFomr').modal('show');
