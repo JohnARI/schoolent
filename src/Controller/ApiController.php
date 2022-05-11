@@ -309,7 +309,7 @@ class ApiController extends AbstractController
         $cookie = $_COOKIE;
 
 
-        if(empty($cookie)){
+        if(!empty($cookie)){
 
         $cookieStart = $_COOKIE['start'];
         $cookieEnd = $_COOKIE['end'];
@@ -317,7 +317,6 @@ class ApiController extends AbstractController
         
         }else{
 
-            
         $cookieStart = "";
         $cookieEnd = "";
         $cookieAllDay = "";

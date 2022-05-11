@@ -218,7 +218,16 @@
 			var description = $("#description").val();
 			var teacherName = $("#teacher").val();
 
-			
+			if(cookieStart==""){
+				let start = cookieStart,
+				end = cookieEnd,
+				all = cookieAllDay
+			}else{
+
+				let start = arg.start,
+				end = arg.end,
+				allDay = arg.allDay
+			}
 			calendar.addEvent({
 
 						title: title,
@@ -286,35 +295,6 @@
 								
                            		$('#calendarForm').modal('show');
 						   
-
-
-						   		$("#envoyerFormulaire").click(function(){
-
-									var title = $("#title").val();
-									var description = $("#description").val();
-									var teacherName = $("#teacher").val();
-
-			
-									calendar.addEvent({
-
-										title: title,
-										start: cookieStart,
-										end: cookieEnd,
-										allDay: cookieAllDay,
-										teacherName: teacherName,
-										description: description,
-
-									})
-
-									calendar.unselect();
-
-
-						   		})
-
-
-
-
-
 						   	}
 
 							
