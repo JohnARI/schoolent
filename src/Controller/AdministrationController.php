@@ -159,7 +159,7 @@ class AdministrationController extends AbstractController
             $session = $formCalendar->get('session')->getData();
             $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
 
-            $teacher = $formCalendar->get('teacher')->getData();
+            $teacher = $formCalendar->get('teacher_id')->getData();
             $cours = $formCalendar->get('name')->getData();
             $programmingLanguages = $formCalendar->get('category')->getData()->getName();
             $dateStart = $formCalendar->get('start')->getData();
@@ -363,7 +363,7 @@ class AdministrationController extends AbstractController
             $session = $formCalendar->get('session')->getData();
             $students = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $session);
 
-            $teacher = $formCalendar->get('teacher')->getData();
+            $teacher = $formCalendar->get('teacher_id')->getData();
             $cours = $formCalendar->get('name')->getData();
             $programmingLanguages = $formCalendar->get('category')->getData()->getName();
             $dateStart = $formCalendar->get('start')->getData();
