@@ -93,7 +93,8 @@
 	var calendarEl = document.getElementById('calendar2');
 
 	let cookieStart = '{{cookieStart}}';	
-	let cookieEnd = '{{cookieEnd}}';	
+	let cookieEnd = '{{cookieEnd}}';
+	let cookieAllDay = '{{cookieAllDay}}'
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
 	let searchParams = new URLSearchParams(window.location.search);
@@ -127,6 +128,7 @@
    		dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
 		document.cookie = "start= "+arg.start+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
 		document.cookie = "end= "+arg.end+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
+		document.cookie = "all= "+arg.allDay+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
 
 		
 		function getCookie(name){
@@ -276,17 +278,6 @@
 			
 				})
 
-				function information() {
-        		var cookieStart = "";
-        		var cookieEnd = "";
-        		$.ajax({
-            		type: "PUT",
-            		url: "/api",
-            		data: { cookieStart: cookieStart, cookieEnd: cookieEnd }
-        			})
-    			}
-
-
 				$.ajax(this.href, {
                        
                         success: function() {
@@ -309,7 +300,7 @@
 										title: title,
 										start: cookieStart,
 										end: cookieEnd,
-										allDay: arg.allDay,
+										allDay: cookieAllDay,
 										teacherName: teacherName,
 										description: description,
 

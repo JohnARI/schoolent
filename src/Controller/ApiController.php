@@ -306,11 +306,23 @@ class ApiController extends AbstractController
         
         //dd($urlStart);
 
+        $cookie = $_COOKIE;
 
+
+        if(empty($cookie)){
 
         $cookieStart = $_COOKIE['start'];
         $cookieEnd = $_COOKIE['end'];
+        $cookieAllDay = $_COOKIE['all'];
+        
+        }else{
 
+            
+        $cookieStart = "";
+        $cookieEnd = "";
+        $cookieAllDay = "";
+
+        }
         
         if ($urlStart && $urlEnd){
 
@@ -487,6 +499,7 @@ class ApiController extends AbstractController
                                                 'code'=>$code,
                                                 'cookieStart'=>$cookieStart,
                                                 'cookieEnd'=>$cookieEnd,
+                                                'cookieAllDay'=>$cookieAllDay,
                                             ]);
 
                 }
@@ -506,6 +519,7 @@ class ApiController extends AbstractController
                                 'code'=>$code,
                                 'cookieStart'=>$cookieStart,
                                 'cookieEnd'=>$cookieEnd,
+                                'cookieAllDay'=>$cookieAllDay,
                             ]);
                         
 
@@ -532,6 +546,7 @@ class ApiController extends AbstractController
                 'calendary'=>$calendrier,
                 'cookieStart'=>$cookieStart,
                 'cookieEnd'=>$cookieEnd,
+                'cookieAllDay'=>$cookieAllDay,
                 
             ]);
 
