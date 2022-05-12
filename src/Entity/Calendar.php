@@ -19,8 +19,9 @@ class Calendar
      */
     private $id;
 
-    /*
-     *  @ORM\Column(type="integer", nullable=false)
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $Category;
 
@@ -44,10 +45,6 @@ class Calendar
      */
     private $end;
 
-     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
-     */
-    private $teacher;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -69,8 +66,8 @@ class Calendar
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false)
+    /*
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $teacher_id;
 
@@ -150,18 +147,6 @@ class Calendar
         return $this;
     }
 
-    public function getTeacher(): ?\DateTimeInterface
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacher(\DateTimeInterface $teacher): self
-    {
-        $this->teacher = $teacher;
-
-        return $this;
-    }
-
 
     public function getTitle(): ?string
     {
@@ -235,5 +220,5 @@ class Calendar
         return $this;
     }
 
-
+     
 }

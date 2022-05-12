@@ -29,12 +29,13 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/{id}/edit", name="api_even_edit", methods={"PUT"})
      */
-    public function majEvent(?Calendar $calendar, Request $request, EntityManagerInterface $em, CalendarRepository $calendars): Response
+    public function majEvent(?Calendar $calendar, Request $request, EntityManagerInterface $em, CalendarRepository $calendars,ProgrammingLanguageRepository $programe): Response
     { //Potentiellement un objet Calendar
 
 
         //On Récupère les données
         $donnees = json_decode($request->getContent());
+        $category = $programe->findAll();
 
         if (
             isset($donnees->title) && !empty($donnees->title) &&
@@ -234,7 +235,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/{id}/delete", name="api_even_delete", methods={"PUT"})
      */
-    public function majEventDelete(?Calendar $calendarDelete, Request $request, CalendarRepository $calendars, $id): Response
+    public function majEventDelete(?Calendar $calendarDelete, Request $request, CalendarRepository $calendars, ProgrammingLanguageRepository $programe, $id): Response
     { //Potentiellement un objet Calendar
 
         
@@ -251,7 +252,7 @@ class ApiController extends AbstractController
                 ORDER BY c.title ASC'
             )->setParameter('title', 'indisponible');
             $calendar = $query->getResult();
-
+            $category = $programe->findAll();
             $calendrier = $calendars->findAll();
             $calendarr = new Calendar;
             $form = $this->createForm(CalendarType::class, $calendarr);
@@ -266,6 +267,7 @@ class ApiController extends AbstractController
                 'calendar' => $calendar,
                 'calendary'=> $calendrier,
                 'form'=> $form->createView(),
+                'category'=>$category,
                 'code'=>$code,
             ]);
 
@@ -330,7 +332,7 @@ class ApiController extends AbstractController
 
         
        
-        $routerName = $request->getRequestUri();
+        //$routerName = $request->getRequestUri();
 
         // dd($routerName);
 
