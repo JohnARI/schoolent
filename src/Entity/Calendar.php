@@ -44,6 +44,10 @@ class Calendar
      */
     private $end;
 
+     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
+     */
+    private $teacher;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -142,6 +146,18 @@ class Calendar
     public function setEnd(\DateTimeInterface $end): self
     {
         $this->end = $end;
+
+        return $this;
+    }
+
+    public function getTeacher(): ?\DateTimeInterface
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(\DateTimeInterface $teacher): self
+    {
+        $this->teacher = $teacher;
 
         return $this;
     }
