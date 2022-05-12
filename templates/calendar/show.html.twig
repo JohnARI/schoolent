@@ -90,21 +90,6 @@
 			selectable: true,
 			editable: true,
 			eventResizableFromStart: true,
-			select: function (arg) {
-
-			$('#calendarFomr2').modal('show');
-
-			calendar.unselect()
-
-			},
-			eventClick: function (arg) {
-				if (confirm('Are you sure you want to delete this event?')) {
-
-						arg.event.remove()
-				}
-				
-				
-				},
 			events: [{% for calendar in calendar %}{
 				id: '{{calendar.id}}',
 				title:'{{ calendar.title }}',
@@ -116,9 +101,9 @@
 				},{% endfor %}]
 
 
-	})
+			})
 
-		calendar.on('eventChange', (e) => {
+			calendar.on('eventChange', (e) => {
 
 
 			let url = `/api/${e.event.id}/edit`
@@ -131,28 +116,7 @@
 				
 
 			}	
-			
-
-			let xhr = new XMLHttpRequest
-
-			xhr.open("PUT", url)
-			xhr.send(JSON.stringify(donnees))
-			
-			})
-
-			calendar.on('eventRemove', (e) => {
-				let url = `/api/${e.event.id}/delete`
-				let donnees = {
-				"id": e.event.id
-				}
-
-
-				let xhr = new XMLHttpRequest
-
-				xhr.open("PUT", url, true)
-				xhr.send(JSON.stringify(donnees))
-
-
+	
 				})
 
 		calendar.render()

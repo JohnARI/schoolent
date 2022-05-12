@@ -8,12 +8,15 @@ use DateInterval;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\UserRepository;
+use App\Entity\ProgrammingLanguage;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ProgrammingLanguageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 
 class ApiController extends AbstractController
 {
@@ -127,14 +130,20 @@ class ApiController extends AbstractController
 
             }
 
+
+            $dateStart = new Datetime($donnees->start);
             // On Hydrate l'objet avec les données
             $calendar->setTitle($donnees->title);
-            $calendar->setStart(new Datetime($donnees->start),strtotime('+2 days'));
+            $calendar->setStart(date_add($dateStart, date_interval_create_from_date_string("1 day")));
             $calendar->setEnd(new DateTime($donnees->end));
             $calendar->setDescription($donnees->description);
             $calendar->setTeacherName($donnees->teacherName);
+           
+          
 
             $moninfo = $donnees->teacherName;
+
+            $maCategorie = $donnees->categorie;
 
             if($moninfo){
 
@@ -159,21 +168,47 @@ class ApiController extends AbstractController
                 $calendar->setTeacherId($id);
             }
 
-                if( $donnees->title == 'HTML'|| $donnees->title == 'html'|| $donnees->title == 'Html'){
+
+            if($maCategorie){
+
+
+                $query = $this->entityManager->createQuery(
+                    'SELECT p.id
+                        FROM App:ProgrammingLanguage p
+                    WHERE p.name = :myname'
+                )->setParameter('myname', $maCategorie);
+
+
+                $categorie = $query->getSingleResult();
+
+                settype($categorie, 'integer');
+
+                
+
+            }
+
+
+                $calendar->setCategory($categorie);
+
+                
+
+
+
+                if( $donnees->categorie == 'Html'){
                     $calendar->setBackgroundColor('#EE1581');
-                }elseif( $donnees->title == 'PHP'|| $donnees->title == 'php'|| $donnees->title == 'Php'){
+                }elseif( $donnees->category == 'PHP'|| $donnees->title == 'php'|| $donnees->title == 'Php'){
                     $calendar->setBackgroundColor('#6C1D89');
-                }elseif( $donnees->title == 'SQL'|| $donnees->title == 'sql'|| $donnees->title == 'Sql'){
+                }elseif( $donnees->category == 'SQL'|| $donnees->title == 'sql'|| $donnees->title == 'Sql'){
                     $calendar->setBackgroundColor('#2ABAD7');
-                }elseif( $donnees->title == 'CSS'|| $donnees->title == 'css'|| $donnees->title == 'Css'){
+                }elseif( $donnees->category == 'CSS'|| $donnees->title == 'css'|| $donnees->title == 'Css'){
                     $calendar->setBackgroundColor('#D7632A');
-                }elseif( $donnees->title == 'JAVASCRIPT'|| $donnees->title == 'javascript'|| $donnees->title == 'Javascript'){
+                }elseif( $donnees->category == 'JAVASCRIPT'|| $donnees->title == 'javascript'|| $donnees->title == 'Javascript'){
                     $calendar->setBackgroundColor('#F2F21A');
-                }elseif( $donnees->title == 'BOOSTRAP'|| $donnees->title == 'boostrap'|| $donnees->title == 'Boostrap'){
+                }elseif( $donnees->category == 'BOOSTRAP'|| $donnees->title == 'boostrap'|| $donnees->title == 'Boostrap'){
                     $calendar->setBackgroundColor('#9C6F9C');
-                }elseif( $donnees->title == 'SYMFONY'|| $donnees->title == 'symfony'|| $donnees->title == 'Symfony'){
+                }elseif( $donnees->category == 'SYMFONY'|| $donnees->title == 'symfony'|| $donnees->title == 'Symfony'){
                     $calendar->setBackgroundColor('#8A828A');
-                }elseif( $donnees->title == 'REACT'|| $donnees->title == 'react'|| $donnees->title == 'React'){
+                }elseif( $donnees->category == 'REACT'|| $donnees->title == 'react'|| $donnees->title == 'React'){
                     $calendar->setBackgroundColor('#8BEF49');
                 }else{
             $calendar->setBackgroundColor($donnees->backgroundColor);
@@ -241,7 +276,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/api", name="api", methods={"GET", "POST"})
      */
-    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request): Response
+    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request,ProgrammingLanguageRepository $programe): Response
     {
 
         // $url = $request->query->get('donnees');
@@ -261,6 +296,8 @@ class ApiController extends AbstractController
         // $test = 
 
         // dd($test);
+
+        $category = $programe->findAll();
 
         $query = $this->entityManager->createQuery(
             'SELECT c
@@ -309,7 +346,7 @@ class ApiController extends AbstractController
         $cookie = $_COOKIE;
 
 
-        if(!empty($cookie)){
+        if(!empty($cookie) && isset($_COOKIE['start'])){
 
         $cookieStart = $_COOKIE['start'];
         $cookieEnd = $_COOKIE['end'];
@@ -499,6 +536,7 @@ class ApiController extends AbstractController
                                                 'cookieStart'=>$cookieStart,
                                                 'cookieEnd'=>$cookieEnd,
                                                 'cookieAllDay'=>$cookieAllDay,
+                                                'category'=>$category,
                                             ]);
 
                 }
@@ -519,6 +557,7 @@ class ApiController extends AbstractController
                                 'cookieStart'=>$cookieStart,
                                 'cookieEnd'=>$cookieEnd,
                                 'cookieAllDay'=>$cookieAllDay,
+                                'category'=>$category,
                             ]);
                         
 
@@ -546,6 +585,7 @@ class ApiController extends AbstractController
                 'cookieStart'=>$cookieStart,
                 'cookieEnd'=>$cookieEnd,
                 'cookieAllDay'=>$cookieAllDay,
+                'category'=>$category,
                 
             ]);
 

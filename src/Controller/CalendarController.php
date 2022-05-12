@@ -86,13 +86,19 @@ class CalendarController extends AbstractController
      * @Route("/{id}", name="calendar_show", methods={"GET"})
      * 
      */
-    public function show(Request $request, CalendarRepository $calendar, UserRepository $userRepository, $id): Response
+    public function show(Request $request, CalendarRepository $calendar, UserRepository $userRepository, UserRepository $userRepo, $id): Response
     {
 
         
-        $user = $this->getUser(); 
-        $id = $this->getUser('id');
-        
+        $user = $this->getUser('id'); 
+        $calendars = new Calendar;
+        $form = $this->createForm(CalendarType::class, $calendars,[
+                'action'=>$this->generateUrl('calendar_new'),
+                'method'=>'POST'
+        ]);
+        $code = 201;
+        $calendrier = $calendar->findAll();
+       
 
         if ($this->isGranted('ROLE_TEACHER')) {
 
@@ -106,8 +112,7 @@ class CalendarController extends AbstractController
                 'method'=>'POST'
             ]);
             $form->handleRequest($request);
-            $calendrier = $calendar->findAll();
-            $calendar = $calendar->findBy(['teacher_id'=>$id]);
+            $calendar = $calendar->findBy(['teacher_id'=>$user]);
 
             // dd($events);
 
@@ -140,12 +145,15 @@ class CalendarController extends AbstractController
 
                 'calendar' => $calendar,
                 'form'=> $form->createView(),
-                'calendrier'=> $calendrier
+                'calendary'=> $calendrier,
+                'code'=>$code,
             ]);
 
-        }else{
+        }
+        
+        if ($this->isGranted('ROLE_ADMIN')){
 
-            $events = $calendar->findBy(['id'=>$id]);
+            $events = $calendar->findBy(['teacher_id'=>$id]);
             $form->handleRequest($request);
             $calendrier = $calendar->findAll();
 
@@ -166,16 +174,17 @@ class CalendarController extends AbstractController
             }
 
 
-            return $this->render('test/test.html.twig',[
+            return $this->render('calendar/show.html.twig',[
 
-                'calendar' => $calendar,
+                'calendar' => $events,
                 'form'=> $form->createView(),
-                'calendrier'=> $calendrier
+                'calendary'=> $calendrier,
+                'code'=> $code
             ]);
 
         }
 
-        return $this->render('calendar/show.html.twig', compact('data'));
+        return $this->redirectToRoute('calendar_show');
     }
 
     /**

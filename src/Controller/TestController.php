@@ -8,6 +8,7 @@ use DateInterval;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\CalendarRepository;
+use App\Repository\ProgrammingLanguageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,22 +28,24 @@ class TestController extends AbstractController
     /**
      * @Route("/test", name="test", methods={"GET", "POST"})
      */
-    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request): Response
+    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request, ProgrammingLanguageRepository $programe): Response
     {
 
-        $url = $request->query->get('donnees');
+        // $url = $request->query->get('donnees');
           
-        $urlStart = substr($url,10,24);
-        $urlEnd = substr($url,43,-2);
+        // $urlStart = substr($url,10,24);
+        // $urlEnd = substr($url,43,-2);
 
-        $test = array($urlStart,$urlEnd);
+        // $test = array($urlStart,$urlEnd);
     
 
         // if(!isset($url)){
 
-        return $this->redirectToRoute('api_test');
+        // return $this->redirectToRoute('api_test');
 
         // }
+
+        $category = $programe->findAll();
 
         $query = $this->entityManager->createQuery(
             'SELECT c
@@ -238,6 +241,7 @@ class TestController extends AbstractController
                                                 'calendar' => $calendar,
                                                 'form'=> $form->createView(),
                                                 'calendrier'=> $calendario,
+                                                'category'=>$category,
                                                 'code'=>$code,
                                             ]);
 
@@ -255,6 +259,7 @@ class TestController extends AbstractController
                                 'calendar' => $calendar,
                                 'form'=> $form->createView(),
                                 'calendary'=> $calendrier,
+                                'category'=>$category,
                                 'code'=>$code,
                             ]);
                         
@@ -280,6 +285,7 @@ class TestController extends AbstractController
                 'form'=> $form->createView(),
                 'code'=>$code,
                 'calendary'=>$calendrier,
+                'category'=>$category,
                 
             ]);
 

@@ -25,9 +25,15 @@
 
 					
 
-					<label for="email" class="form-label">Title</label>
+					<label for="title" class="form-label">Title</label>
 					<input type="text" name="title" id="title" class="form-control">
 
+					<label for="category" class="form-label">Category</label>
+					<select type="text" name="category" id="category" class="form-control">
+						{% for cat in category %}
+								<option>{{cat.name}}</option>
+						{% endfor %}
+					</select>
 					<label for="description">Description</label>
 					<input type="text" name="description" id="description" class="form-control">
 

@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Calendar;
+use App\Entity\ProgrammingLanguage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
@@ -28,6 +30,11 @@ class CalendarType extends AbstractType
             ->add('Description')
             ->add('session')
             ->add('background_color', ColorType::class, array('attr' => array('style' => 'display:none')));
+            // ->add('category', EntityType::class,[
+            //     'label' => 'Technologie',
+            //     'class' => ProgrammingLanguage::class,
+
+            // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

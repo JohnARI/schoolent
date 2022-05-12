@@ -92,9 +92,6 @@
 
 	var calendarEl = document.getElementById('calendar2');
 
-	let cookieStart = '{{cookieStart}}';	
-	let cookieEnd = '{{cookieEnd}}';
-	let cookieAllDay = '{{cookieAllDay}}'
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
 	let searchParams = new URLSearchParams(window.location.search);
@@ -194,7 +191,7 @@
 	let debut = initialisation()
 
 
-	debut();
+	//debut();
 
 
 	$(document).ready(function(){
@@ -217,17 +214,9 @@
 			var title = $("#title").val();
 			var description = $("#description").val();
 			var teacherName = $("#teacher").val();
+			var cat = $("#category").val();
 
-			if(cookieStart==""){
-				let start = cookieStart,
-				end = cookieEnd,
-				all = cookieAllDay
-			}else{
-
-				let start = arg.start,
-				end = arg.end,
-				allDay = arg.allDay
-			}
+			
 			calendar.addEvent({
 
 						title: title,
@@ -235,7 +224,8 @@
 						end: arg.end,
 						allDay: arg.allDay,
 						teacherName: teacherName,
-						description: description
+						description: description,
+						catego: cat,
 
 				})
 
@@ -316,6 +306,7 @@
 				"description": e.event.extendedProps.description,
 				"teacherName": e.event.extendedProps.teacherName,
 				"teacherId": " ",
+				"categorie": "Html",
 				"backgroundColor": '#0080ff'
 
 

@@ -19,9 +19,8 @@ class Calendar
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="calendars")
-     * @ORM\JoinColumn(nullable=true)
+    /*
+     *  @ORM\Column(type="integer", nullable=false)
      */
     private $Category;
 
@@ -67,7 +66,7 @@ class Calendar
     private $name;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $teacher_id;
 
@@ -87,12 +86,12 @@ class Calendar
         return $this->id;
     }
 
-    public function getCategory(): ?ProgrammingLanguage
+    public function getCategory(): ?int
     {
         return $this->Category;
     }
 
-    public function setCategory(?ProgrammingLanguage $Category): self
+    public function setCategory(?int $Category): self
     {
         $this->Category = $Category;
 
@@ -220,5 +219,5 @@ class Calendar
         return $this;
     }
 
-     
+
 }
