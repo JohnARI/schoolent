@@ -5,6 +5,7 @@ namespace App\Controller;
 use DateTime;
 use DatePeriod;
 use DateInterval;
+use App\Entity\User;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\UserRepository;
@@ -278,7 +279,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/api", name="api", methods={"GET", "POST"})
      */
-    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request,ProgrammingLanguageRepository $programe): Response
+    public function index(?Calendar $calendarr, CalendarRepository $calendary, Request $request,ProgrammingLanguageRepository $programe, UserRepository $user): Response
     {
 
         // $url = $request->query->get('donnees');
@@ -310,7 +311,7 @@ class ApiController extends AbstractController
         $calendar = $query->getResult();
         $calendars = new Calendar;
         $form = $this->createForm(CalendarType::class, $calendars);
-        $calendrier = $calendary->findAll();
+        $userTeacher = $user->findBy(['isTeacher'=>1]);
         $code="";//initialisation
      
 
@@ -516,10 +517,14 @@ class ApiController extends AbstractController
                                     // dd($date);
 
                                         $queryBuilder = $this->entityManager->createQueryBuilder();
-                                        $queryBuilder->select('c.teacher_name')
-                                            ->from(Calendar::class, 'c')
+                                        $queryBuilder->select('u.fullname')
+                                            ->from(User::class, 'u')
+                                            ->add('where', "u.is_teacher = 1")
+                                            ->Leftjoin('App\Entity\Calendar', 'c', 'WITH', 'c.teacher_name = u.fullname')
                                             ->add('where', "c.start not IN ( :date) AND c.end not IN ( :date)")
-                                            ->setParameter('date', $dateTest);
+                                            ->setParameter('date', $dateTest)
+                                            ->groupBy('u.fullname');
+                                            
 
                                             $query = $queryBuilder->getQuery();
 
@@ -554,7 +559,7 @@ class ApiController extends AbstractController
 
                                 'calendar' => $calendar,
                                 'form'=> $form->createView(),
-                                'calendary'=> $calendrier,
+                                'teacher'=> $userTeacher,
                                 'code'=>$code,
                                 'cookieStart'=>$cookieStart,
                                 'cookieEnd'=>$cookieEnd,
@@ -583,7 +588,7 @@ class ApiController extends AbstractController
                 'calendar' => $calendar,
                 'form'=> $form->createView(),
                 'code'=>$code,
-                'calendary'=>$calendrier,
+                'teacher'=> $userTeacher,
                 'cookieStart'=>$cookieStart,
                 'cookieEnd'=>$cookieEnd,
                 'cookieAllDay'=>$cookieAllDay,

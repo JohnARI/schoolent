@@ -169,7 +169,23 @@
 
 			if (confirm('Vous souhaitez entrer un nouvel évènement ?')) {
 
-					calendrierShow();
+					function checkPulse(XMLHttpRequest) {
+							$.ajax({
+								url: "/api?start=" + donnees['start'] + "&end=" + donnees['end'],
+								type: 'GET',
+								async: false,
+								beforeSend: null,
+								success:
+									function (result, textStatus, xhr) {
+										if (xhr.getResponseHeader('REQUIRES_AUTH') === '1') {
+											XMLHttpRequest.abort(); //terminate further ajax execution
+											window.location = window.location;
+										}
+									}
+							});
+					}
+
+					checkPulse();
 
 				}
 			
@@ -192,6 +208,44 @@
 
 
 	//debut();
+
+
+	$("#actualiserListe").click(function(){
+
+
+						if (confirm('souhaitez-vous avoir la liste mise à jour des endeignants disponible sur la période selectionnée ?')) {
+
+
+								location.reaload();
+						}
+
+
+			if()
+
+			var title = $("#title").val();
+			var description = $("#description").val();
+			var teacherName = $("#teacher").val();
+			var cat = $("#category").val();
+
+			
+			calendar.addEvent({
+
+						title: title,
+						start: arg.start,
+						end: arg.end,
+						allDay: arg.allDay,
+						teacherName: teacherName,
+						description: description,
+						catego: cat,
+
+				})
+
+
+			
+			calendar.unselect();
+
+			
+		})
 
 
 	$(document).ready(function(){

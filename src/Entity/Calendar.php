@@ -66,7 +66,7 @@ class Calendar
      */
     private $name;
 
-    /*
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $teacher_id;

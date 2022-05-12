@@ -119,6 +119,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $sexe;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isTeacher;
+
 
 
     public function __construct()
@@ -520,5 +525,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this->getFullname();
+    }
+
+    public function getIsTeacher(): ?bool
+    {
+        return $this->isTeacher;
+    }
+
+    public function setIsTeacher(?bool $isTeacher): self
+    {
+        $this->isTeacher = $isTeacher;
+
+        return $this;
     }
 }

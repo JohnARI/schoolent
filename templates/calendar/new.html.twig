@@ -41,18 +41,20 @@
 					<select type="text" name="teacher" id="teacher" class="form-control">
 					{% if code == 200 %}
 						{% for calendar in calendrier %}
-							<option>{{calendar.teacher_name}}</option>
+							<option>{{calendar.fullname}}</option>
 						{% endfor %}
 					{% elseif code == 201 %}
-						{% for calendar in calendary %}
-							<option>{{calendar.teacherName}}</option>
+						{% for teacherSelect in teacher %}
+							<option>{{teacherSelect.fullname}}</option>
 						{% endfor %}
 					{% endif %}
 					</select>
 					<div class="d-flex justify-content-center">
 						<button type="submit" class="btn btn-primary mt-3" id="envoyerFormulaire">Ajouter</button>
 					</div>
-				   
+				   <div class="d-flex justify-content-end">
+				   		<button type="submit" class="btn btn-success mt-3 align-items-end" id="actualiserListe">Actualiser ma liste d'enseignants</button>
+				   </div>
 
 					
 
