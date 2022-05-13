@@ -91,7 +91,8 @@
 
 
 	var calendarEl = document.getElementById('calendar2');
-
+	let cookieStart = '{{cookieStart}}';	
+	let cookieEnd = '{{cookieEnd}}';
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
 	let searchParams = new URLSearchParams(window.location.search);
@@ -113,6 +114,9 @@
 	droppable: true, // this allows things to be dropped onto the calendar
 	select: function (arg) {
 
+
+		
+
 		let urlVerif = document.location.href;
 		let urlcompte = urlVerif.length;
 		var startS = JSON.stringify(arg.start);
@@ -122,42 +126,39 @@
 			'start' : startS,
 			'end' : endS
 			}
-   		dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
-		document.cookie = "start= "+arg.start+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
-		document.cookie = "end= "+arg.end+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
-		document.cookie = "all= "+arg.allDay+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
+
+		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
+
+		if (navigator.cookieEnabled) {
+			if ((document.cookie.indexOf("start") == -1)||(document.cookie.indexOf("end") == -1)) {
+			dtExpire.setTime(dtExpire.getTime() + 3600 * 1000);
+			document.cookie = "start= "+arg.start+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
+			document.cookie = "end= "+arg.end+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
+			document.cookie = "all= "+arg.allDay+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
+			
+			}
 
 		
-		function getCookie(name){
-			if(document.cookie.length == 0)
-			return null;
+		}else{
 
-			var regSepCookie = new RegExp('(; )', 'g');
-			var cookies = document.cookie.split(regSepCookie);
-
-			for(var i = 0; i < cookies.length; i++){
-			var regInfo = new RegExp('=', 'g');
-			var infos = cookies[i].split(regInfo);
-			if(infos[0] == name){
-				return unescape(infos[1]);
-			}
-			}
-        return null;
-  	    }
 		
+    			alert('précedente date initiale: ' + JSON.stringify(cookieStart));
+    			alert('précedente date de fin: ' + JSON.stringify(cookieEnd));
+
+		}
+
 	
-		function calendrierShow(){
-				$('#calendarForm').modal('show');
-			}
+				
+		$('#calendarForm').modal('show');
 
-		calendrierShow();
+
 	
 	function initialisation(){
 
 		let maClosure = () => {
 		
 		//?donnees={"start":"2022-04-10T22:00:00.000Z",end:"2022-04-15T22:00:00.000Z"}
-		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
+		
 
 
 		let urlVerifmodif = document.location.href;
@@ -216,35 +217,9 @@
 						if (confirm('souhaitez-vous avoir la liste mise à jour des endeignants disponible sur la période selectionnée ?')) {
 
 
-								location.reaload();
+								location.assign(location.href);
 						}
 
-
-			if()
-
-			var title = $("#title").val();
-			var description = $("#description").val();
-			var teacherName = $("#teacher").val();
-			var cat = $("#category").val();
-
-			
-			calendar.addEvent({
-
-						title: title,
-						start: arg.start,
-						end: arg.end,
-						allDay: arg.allDay,
-						teacherName: teacherName,
-						description: description,
-						catego: cat,
-
-				})
-
-
-			
-			calendar.unselect();
-
-			
 		})
 
 
@@ -265,10 +240,14 @@
 
 		$("#envoyerFormulaire").click(function(){
 
+
+
 			var title = $("#title").val();
 			var description = $("#description").val();
 			var teacherName = $("#teacher").val();
 			var cat = $("#category").val();
+
+			
 
 			
 			calendar.addEvent({

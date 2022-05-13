@@ -346,7 +346,7 @@ class ApiController extends AbstractController
         
         //dd($urlStart);
 
-        $cookie = $_COOKIE;
+        $cookie = (isset($_COOKIE["start"])) ? $_COOKIE["start"] : NULL;
 
 
         if(!empty($cookie) && isset($_COOKIE['start'])){
