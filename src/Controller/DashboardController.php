@@ -42,8 +42,7 @@ class DashboardController extends AbstractController
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $myStudents = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession());
         $mySession = $this->getUser()->getSession($session);
-        $myId = $this->getUser();
-        
+        $gradeTeacher = $this->entityManager->getRepository(Grade::class)->findGradeByTeacher($this->getUser()->getId(), $mySession);
         $results = $this->cache->get('dashboard', function(ItemInterface $item) use ($myStudents, $mySession) {
             $item->expiresAfter(3600);
             return [ 
@@ -56,21 +55,22 @@ class DashboardController extends AbstractController
             'studentsMan' => $this->entityManager->getRepository(User::class)->findBySexeStudent(0),
             'dateByMonth' => $this->entityManager->getRepository(Calendar::class)->findDateMonth(),
             'gradeStudents' => $this->entityManager->getRepository(Grade::class)->findByUser($myStudents),
-            'gradeTeacher' => $this->entityManager->getRepository(Grade::class)->findGradeByTeacher($this->getUser()->getId(), $mySession),
             ];
         });
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
-            $grade->setTeacher($myId);
+            $grade->setTeacher($this->getUser());
             $grade->setSession($mySession);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
             return $this->redirect($request->getUri());
+            
         }
 
         return $this->render('dashboard/admins-dashboard.html.twig', [
+            'gradeTeacher' => $gradeTeacher,
             'results' => $results,
             'myStudents' => $myStudents,
             'formGrade' => $formGrade->createView(),
@@ -88,20 +88,23 @@ class DashboardController extends AbstractController
         $formGrade->handleRequest($request);
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $myStudents = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession());
+        $mySession = $this->getUser()->getSession($session);
+        $gradeTeacher = $this->entityManager->getRepository(Grade::class)->findGradeByTeacher($this->getUser()->getId(), $mySession);
+       
         
-        $results = $this->cache->get('dashboard', function(ItemInterface $item) use($session, $myStudents) {
+        $results = $this->cache->get('dashboard', function(ItemInterface $item) use($myStudents) {
             $item->expiresAfter(3600);
             return [ 
-                'mySession' => $this->getUser()->getSession($session),
                 'gradeStudents' => $this->entityManager->getRepository(Grade::class)->findByUser($myStudents),
-                'gradeTeacher' => $this->entityManager->getRepository(Grade::class)->findByTeacher($this->getUser()->getId(),),
             ];
         });
 
+        
+
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());
-            $grade->setTeacher($this->getUser()->getId());
-            $grade->setSession($results['mySession']);
+            $grade->setTeacher($this->getUser());
+            $grade->setSession($mySession);
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
@@ -110,6 +113,7 @@ class DashboardController extends AbstractController
         }
 
         return $this->render('dashboard/teachers-dashboard.html.twig', [
+            'gradeTeacher' => $gradeTeacher,
             'results' => $results,
             'myStudents' => $myStudents,
             'formGrade' => $formGrade->createView(),

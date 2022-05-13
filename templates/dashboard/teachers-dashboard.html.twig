@@ -158,9 +158,9 @@
 													<td>{{form_widget(formGrade.submit)}}</td>
 													{{form_end(formGrade)}}
 												</tr>
-												{% for grade in results.gradeTeacher %}
+												{% for grade in gradeTeacher %}
 
-													<tr {# class='clickable-row' data-href='{{path('profil_user', {'id': grade.user.id} ) }}' #}>
+													<tr  class='clickable-row' data-href='{{path('profil_user', {'id': grade.user.id} ) }}' >
 
 
 														
@@ -225,18 +225,13 @@
 	</div>
 	<script>
 		$('#ajax').submit(function (e) {
-
 e.preventDefault();
 let url = "{{ path('dashboard-teacher') }}";
 let formSerialize = $(this).serialize();
-
 $.post(url, formSerialize, function (response) { // your callback here
 alert(response);
 }, 'JSON');
 });
-
-
-
  $(".clickable-row").click(function() {
         window.location = $(this).data("href");
     });
