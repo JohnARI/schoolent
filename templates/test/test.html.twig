@@ -95,13 +95,17 @@
 	let cookieEnd = '{{cookieEnd}}';
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
+	let searchParams = new URLSearchParams(window.location.search);
+	let UrlParamStart = searchParams.get('start');
+	let UrlParamEnd = searchParams.get('end');
+
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 	headerToolbar: {
 	left: 'prev,next today',
 	center: 'title',
 	right: 'dayGridMonth,timeGridWeek,timeGridDay'
 	},
-
+	timeZone: 'UTC',
 	defaultView: 'month',
 	navLinks: true, // can click day/week names to navigate views
 	businessHours: true, // display business hours
@@ -112,7 +116,7 @@
 	select: function (arg) {
 
 
-		
+		//arg.date.toUTCString();
 
 		let urlVerif = document.location.href;
 		let urlcompte = urlVerif.length;
@@ -124,6 +128,21 @@
 			'end' : endS
 			}
 
+		function convertFromStringToDate(responseDate){
+			let dateComponents = responseDate.split('T');
+			let datePieces = dateComponents[0].split("-");
+			let timePieces = dateComponents[1].split(":");
+			return(new Date(datePieces[2], (datePieces[1] - 1), datePieces[0],
+								timePieces[0], timePieces[1], timePieces[2]))
+		}
+
+
+		let date = startS.toString();
+
+
+		let datee = new Date(date);
+
+		alert(datee);
 
 		if (navigator.cookieEnabled) {
 			if ((document.cookie.indexOf("start") == -1)||(document.cookie.indexOf("end") == -1)) {
@@ -156,27 +175,17 @@
 		
 		let urlVerifmodif = document.location.href;
 
-		if(urlVerif != urlVerifmodif){
+					if(UrlParamStart!=null &&UrlParamEnd!=null){
 
-									
-
-			$.ajax(this.href, {
-                       
-                        success: function() {
-
-                        $('#calendarForm').modal('show');
-							
-                        }
-						
-                    })
-			}else{
+					alert('précedente date selectionnée debut: ' + UrlParamStart);
+					alert('précedente date selectionnée fin: ' + UrlParamEnd);
+			
+					}else{
 
 						$('#calendarForm').modal('show');
 
+					}
 			}
-
-
-		}
 
     	return maClosure;
 	}
@@ -189,16 +198,16 @@
 	lancement();
 
 
-	$("#actualiserListe").click(function(){
+						$("#actualiserListe").click(function(){
 
 
-						if (confirm('souhaitez-vous avoir la liste mise à jour des endeignants disponible sur la période selectionnée ?')) {
+							if (confirm('souhaitez-vous avoir la liste mise à jour des endeignants disponible sur la période selectionnée ?')) {
 
 
 								location.assign(location.href);
-						}
+							}
 
-		})
+						})
 
 
 	$(document).ready(function(){
@@ -216,29 +225,17 @@
 			xhr.send(JSON.stringify(donnees));
 
 
-		let searchParams = new URLSearchParams(window.location.search);
-		let UrlParamStart = searchParams.get('start');
-		let UrlParamEnd = searchParams.get('end');
+			$.ajax(this.href, {
+                       
+                    success: function() {
+
+                    $('#calendarForm').modal('show');
+							
+                    }
+						
+                })
 
 
-
-
-			if(UrlParamStart!=null &&UrlParamEnd!=null){
-
-					alert('précedente date selectionnée debut: ' + UrlParamStart);
-					alert('précedente date selectionnée fin: ' + UrlParamEnd);
-
-			}
-
-
-
-
-
-
-
-
-
-		
 
 		$("#envoyerFormulaire").click(function(){
 
@@ -250,10 +247,8 @@
 					var cat = $("#category").val();
 
 			
-					if(cookieStart !=null || cookieEnd != null){
+					if(cookieStart == null || cookieEnd == null){
 
-
-								if(cookieStart == arg.start && cookieEnd == arg.end){
 
 										calendar.addEvent({
 
@@ -267,7 +262,6 @@
 
 										})
 
-
 									deleteAllCookies();
 
 								}else{
@@ -278,6 +272,7 @@
 										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
 										alert('précedente selectionnée fin: ' + JSON.stringify(cookieEnd));
 
+												
 
 										}
 
@@ -287,30 +282,13 @@
 
 								}
 
-						}else{
-
-
-											calendar.addEvent({
-
-											title: title,
-											start: arg.start,
-											end: arg.end,
-											allDay: arg.allDay,
-											teacherName: teacherName,
-											description: description,
-											catego: cat,
-
-						})
-
-
-									deleteAllCookies();
-
-						}
-			
+		
 							deleteAllCookies();							
 
 			
 							calendar.unselect();
+
+							location.assign(location.href);
 
 			
 					})
