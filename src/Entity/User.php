@@ -558,6 +558,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $gradesTeacher->setTeacher(null);
             }
         }
+
+    }
+    
     public function getIsTeacher(): ?bool
     {
         return $this->isTeacher;
