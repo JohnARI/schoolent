@@ -20,8 +20,8 @@ class Calendar
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="calendars")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\Column(type="integer")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $Category;
 
@@ -47,11 +47,6 @@ class Calendar
 
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
-     */
-    private $teacher;
-
-    /**
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $title;
@@ -67,9 +62,19 @@ class Calendar
     private $BackgroundColor;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $teacher_id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $teacher_name;
 
     public function __construct()
     {
@@ -82,12 +87,12 @@ class Calendar
         return $this->id;
     }
 
-    public function getCategory(): ?ProgrammingLanguage
+    public function getCategory(): ?int
     {
         return $this->Category;
     }
 
-    public function setCategory(?ProgrammingLanguage $Category): self
+    public function setCategory(?int $Category): self
     {
         $this->Category = $Category;
 
@@ -142,18 +147,6 @@ class Calendar
         return $this;
     }
 
-    public function getTeacher(): ?User
-    {
-        return $this->teacher;
-    }
-
-    public function setTeacher(?User $teacher): self
-    {
-        $this->teacher = $teacher;
-
-     
-        return $this;
-    }
 
     public function getTitle(): ?string
     {
@@ -199,6 +192,30 @@ class Calendar
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTeacherId(): ?int
+    {
+        return $this->teacher_id;
+    }
+
+    public function setTeacherId(int $teacher_id): self
+    {
+        $this->teacher_id = $teacher_id;
+
+        return $this;
+    }
+
+    public function getTeacherName(): ?string
+    {
+        return $this->teacher_name;
+    }
+
+    public function setTeacherName(?string $teacher_name): self
+    {
+        $this->teacher_name = $teacher_name;
 
         return $this;
     }

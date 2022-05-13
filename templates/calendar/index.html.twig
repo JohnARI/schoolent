@@ -22,7 +22,7 @@
 		<tbody>
 			{% for calendar in calendars %}
 				<tr>
-					<td>{{ calendar.id }}</td>
+					<td>{{ calendar.teacherId }}</td>
 					<td>{{ calendar.createdAt ? calendar.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 					<td>{{ calendar.start ? calendar.start|date('Y-m-d H:i:s') : '' }}</td>
 					<td>{{ calendar.end ? calendar.end|date('Y-m-d H:i:s') : '' }}</td>
@@ -30,7 +30,7 @@
 					<td>{{ calendar.Description }}</td>
                     <td>{{ calendar.teacherName }}</td>
 					<td>
-						<a href="{{ path('calendar_show', {'id': calendar.id}) }}">show</a>
+						<a href="{{ path('calendar_show', {'id': calendar.teacherId}) }}">show</a>
 						<a href="{{ path('calendar_edit', {'id': calendar.id}) }}">edit</a>
 					</td>
 				</tr>
