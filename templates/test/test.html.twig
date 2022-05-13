@@ -95,9 +95,6 @@
 	let cookieEnd = '{{cookieEnd}}';
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
-	let searchParams = new URLSearchParams(window.location.search);
-	let UrlParamStart = searchParams.get('start');
-	let UrlParamEnd = searchParams.get('end');
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 	headerToolbar: {
 	left: 'prev,next today',
@@ -127,7 +124,6 @@
 			'end' : endS
 			}
 
-		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
 
 		if (navigator.cookieEnabled) {
 			if ((document.cookie.indexOf("start") == -1)||(document.cookie.indexOf("end") == -1)) {
@@ -137,62 +133,45 @@
 			document.cookie = "all= "+arg.allDay+"; expires=" + new Date(dtExpire).toUTCString() + "; path=/";
 			
 			}
-
-		
-		}else{
-
-		
-    			alert('précedente date initiale: ' + JSON.stringify(cookieStart));
-    			alert('précedente date de fin: ' + JSON.stringify(cookieEnd));
-
 		}
 
-	
-				
-		$('#calendarForm').modal('show');
+		
+	function deleteAllCookies() {
+             var cookies = document.cookie.split(";");
+             for (var i = 0; i < cookies.length; i++) {
+                 var cookie = cookies[i];
+                 var eqPos = cookie.indexOf("=");
+                 var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                 document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+             }
+	}
 
 
 	
 	function initialisation(){
 
+		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
+
 		let maClosure = () => {
 		
-		//?donnees={"start":"2022-04-10T22:00:00.000Z",end:"2022-04-15T22:00:00.000Z"}
-		
-
-
 		let urlVerifmodif = document.location.href;
-
-		
 
 		if(urlVerif != urlVerifmodif){
 
+									
 
-			if (confirm('Vous souhaitez entrer un nouvel évènement ?')) {
+			$.ajax(this.href, {
+                       
+                        success: function() {
 
-					function checkPulse(XMLHttpRequest) {
-							$.ajax({
-								url: "/api?start=" + donnees['start'] + "&end=" + donnees['end'],
-								type: 'GET',
-								async: false,
-								beforeSend: null,
-								success:
-									function (result, textStatus, xhr) {
-										if (xhr.getResponseHeader('REQUIRES_AUTH') === '1') {
-											XMLHttpRequest.abort(); //terminate further ajax execution
-											window.location = window.location;
-										}
-									}
-							});
-					}
-
-					checkPulse();
-
-				}
-			
+                        $('#calendarForm').modal('show');
+							
+                        }
+						
+                    })
 			}else{
 
-					//setTimeout(calendrierShow, 2000);
+						$('#calendarForm').modal('show');
 
 			}
 
@@ -202,13 +181,12 @@
     	return maClosure;
 	}
 
-	//calendrierShow();
 
 
-	let debut = initialisation()
+	let lancement = initialisation()
 
 
-	//debut();
+	lancement();
 
 
 	$("#actualiserListe").click(function(){
@@ -236,44 +214,117 @@
 
 			xhr.open("GET", "/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
 			xhr.send(JSON.stringify(donnees));
+
+
+		let searchParams = new URLSearchParams(window.location.search);
+		let UrlParamStart = searchParams.get('start');
+		let UrlParamEnd = searchParams.get('end');
+
+
+
+
+			if(UrlParamStart!=null &&UrlParamEnd!=null){
+
+					alert('précedente date selectionnée debut: ' + UrlParamStart);
+					alert('précedente date selectionnée fin: ' + UrlParamEnd);
+
+			}
+
+
+
+
+
+
+
+
+
 		
 
 		$("#envoyerFormulaire").click(function(){
 
 
 
-			var title = $("#title").val();
-			var description = $("#description").val();
-			var teacherName = $("#teacher").val();
-			var cat = $("#category").val();
+					var title = $("#title").val();
+					var description = $("#description").val();
+					var teacherName = $("#teacher").val();
+					var cat = $("#category").val();
 
 			
+					if(cookieStart !=null || cookieEnd != null){
+
+
+								if(cookieStart == arg.start && cookieEnd == arg.end){
+
+										calendar.addEvent({
+
+										title: title,
+										start: arg.start,
+										end: arg.end,
+										allDay: arg.allDay,
+										teacherName: teacherName,
+										description: description,
+										catego: cat,
+
+										})
+
+
+									deleteAllCookies();
+
+								}else{
+
+									function info(){
+
+										alert('Vous avez deja selectionnées des dates');
+										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
+										alert('précedente selectionnée fin: ' + JSON.stringify(cookieEnd));
+
+
+										}
+
+						
+										return info();
+
+
+								}
+
+						}else{
+
+
+											calendar.addEvent({
+
+											title: title,
+											start: arg.start,
+											end: arg.end,
+											allDay: arg.allDay,
+											teacherName: teacherName,
+											description: description,
+											catego: cat,
+
+						})
+
+
+									deleteAllCookies();
+
+						}
+			
+							deleteAllCookies();							
 
 			
-			calendar.addEvent({
-
-						title: title,
-						start: arg.start,
-						end: arg.end,
-						allDay: arg.allDay,
-						teacherName: teacherName,
-						description: description,
-						catego: cat,
-
-				})
-
+							calendar.unselect();
 
 			
-			calendar.unselect();
+					})
 
-			
+		
 		})
 
-		
-})
 
 
-		
+
+
+
+
+
 },
 
 
@@ -310,22 +361,7 @@
 			
 				})
 
-				$.ajax(this.href, {
-                       
-                        success: function() {
-
-							if(urlcompte > 50){
-								
-                           		$('#calendarForm').modal('show');
-						   
-						   	}
-
-							
-                        }
-
-
-						
-                    });
+				
 
 
 				//$('#calendarFomr').modal('show');

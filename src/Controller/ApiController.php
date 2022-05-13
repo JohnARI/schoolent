@@ -236,7 +236,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/api/{id}/delete", name="api_even_delete", methods={"PUT"})
      */
-    public function majEventDelete(?Calendar $calendarDelete, Request $request, CalendarRepository $calendars, ProgrammingLanguageRepository $programe, $id): Response
+    public function majEventDelete(?Calendar $calendarDelete, Request $request, CalendarRepository $calendars, ProgrammingLanguageRepository $programe, UserRepository $user,$id): Response
     { //Potentiellement un objet Calendar
 
         
@@ -254,7 +254,7 @@ class ApiController extends AbstractController
             )->setParameter('title', 'indisponible');
             $calendar = $query->getResult();
             $category = $programe->findAll();
-            $calendrier = $calendars->findAll();
+            $userTeacher = $user->findBy(['isTeacher'=>1]);
             $calendarr = new Calendar;
             $form = $this->createForm(CalendarType::class, $calendarr);
 
@@ -266,7 +266,7 @@ class ApiController extends AbstractController
             return $this->render('test/test.html.twig',[
 
                 'calendar' => $calendar,
-                'calendary'=> $calendrier,
+                'teacher'=> $userTeacher,
                 'form'=> $form->createView(),
                 'category'=>$category,
                 'code'=>$code,
