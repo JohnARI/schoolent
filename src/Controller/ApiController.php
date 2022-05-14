@@ -9,7 +9,6 @@ use App\Entity\User;
 use App\Entity\Calendar;
 use App\Form\CalendarType;
 use App\Repository\UserRepository;
-use App\Entity\ProgrammingLanguage;
 use App\Repository\CalendarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

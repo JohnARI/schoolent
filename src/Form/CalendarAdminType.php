@@ -40,7 +40,7 @@ class CalendarAdminType extends AbstractType
             'class' => Session::class,
             'choice_label' => 'name',
         ])
-        ->add('teacher', EntityType::class, [
+        ->add('teacher_name', EntityType::class, [
             'label' => 'Professeur',
             'class' => User::class,
             'multiple' => false,

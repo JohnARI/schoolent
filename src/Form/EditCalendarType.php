@@ -20,7 +20,7 @@ class EditCalendarType extends AbstractType
     {
         $builder
         ->add('start', DateType::class, [
-            'label' => 'Dapart',
+            'label' => 'Départ',
             'widget' => 'single_text'
         ])
         ->add('end', DateType::class, [
@@ -40,7 +40,7 @@ class EditCalendarType extends AbstractType
             'class' => Session::class,
             'choice_label' => 'name',
         ])
-        ->add('teacher', EntityType::class, [
+        ->add('user', EntityType::class, [
             'label' => 'Professeur',
             'class' => User::class,
             'choice_label' => 'fullname',
