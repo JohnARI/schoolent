@@ -115,7 +115,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												{% for grade in grades %}
+												{% for grade in grades|sort|reverse %}
 													<tr>
 
 														<td>{{grade.category}}</td>

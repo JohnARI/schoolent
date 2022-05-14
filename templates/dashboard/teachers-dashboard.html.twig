@@ -158,7 +158,7 @@
 													<td>{{form_widget(formGrade.submit)}}</td>
 													{{form_end(formGrade)}}
 												</tr>
-												{% for grade in gradeTeacher %}
+												{% for grade in gradeTeacher|sort|reverse %}
 
 													<tr  class='clickable-row' data-href='{{path('profil_user', {'id': grade.user.id} ) }}' >
 

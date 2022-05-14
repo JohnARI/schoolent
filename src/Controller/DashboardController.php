@@ -39,6 +39,7 @@ class DashboardController extends AbstractController
         $grade = new Grade();
         
         $formGrade = $this->createForm(GradeType::class, $grade);
+        $formGrade->handleRequest($request);
         $session = $this->entityManager->getRepository(Session::class)->findAll();
         $myStudents = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession());
         $mySession = $this->getUser()->getSession($session);

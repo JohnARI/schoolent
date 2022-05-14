@@ -3,7 +3,7 @@
 
 var ctx = document.getElementById("chart-monthly").getContext('2d');;
 
-var labels = [{%for data in results.dateByMonth %} 
+var labels = [{%for data in results.dateByMonth %}
             {% set trans_month_hash = {"January": "Janvier", "February": "Février", "March": "Mars",
                                         "April": "Avril", "May": "Mai", "June": "Juin", "August": "Aout",
                                         "September": "Septembre", "October": "Octobre", "December": "Decembre"} 
