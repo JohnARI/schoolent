@@ -91,14 +91,13 @@
 
 
 	var calendarEl = document.getElementById('calendar2');
-	let cookieStart = '{{cookieStart}}';	
-	let cookieEnd = '{{cookieEnd}}';
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
 	let searchParams = new URLSearchParams(window.location.search);
 	let UrlParamStart = searchParams.get('start');
 	let UrlParamEnd = searchParams.get('end');
-
+	var cookieStart = "";
+	var cookieEnd =""; 
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 	headerToolbar: {
 	left: 'prev,next today',
@@ -115,8 +114,6 @@
 	droppable: true, // this allows things to be dropped onto the calendar
 	select: function (arg) {
 
-
-		//arg.date.toUTCString();
 
 		let urlVerif = document.location.href;
 		let urlcompte = urlVerif.length;
@@ -142,7 +139,6 @@
 
 		let datee = new Date(date);
 
-		alert(datee);
 
 		if (navigator.cookieEnabled) {
 			if ((document.cookie.indexOf("start") == -1)||(document.cookie.indexOf("end") == -1)) {
@@ -155,7 +151,7 @@
 		}
 
 		
-	function deleteAllCookies() {
+		function deleteAllCookies() {
              var cookies = document.cookie.split(";");
              for (var i = 0; i < cookies.length; i++) {
                  var cookie = cookies[i];
@@ -204,7 +200,22 @@
 							if (confirm('souhaitez-vous avoir la liste mise à jour des endeignants disponible sur la période selectionnée ?')) {
 
 
-								location.assign(location.href);
+									var xhr = new XMLHttpRequest;
+	
+											xhr.onreadystatechange = function() {
+												if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+													callback(xhr.responseText);
+												}
+											};
+
+											xhr.open("GET", "/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
+											xhr.send(JSON.stringify(donnees));
+
+
+
+											location.assign(location.href);
+
+											
 							}
 
 						})
@@ -213,27 +224,27 @@
 	$(document).ready(function(){
 
 		
-		var xhr = new XMLHttpRequest;
 	
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
-					callback(xhr.responseText);
-				}
-			};
 
-			xhr.open("GET", "/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
-			xhr.send(JSON.stringify(donnees));
+			
 
-
-			$.ajax(this.href, {
+                
+											$.ajax(this.href, {
                        
-                    success: function() {
+												success: function() {
 
-                    $('#calendarForm').modal('show');
+													if(urlcompte >= 50){
+
+															$('#calendarForm').modal('show');
+
+														}
+														
+												}
+													
+											})
 							
-                    }
-						
-                })
+    
+
 
 
 
@@ -246,8 +257,17 @@
 					var teacherName = $("#teacher").val();
 					var cat = $("#category").val();
 
+					/*function info(){
+
+										alert('Vous avez deja selectionnées des dates');
+										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
+										alert('précedente selectionnée fin: ' + JSON.stringify(cookieEnd));
+										alert('Veuillez saisir les bonnes dates');
+
+										}*/
+
 			
-					if(cookieStart == null || cookieEnd == null){
+				
 
 
 										calendar.addEvent({
@@ -264,31 +284,53 @@
 
 									deleteAllCookies();
 
-								}else{
+									calendar.unselect();
 
-									function info(){
+									let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
 
-										alert('Vous avez deja selectionnées des dates');
-										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
-										alert('précedente selectionnée fin: ' + JSON.stringify(cookieEnd));
+									setTimeout(location.assign(location.href),4000);
+									
 
-												
+								//}else{
 
-										}
+									
 
-						
-										return info();
+										/*if(arg.start == cookieStart || arg.end == cookieEnd){
+
+											calendar.addEvent({
+
+												title: title,
+												start: arg.start,
+												end: arg.end,
+												allDay: arg.allDay,
+												teacherName: teacherName,
+												description: description,
+												catego: cat,
+
+										})
+
+												deleteAllCookies();
+												location.assign(location.href);
+
+										}else{
 
 
-								}
+											return info();*/
+
+
+										//}
+
+
+
+								//}
 
 		
-							deleteAllCookies();							
+							//deleteAllCookies();							
 
 			
-							calendar.unselect();
+							
 
-							location.assign(location.href);
+							//location.assign(location.href);
 
 			
 					})
@@ -296,6 +338,7 @@
 		
 		})
 
+		calendar.unselect();
 
 
 
@@ -328,7 +371,7 @@
 				dayMaxEvents: true, // allow "more" link when too many events
 				events: [{% for calendar in calendar %}{
 				id: '{{calendar.id}}',
-				title:'{{ calendar.title }}',
+				title:'{{ calendar.title ~ ' ' ~ calendar.teacherName }}',
 				start: '{{ calendar.start |date('Y-m-d H:i:s') }}',
 				end: '{{ calendar.end |date('Y-m-d H:i:s') }}',
 				description: '{{ calendar.description }}',
