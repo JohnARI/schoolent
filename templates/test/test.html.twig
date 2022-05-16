@@ -165,22 +165,16 @@
 	
 	function initialisation(){
 
-		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
-
+		
 		let maClosure = () => {
 		
-		let urlVerifmodif = document.location.href;
+		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
 
-					if(UrlParamStart!=null &&UrlParamEnd!=null){
 
-					alert('précedente date selectionnée debut: ' + UrlParamStart);
-					alert('précedente date selectionnée fin: ' + UrlParamEnd);
-			
-					}else{
 
-						$('#calendarForm').modal('show');
+							$('#calendarForm').modal('show');
 
-					}
+
 			}
 
     	return maClosure;
@@ -192,6 +186,8 @@
 
 
 	lancement();
+
+
 
 
 						$("#actualiserListe").click(function(){
@@ -226,23 +222,6 @@
 		
 	
 
-			
-
-                
-											$.ajax(this.href, {
-                       
-												success: function() {
-
-													if(urlcompte >= 50){
-
-															$('#calendarForm').modal('show');
-
-														}
-														
-												}
-													
-											})
-							
     
 
 
@@ -267,7 +246,7 @@
 										}*/
 
 			
-				
+									if(title !="" && description !=""){
 
 
 										calendar.addEvent({
@@ -288,7 +267,11 @@
 
 									let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
 
+									
 									setTimeout(location.assign(location.href),4000);
+
+
+									}
 									
 
 								//}else{

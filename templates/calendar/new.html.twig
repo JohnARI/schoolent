@@ -26,7 +26,7 @@
 					
 
 					<label for="title" class="form-label">Title</label>
-					<input type="text" name="title" id="title" class="form-control">
+					<input type="text" name="title" id="title" class="form-control" required>
 
 					<label for="category" class="form-label">Category</label>
 					<select type="text" name="category" id="category" class="form-control">
@@ -35,10 +35,10 @@
 						{% endfor %}
 					</select>
 					<label for="description">Description</label>
-					<input type="text" name="description" id="description" class="form-control">
+					<input type="text" name="description" id="description" class="form-control" required>
 
 					<label for="teacher" class="form-label">Enseignant</label>
-					<select type="text" name="teacher" id="teacher" class="form-control">
+					<select type="text" name="teacher" id="teacher" class="form-control" required>
 					{% if code == 200 %}
 						{% for calendar in calendrier %}
 							<option>{{calendar.fullname}}</option>
