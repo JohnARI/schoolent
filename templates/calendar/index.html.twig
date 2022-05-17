@@ -30,8 +30,8 @@
 					<td>{{ calendar.Description }}</td>
                     <td>{{ calendar.teacherName }}</td>
 					<td>
-						<a href="{{ path('calendar_show', {'id': calendar.teacherId}) }}">show</a>
-						<a href="{{ path('calendar_edit', {'id': calendar.id}) }}">edit</a>
+						<a href="{{ path('calendar_show', {'id': calendar.teacherId}) }}">consulter</a>
+						<a href="{{ path('calendar_edit', {'id': calendar.id}) }}">modifier</a>
 					</td>
 				</tr>
 			{% else %}
