@@ -40,11 +40,15 @@
 					<label for="teacher" class="form-label">Formateur</label>
 					<select type="text" name="teacher" id="teacher" class="form-control" required>
 					{% if code == 200 %}
-						{% for calendar in calendrier %}
-							<option>{{calendar.fullname}}</option>
+						{% for teacherSelect in calendrier %}
+							<option>{{teacherSelect.fullname}}</option>
 						{% endfor %}
 					{% elseif code == 201 %}
 						{% for teacherSelect in teacher %}
+							<option>{{teacherSelect.fullname}}</option>
+						{% endfor %}
+					{% elseif code == 203 %}
+						{% for teacherSelect in indisponible %}
 							<option>{{teacherSelect.fullname}}</option>
 						{% endfor %}
 					{% endif %}
