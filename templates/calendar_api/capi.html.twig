@@ -236,7 +236,7 @@
 					var teacherName = $("#teacher").val();
 					var cat = $("#category").val();
 
-					/*function info(){
+								/*function info(){
 
 										alert('Vous avez deja selectionnées des dates');
 										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
@@ -263,15 +263,17 @@
 
 									deleteAllCookies();
 
-									calendar.unselect();
-
-									let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
+									
 
 									
-									setTimeout(location.assign(location.href),4000);
 
-
+									
+									
 									}
+
+									$('#calendarForm').modal('hide');
+
+									
 									
 
 								//}else{
@@ -334,7 +336,7 @@
 
 
 				eventClick: function (arg) {
-				if (confirm('Are you sure you want to delete this event?')) {
+				if (confirm('Etes-vous sûr de vouloir supprimer cet évènement?')) {
 
 
 					arg.event.remove()
@@ -389,8 +391,10 @@
 				let xhr = new XMLHttpRequest
 
 				xhr.open("PUT", url, true)
-				xhr.send(JSON.stringify(donnees))
+				xhr.send(JSON.stringify(donnees));
 
+				let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
+				setTimeout(location.reload(),5000);
 
 				})
 
@@ -435,6 +439,7 @@
 				xhr.open("PUT", url, true)
 				xhr.send(JSON.stringify(donnees))
 
+				let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
 
 				});
 
@@ -453,7 +458,7 @@
 
 	});*/
 
-	//setTimeout(changeUrl(urlInit),10000);
+	
 	
 
 }
