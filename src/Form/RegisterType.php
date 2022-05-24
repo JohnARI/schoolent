@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -122,7 +123,20 @@ class RegisterType extends AbstractType
                 ]
             ])
 
-            
+            ->add('is_teacher', ChoiceType::class, [
+                'attr' => [
+                    'class' => 'input100 form-control',  
+                ],
+                'label' => 'Formateur',
+                
+                'required' => true,
+                'multiple' => false,
+                'expanded' => false,
+                'choices'  => [
+                    'Non' => 0,
+                    'Yes' => 1,
+                ]
+            ])
 
             ->add('submit', SubmitType::class, [
                 'label' => "Ajouter",

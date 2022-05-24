@@ -55,6 +55,12 @@
 				</div>
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
 					<figure class="input-group-text bg-white text-muted">
+						<i class="zmdi zmdi-male-female" aria-hidden="true"></i>
+					</figure>
+					{{form_widget(formUser.is_teacher)}}
+				</div>
+				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
+					<figure class="input-group-text bg-white text-muted">
 						<i class="fa fa-users" aria-hidden="true"></i>
 					</figure>
 					{{form_widget(formUser.session)}}
