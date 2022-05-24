@@ -3,6 +3,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="field_form">
+				
 					{{form_start(form)}}
 					<div class="row">
 						{% for message in app.flashes('message_success') %}
@@ -21,7 +22,6 @@
 								</button>
 							</div>
 						{% endfor %}
-
 						{% if app.user.roles == ['ROLE_TEACHER'] %}
 							<div class="form-group col-md-6" style="display:none;">
 								{{form_row(form.title, {'attr': {'value': 'Indisponible' }})}}
@@ -48,16 +48,17 @@
 							<div class="col-md-12">
 								<button id="btn" class="btn btn-fill-out">{{ button_label|default('Ajouter')
 								}}</button>
-							</div>
+							</div> 
+							
 
 						{% endif %}
 
-							
+						{{form_end(form)}}	
 
 
 
 					</div>
-					{{form_end(form)}}
+					
 				</div>
 			</div>
 

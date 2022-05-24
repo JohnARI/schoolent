@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CalendarType extends AbstractType
 {
@@ -32,11 +33,14 @@ class CalendarType extends AbstractType
         ->add('title', TextType::class, [
             'label' => 'Intitulé',
         ])
-        ->add('category', TextType::class, [
-            'label' => 'Technologie',
-            
+        ->add('description', TextareaType::class, [
+            'label' => 'DEscription',
         ])
-        ->add('session')
+        // ->add('category', TextType::class, [
+        //     'label' => 'Technologie',
+            
+        // ])
+        // ->add('session')
     
         ->add('teacher_name', TextType::class, [
             'label' => 'Formateur',
