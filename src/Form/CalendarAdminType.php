@@ -6,6 +6,7 @@ use App\Entity\Calendar;
 use App\Entity\ProgrammingLanguage;
 use App\Entity\Session;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -44,7 +45,10 @@ class CalendarAdminType extends AbstractType
             'label' => 'Professeur',
             'class' => User::class,
             'multiple' => false,
-            'choice_label' => 'fullname',
+            // 'query_builder' => function (UserRepository $teacher) {
+ 
+            //     return $teacher->findByRole('ROLE_TEACHER');
+            // },
         ])
         ->add('submit', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary btn-block'],
