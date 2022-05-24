@@ -21,7 +21,7 @@ class Calendar
 
     /**
      * @ORM\Column(type="integer")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $Category;
 

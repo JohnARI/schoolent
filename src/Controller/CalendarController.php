@@ -26,10 +26,40 @@ class CalendarController extends AbstractController
         $this->users = new ArrayCollection();
     }
     /**
-     * @Route("/", name="calendar_index", methods={"GET"})
+     * @Route("/", name="calendar_index", methods={"GET","POST"})
+     * @param Calendar $calendar
+     * @return Response
      */
-    public function index(CalendarRepository $calendarRepository): Response
+    public function index(CalendarRepository $calendarRepository,Request $request, EntityManagerInterface $entityManager): Response
     {
+        $calendar = new Calendar();
+        $form = $this->createForm(CalendarType::class, $calendar);
+        $form->handleRequest($request);
+        $id_user = $this->getUser('id');
+        $teacher_calendar = $calendarRepository->findBy(['teacher_id'=>$id_user]);
+        
+        if ($this->isGranted('ROLE_TEACHER')){
+
+
+
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                // dd($calendar);
+                $entityManager->persist($calendar);
+                $entityManager->flush();
+    
+                return $this->redirectToRoute('calendar_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('calendar/index.html.twig', [
+                'calendars' => $teacher_calendar,
+                'form' => $form->createView()
+            ]);
+
+
+        }
+        
+        
         return $this->render('calendar/index.html.twig', [
             'calendars' => $calendarRepository->findAll(),
         ]);
@@ -51,17 +81,17 @@ class CalendarController extends AbstractController
 
         $events = $calendarRepository->findBy(['teacher_id'=>$id_user]);
 
-        foreach($events as $event){
+        // foreach($events as $event){
 
-            $start = $event->getStart();
-            $end = $event->getEnd();
+        //     $start = $event->getStart();
+        //     $end = $event->getEnd();
             
-        }
+        // }
       
-        // $interval = DateInterval::createFromDateString('1 day');
-        // $daterange = new DatePeriod($start,$interval,$end);
-        $start_date = $form['start']->getData();
-        $end_date = $form['end']->getData();
+        // // $interval = DateInterval::createFromDateString('1 day');
+        // // $daterange = new DatePeriod($start,$interval,$end);
+        // $start_date = $form['start']->getData();
+        // $end_date = $form['end']->getData();
        
 
         // dd($daterange);
@@ -100,7 +130,7 @@ class CalendarController extends AbstractController
         $calendrier = $calendar->findAll();
        
 
-        if ($this->isGranted('ROLE_TEACHER')) {
+        if ($this->isGranted('ROLE_TEACHER')){
 
                
 

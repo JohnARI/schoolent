@@ -5,9 +5,47 @@
 {% block body %}
     <h1>Edit Calendar</h1>
 
-    {{ include('calendar/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="content fs-6 d-flex flex-column-fluid justify-content-end" id="kt_content">
+						<!--begin::Container-->
+						<div class="container">
+							<!--begin::Profile Account-->
+							<div class="card justify-content-end">
+								<!--begin::Form-->
+								<div class="form d-flex flex-end">
+									<div class="card-body mw-450px py-20 justify-content-end">
+										<!--begin::Form row-->
+										{{form_start(form) }}
+										{{form_row(form.title) }}
+										{{form_row(form.start) }}
+										{{form_row(form.end) }}
+										{{form_row(form.category) }}
+										{{form_row(form.session) }}
+										{{form_row(form.teacher_name) }}
+										<div class="separator separator-dashed my-10"></div>
+										<!--begin::Form row-->
+										<div class="row mb-13">
+											<!--begin::Form row-->
+											<div class="row mb-8">
+												<label class="col-lg-3 col-form-label">Modification</label>
+												<div class="col-lg-9">
+													{{form_row(form.submit) }}
+													<div class="form-text">
+														Après validation, les informations seront modifier
+														<a href="#" class="fw-bold">En savoir plus</a>.
+													</div>
+												</div>
+											</div>
+											<!--end::Form row-->
+											{{form_end(form) }}
+											<!--begin::Form row-->
+										</div>
+									</div>
+									<!--end::Form-->
+								</div>
+								<!--end::Profile Account-->
+							</div>
+							<!--end::Container-->
+						</div>
+						<!--end::Content-->
 
-    <a href="{{ path('calendar_index') }}">back to list</a>
-
-    {{ include('calendar/_delete_form.html.twig') }}
 {% endblock %}

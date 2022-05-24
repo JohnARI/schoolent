@@ -80,7 +80,7 @@ class ApiController extends AbstractController
             return new Response('Données incomplètes', 404);
         }
 
-        return $this->render('test/index.html.twig');
+        return $this->render('calendar_api/index.html.twig');
     }
 
 
@@ -135,7 +135,7 @@ class ApiController extends AbstractController
             $dateStart = new Datetime($donnees->start);
             // On Hydrate l'objet avec les données
             $calendar->setTitle($donnees->title);
-            $calendar->setStart(date_add($dateStart, date_interval_create_from_date_string("1 day")));
+            $calendar->setStart(date_add($dateStart, date_interval_create_from_date_string("0 day")));
             $calendar->setEnd(new DateTime($donnees->end));
             $calendar->setDescription($donnees->description);
             $calendar->setTeacherName($donnees->teacherName);
@@ -262,7 +262,7 @@ class ApiController extends AbstractController
     
 
 
-            return $this->render('test/test.html.twig',[
+            return $this->render('calendar_api/capi.html.twig',[
 
                 'calendar' => $calendar,
                 'teacher'=> $userTeacher,
@@ -299,19 +299,26 @@ class ApiController extends AbstractController
 
         // dd($test);
 
+        
+
         $category = $programe->findAll();
 
         $query = $this->entityManager->createQuery(
-            'SELECT c
+            'SELECT c.start, c.end
                 FROM App:Calendar c
-            WHERE c.title != :title
+            WHERE c.title = :title 
             ORDER BY c.title ASC'
         )->setParameter('title', 'indisponible');
-        $calendar = $query->getResult();
+        $indisponible = $query->getResult();
+        $calendar = $calendary->findAll();
         $calendars = new Calendar;
         $form = $this->createForm(CalendarType::class, $calendars);
         $userTeacher = $user->findBy(['isTeacher'=>1]);
         $code="";//initialisation
+        $cookieStart = 1;
+        $cookieEnd = 2;
+        $cookieAllDay = 0;
+        
      
 
 
@@ -332,7 +339,7 @@ class ApiController extends AbstractController
 
         
        
-        //$routerName = $request->getRequestUri();
+        $routerName = $request->getRequestUri();
 
         // dd($routerName);
 
@@ -341,36 +348,20 @@ class ApiController extends AbstractController
 
         $urlStart = (isset($_GET["start"])) ? $_GET["start"] : NULL;
         $urlEnd = (isset($_GET["end"])) ? $_GET["end"] : NULL;
-
-        
-        //dd($urlStart);
-
         $cookie = (isset($_COOKIE["start"])) ? $_COOKIE["start"] : NULL;
 
 
-        if(!empty($cookie) && isset($_COOKIE['start'])){
-
-        $cookieStart = $_COOKIE['start'];
-        $cookieEnd = $_COOKIE['end'];
-        $cookieAllDay = $_COOKIE['all'];
-        
-        }else{
-
-        $cookieStart = "";
-        $cookieEnd = "";
-        $cookieAllDay = "";
-
-        }
+       
         
         if ($urlStart && $urlEnd){
 
 
-
+            header('Location: '.$routerName);
             // $routerName = $request->getRequestUri();
 
            
-
-            // dd($test);
+           
+        
 
             /** Je met ma requête ajax(GET) dans une variable :
              * Etant donnée qu'ell est en string() je délimite la bout concernant a START
@@ -389,7 +380,25 @@ class ApiController extends AbstractController
             /**
              * L'ensemble de mes dates de la BDD
              * Je vais choisir des dates aléatoires à partir de la BDD
+             * 
              */
+
+            if(!empty($cookie)){
+
+                $cookieStart = $_COOKIE['start'];
+                $cookieEnd = $_COOKIE['end'];
+                $cookieAllDay = $_COOKIE['all'];
+
+                $debut = new \DateTime($urlStart);
+                $debut = date_format($debut,"d/m/Y");
+
+                $fin = new \DateTime($urlEnd);
+                $fin = date_format($fin,"d/m/Y");
+
+                $this->addFlash('contact_success', 'liste des enseignants mise à jour du ' .$debut.' au '.$fin);
+                
+                }
+            
             $queryBuilder = $this->entityManager->createQueryBuilder();
             $queryBuilder->select('c.start,c.end')
             ->from(Calendar::class, 'c');
@@ -459,7 +468,7 @@ class ApiController extends AbstractController
 
                         $code = 200;
 
-                        // dd($intervalBddNew);
+            
 
 
                             foreach($daterange as $newTest){
@@ -482,11 +491,14 @@ class ApiController extends AbstractController
                             $query = $queryBuilder->getQuery();
                             $calendar1 = $query->getResult();
 
+                           
+
                             /**"array_rand" sélectionne une ou plusieurs valeurs au hasard dans un tableau et retourne la ou les clés de ces valeurs. 
                              * Cette fonction utilise un pseudo générateur de nombre aléatoire, 
                              * ce qui ne convient pas pour de la cryptographie. */
 
                             if(!empty($calendar1)){
+
 
                             $dateInit = array_rand($calendar1,1);
                             $dateSqlInit = $calendar1[$dateInit]['start'];
@@ -505,9 +517,9 @@ class ApiController extends AbstractController
                             }
 
 
-                            // dd($date);
 
-                            //($startDate >= $date || $startDate <=  $date ) || ($endDate >= $date || $end <= $date)
+
+                            //($startDate >= $date && $startDate <=  $date ) || ($endDate >= $date && $end <= $date)
                             // if(in_array($startDate, $dateTest, false) || in_array($endDate, $dateTest, false)){
 
                             // echo 'Vous etes bien dans l\'interval';
@@ -531,9 +543,78 @@ class ApiController extends AbstractController
 
                                             // echo '<pre>'; print_r($calendario); echo '</pre>';
 
+
+                                                    if(($startDate <= $indisponible && $startDate >=  $indisponible ) || ($endDate <= $indisponible && $end >= $indisponible)){
+
+                                                        //JE VERIFIE SI "INDISPONIBLE" se trouve dans la zone sélectionnée et j'élimine les formateurs indisponibles
+                                                        
+                                                        $code = 203;
+
+                                                        $dateIndispoD = array_rand($indisponible,1);
+                                                        $date_i = $indisponible[$dateIndispoD]['start'];
+                                                        $startIndispo = $date_i->format('Y-m-d H:i:s');
+                                                        $startIndispo = new \DateTime($startIndispo);
+                                                    
+
+
+                                                        $dateIndispoF = array_rand($indisponible,1);
+                                                        $date_f = $indisponible[$dateIndispoF]['end'];
+                                                        $endIndispo = $date_f->format('Y-m-d H:i:s');
+                                                        $endIndispo = new \DateTime($endIndispo);
+
+                                                        $zoneInterIndispo = DateInterval::createFromDateString('1 day');
+                                                        $dateIndispoRange = new DatePeriod($startIndispo,$zoneInterIndispo,$endIndispo);
+
+
+                                                        foreach( $dateIndispoRange as $indispoDate){
+                    
+                            
+                                
+                                                            $indispoDate->format('Y-m-d H:i:s');//J'inspecte les dates du select(daterange) et je m'assure de bien y être
+                                                    
+                                                            $indispo[] = $indispoDate->format('Y-m-d H:i:s');
+                                
+                                                            }
+
+
+                                                        $queryBuilder = $this->entityManager->createQueryBuilder();
+                                                        $queryBuilder->select('u.fullname')
+                                                            ->from(User::class, 'u')
+                                                            ->add('where', "u.is_teacher = 1")
+                                                            ->Leftjoin('App\Entity\Calendar', 'c', 'WITH', 'c.teacher_name = u.fullname')
+                                                            ->add('where', "c.start not IN ( :date) OR c.end not IN ( :date) AND c.title != :title")
+                                                            ->setParameters(array(
+                                                                'date'=>$indispo,
+                                                                'title'=>'indisponible'
+                                                            ))
+                                                            ->groupBy('u.fullname');
+                        
+
+                                                        $query = $queryBuilder->getQuery();
+                                                            
+                                                        $T_indisponible = $query->getResult();
+                                                            
+                                                        return $this->render('calendar_api/capi.html.twig',[
+
+                                                            'calendar' => $calendar,
+                                                            'form'=> $form->createView(),
+                                                            'indisponible'=> $T_indisponible,
+                                                            'code'=>$code,
+                                                            'cookieStart'=>$cookieStart,
+                                                            'cookieEnd'=>$cookieEnd,
+                                                            'cookieAllDay'=>$cookieAllDay,
+                                                            'category'=>$category,
+                                                        ]);
+
+
+
+
+                                                    }
+
+
                                 
 
-                                            return $this->render('test/test.html.twig',[
+                                            return $this->render('calendar_api/capi.html.twig',[
 
                                                 'calendar' => $calendar,
                                                 'form'=> $form->createView(),
@@ -554,7 +635,7 @@ class ApiController extends AbstractController
 
                             // echo '<pre>'; print_r($calendario); echo '</pre>';
 
-                            return $this->render('test/test.html.twig',[
+                            return $this->render('calendar_api/capi.html.twig',[
 
                                 'calendar' => $calendar,
                                 'form'=> $form->createView(),
@@ -582,7 +663,7 @@ class ApiController extends AbstractController
 
             $code = 201;
 
-            return $this->render('test/test.html.twig',[
+            return $this->render('calendar_api/capi.html.twig',[
 
                 'calendar' => $calendar,
                 'form'=> $form->createView(),
@@ -618,7 +699,7 @@ class ApiController extends AbstractController
         
 
 
-        return $this->redirectToRoute('test');
+        return $this->redirectToRoute('api');
         // unset($_GET['donnees']);
     
     }

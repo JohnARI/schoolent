@@ -22,7 +22,7 @@
 							</div>
 						{% endfor %}
 
-						{% if app.user.roles != ['ROLE_ADMIN'] %}
+						{% if app.user.roles == ['ROLE_TEACHER'] %}
 							<div class="form-group col-md-6" style="display:none;">
 								{{form_row(form.title, {'attr': {'value': 'Indisponible' }})}}
 							</div>
@@ -51,6 +51,10 @@
 							</div>
 
 						{% endif %}
+
+							
+
+
 
 					</div>
 					{{form_end(form)}}

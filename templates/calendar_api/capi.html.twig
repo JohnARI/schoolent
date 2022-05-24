@@ -17,7 +17,7 @@
 		{% embed "components/modal.html.twig" %}
 			{% set modalType = "modal-lg" %}
 			{% set id = "calendarForm" %}
-			{% set buttonTitle = "Ajouter un utilisateur" %}
+			{% set buttonTitle = "Ajouter un evènement" %}
 			{% block modalTitle %}Ajouter un evènement
 			{% endblock %}
 			{% block dashboard %}
@@ -91,14 +91,13 @@
 
 
 	var calendarEl = document.getElementById('calendar2');
-	let cookieStart = '{{cookieStart}}';	
-	let cookieEnd = '{{cookieEnd}}';
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
 	let searchParams = new URLSearchParams(window.location.search);
 	let UrlParamStart = searchParams.get('start');
 	let UrlParamEnd = searchParams.get('end');
-
+	var cookieStart = "";
+	var cookieEnd =""; 
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 	headerToolbar: {
 	left: 'prev,next today',
@@ -115,8 +114,6 @@
 	droppable: true, // this allows things to be dropped onto the calendar
 	select: function (arg) {
 
-
-		//arg.date.toUTCString();
 
 		let urlVerif = document.location.href;
 		let urlcompte = urlVerif.length;
@@ -155,7 +152,7 @@
 		}
 
 		
-	function deleteAllCookies() {
+		function deleteAllCookies() {
              var cookies = document.cookie.split(";");
              for (var i = 0; i < cookies.length; i++) {
                  var cookie = cookies[i];
@@ -169,22 +166,16 @@
 	
 	function initialisation(){
 
-		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
-
+		
 		let maClosure = () => {
 		
-		let urlVerifmodif = document.location.href;
+		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
 
-					if(UrlParamStart!=null &&UrlParamEnd!=null){
 
-					alert('précedente date selectionnée debut: ' + UrlParamStart);
-					alert('précedente date selectionnée fin: ' + UrlParamEnd);
-			
-					}else{
 
-						$('#calendarForm').modal('show');
+							$('#calendarForm').modal('show');
 
-					}
+
 			}
 
     	return maClosure;
@@ -198,13 +189,30 @@
 	lancement();
 
 
+
+
 						$("#actualiserListe").click(function(){
 
 
-							if (confirm('souhaitez-vous avoir la liste mise à jour des endeignants disponible sur la période selectionnée ?')) {
+							if (confirm('souhaitez-vous mettre à jour la liste des formateurs disponible sur la période selectionnée ?')) {
 
 
-								location.assign(location.href);
+									var xhr = new XMLHttpRequest;
+	
+											xhr.onreadystatechange = function() {
+												if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+													callback(xhr.responseText);
+												}
+											};
+
+											xhr.open("GET", "/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
+											xhr.send(JSON.stringify(donnees));
+
+
+
+											location.assign(location.href);
+
+											
 							}
 
 						})
@@ -213,27 +221,10 @@
 	$(document).ready(function(){
 
 		
-		var xhr = new XMLHttpRequest;
 	
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
-					callback(xhr.responseText);
-				}
-			};
 
-			xhr.open("GET", "/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
-			xhr.send(JSON.stringify(donnees));
+    
 
-
-			$.ajax(this.href, {
-                       
-                    success: function() {
-
-                    $('#calendarForm').modal('show');
-							
-                    }
-						
-                })
 
 
 
@@ -246,8 +237,17 @@
 					var teacherName = $("#teacher").val();
 					var cat = $("#category").val();
 
+								/*function info(){
+
+										alert('Vous avez deja selectionnées des dates');
+										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
+										alert('précedente selectionnée fin: ' + JSON.stringify(cookieEnd));
+										alert('Veuillez saisir les bonnes dates');
+
+										}*/
+
 			
-					if(cookieStart == null || cookieEnd == null){
+									if(title !="" && description !=""){
 
 
 										calendar.addEvent({
@@ -264,31 +264,59 @@
 
 									deleteAllCookies();
 
-								}else{
+									
 
-									function info(){
+									
 
-										alert('Vous avez deja selectionnées des dates');
-										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
-										alert('précedente selectionnée fin: ' + JSON.stringify(cookieEnd));
+									
+									
+									}
 
-												
+									$('#calendarForm').modal('hide');
 
-										}
+									
+									
 
-						
-										return info();
+								//}else{
+
+									
+
+										/*if(arg.start == cookieStart || arg.end == cookieEnd){
+
+											calendar.addEvent({
+
+												title: title,
+												start: arg.start,
+												end: arg.end,
+												allDay: arg.allDay,
+												teacherName: teacherName,
+												description: description,
+												catego: cat,
+
+										})
+
+												deleteAllCookies();
+												location.assign(location.href);
+
+										}else{
 
 
-								}
+											return info();*/
+
+
+										//}
+
+
+
+								//}
 
 		
-							deleteAllCookies();							
+							//deleteAllCookies();							
 
 			
-							calendar.unselect();
+							
 
-							location.assign(location.href);
+							//location.assign(location.href);
 
 			
 					})
@@ -296,6 +324,7 @@
 		
 		})
 
+		calendar.unselect();
 
 
 
@@ -308,7 +337,7 @@
 
 
 				eventClick: function (arg) {
-				if (confirm('Are you sure you want to delete this event?')) {
+				if (confirm('Etes-vous sûr de vouloir supprimer cet évènement?')) {
 
 
 					arg.event.remove()
@@ -328,7 +357,7 @@
 				dayMaxEvents: true, // allow "more" link when too many events
 				events: [{% for calendar in calendar %}{
 				id: '{{calendar.id}}',
-				title:'{{ calendar.title }}',
+				title:'{{ calendar.title ~ ' ' ~ calendar.teacherName }}',
 				start: '{{ calendar.start |date('Y-m-d H:i:s') }}',
 				end: '{{ calendar.end |date('Y-m-d H:i:s') }}',
 				description: '{{ calendar.description }}',
@@ -363,8 +392,10 @@
 				let xhr = new XMLHttpRequest
 
 				xhr.open("PUT", url, true)
-				xhr.send(JSON.stringify(donnees))
+				xhr.send(JSON.stringify(donnees));
 
+				let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
+				setTimeout(location.reload(),5000);
 
 				})
 
@@ -409,6 +440,7 @@
 				xhr.open("PUT", url, true)
 				xhr.send(JSON.stringify(donnees))
 
+				let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
 
 				});
 
@@ -427,7 +459,7 @@
 
 	});*/
 
-	//setTimeout(changeUrl(urlInit),10000);
+	
 	
 
 }

@@ -20,6 +20,8 @@
 			</tr>
 		</thead>
 		<tbody>
+					
+		</tbody>
 			{% for calendar in calendars %}
 				<tr>
 					<td>{{ calendar.teacherId }}</td>
@@ -30,8 +32,8 @@
 					<td>{{ calendar.Description }}</td>
                     <td>{{ calendar.teacherName }}</td>
 					<td>
-						<a href="{{ path('calendar_show', {'id': calendar.teacherId}) }}">show</a>
-						<a href="{{ path('calendar_edit', {'id': calendar.id}) }}">edit</a>
+						<a href="{{ path('calendar_show', {'id': calendar.teacherId}) }}">consulter</a>
+						<a href="{{ path('calendar_edit', {'id': calendar.id}) }}">modifier</a>
 					</td>
 				</tr>
 			{% else %}
@@ -39,8 +41,33 @@
 					<td colspan="9">no records found</td>
 				</tr>
 			{% endfor %}
-		</tbody>
+				
+							
 	</table>
 
-	<a href="{{ path('calendar_new') }}">Create new</a>
+	
+					<div class="d-flex justify-content-end">
+						<button type="submit" class="btn btn-primary mt-3" id="envoyerFormulaire" data-bs-toggle="modal" data-bs-target="#calendarForm1">Ajouter un nouvel évènement</button>
+					</div>
+
+	<div
+		class="tab-pane active" id="users">
+		{#---------------------------------------------Modal-------------------------------------------- #}
+		{% embed "components/modal.html.twig" %}
+			{% set modalType = "modal-lg" %}
+			{% set id = "calendarForm1" %}
+			{% set buttonTitle = "Ajouter un évènement" %}
+			{% block modalTitle %}Ajouter un évènement
+			{% endblock %}
+			{% block dashboard %}
+				{% include "calendar/_form.html.twig" %}
+			{% endblock %}
+		{% endembed %}
+		{#--------------------------------------------Fin modal------------------------------------------- #}
+
+
+	
+	</div>
+
+
 {% endblock %}
