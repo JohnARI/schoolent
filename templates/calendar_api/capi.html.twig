@@ -48,9 +48,10 @@
                 </h4>                                                             
 			</div> 
 			<div class="modal-body">
-				{% for calendar in calendar %}
+				{# {% for calendar in calendar %}
 				{{calendar.title}} {{calendar.teacherName}}
-				{% endfor %}
+				{% endfor %} #}
+				<p id="test" >text</p>
 			</div>   
 		</div>                                                                       
 	</div>                                      
@@ -235,7 +236,7 @@
 					var title = $("#title").val();
 					var description = $("#description").val();
 					var teacherName = $("#teacher").val();
-					var cat = $("#category").val();
+					var category = $("#category").val();
 
 								/*function info(){
 
@@ -258,7 +259,7 @@
 										allDay: arg.allDay,
 										teacherName: teacherName,
 										description: description,
-										catego: cat,
+										category: category,
 
 										})
 
@@ -349,22 +350,37 @@
     			return stillEvent.allDay && movingEvent.allDay;
   				},
 
-				/*eventMouseEnter:function( mouseEnterInfo ) {
-
-					$('#Mysmallmodal').modal('show');
-				 },*/
+				
 				editable: true,
 				dayMaxEvents: true, // allow "more" link when too many events
 				events: [{% for calendar in calendar %}{
 				id: '{{calendar.id}}',
-				title:'{{ calendar.title ~ ' ' ~ calendar.teacherName }}',
+				title:'{{ calendar.title}}',
 				start: '{{ calendar.start |date('Y-m-d H:i:s') }}',
 				end: '{{ calendar.end |date('Y-m-d H:i:s') }}',
-				description: '{{ calendar.description }}',
-				backgroundColor: '{{ calendar.backgroundColor }}'
+				description: '{{ calendar.title }}',
+				backgroundColor: '{{ calendar.backgroundColor }}',
+				extendedProps:{
+        			teacher : '{{ calendar.teacherName}}'
+      			},
 
-				},{% endfor %}]
+				
 
+				},{% endfor %}],
+
+				eventMouseEnter:(infos)=>{
+
+					$('#Mysmallmodal').modal('show');
+					document.getElementById('test').innerText = infos.event.title+" "+infos.event.extendedProps.teacher
+					//'calendar.title ~ ' ' ~ calendar.teacherName '
+
+				},
+
+				eventMouseLeave:()=>{
+
+					$('#Mysmallmodal').modal('hide');
+
+				},
 			
 				})
 
@@ -374,7 +390,7 @@
 				//$('#calendarFomr').modal('show');
 
 				calendar.on('eventAdd', (e) => {
-				let url = '/api/edit'
+				let url = '/admin/api/edit'
 				let donnees = {
 				"title": e.event.title,
 				"start": e.event.start,
@@ -382,7 +398,7 @@
 				"description": e.event.extendedProps.description,
 				"teacherName": e.event.extendedProps.teacherName,
 				"teacherId": " ",
-				"categorie": "Html",
+				"categorie": e.event.extendedProps.category,
 				"backgroundColor": '#0080ff'
 
 
@@ -394,7 +410,7 @@
 				xhr.open("PUT", url, true)
 				xhr.send(JSON.stringify(donnees));
 
-				let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
+				let urlmodif = window.history.pushState('api', 'New Page Title', "/admin/api");
 				setTimeout(location.reload(),5000);
 
 				})
@@ -440,7 +456,7 @@
 				xhr.open("PUT", url, true)
 				xhr.send(JSON.stringify(donnees))
 
-				let urlmodif = window.history.pushState('api', 'New Page Title', "/api");
+				let urlmodif = window.history.pushState('api', 'New Page Title', "/admin/api");
 
 				});
 

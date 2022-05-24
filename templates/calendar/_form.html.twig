@@ -24,7 +24,7 @@
 						{% endfor %}
 						{% if app.user.roles != ['ROLE_ADMIN'] %}
 							<div class="form-group col-md-6" style="display:none;">
-								{{form_row(form.title, {'attr': {'value': 'Indisponible' }})}}
+								{{form_row(form.title, {'attr': {'value': 'Indisponible'}})}}
 							</div>
 							<div class="form-group col-md-6" style="display:none;">
 								{{form_row(form.teacher_id, {'attr': {'value': app.user.id }})}}
