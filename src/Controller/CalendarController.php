@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/calendar")
+ * @Route("/teacher/calendar")
  */
 class CalendarController extends AbstractController
 {

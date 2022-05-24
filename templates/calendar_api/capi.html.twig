@@ -17,8 +17,8 @@
 		{% embed "components/modal.html.twig" %}
 			{% set modalType = "modal-lg" %}
 			{% set id = "calendarForm" %}
-			{% set buttonTitle = "Ajouter un evènement" %}
-			{% block modalTitle %}Ajouter un evènement
+			{% set buttonTitle =""%}
+			{% block modalTitle %}
 			{% endblock %}
 			{% block dashboard %}
 				{% include "calendar/new.html.twig" %}
@@ -169,7 +169,7 @@
 		
 		let maClosure = () => {
 		
-		let urlmodif = window.history.pushState('api', 'New Page Title', "/api?start=" + donnees['start'] + "&end=" + donnees['end']);
+		let urlmodif = window.history.pushState('/admin/api', 'New Page Title', "/admin/api?start=" + donnees['start'] + "&end=" + donnees['end']);
 
 
 
@@ -205,12 +205,12 @@
 												}
 											};
 
-											xhr.open("GET", "/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
+											xhr.open("GET", "/admin/api?start=" + donnees['start'] + "&end=" + donnees['end'], true);
 											xhr.send(JSON.stringify(donnees));
 
 
 
-											//location.assign(location.href);
+											location.assign(location.href);
 
 											
 							}
@@ -316,7 +316,7 @@
 			
 							
 
-							//location.assign(location.href);
+							location.assign(location.href);
 
 			
 					})
@@ -405,7 +405,7 @@
 				calendar.render();
 
 				calendar.on('eventChange', (e) => {
-				let url = `/api/${e.event.id}/edit`
+				let url = `/admin/api/${e.event.id}/edit`
 				let donnees = {
 				"title": e.event.title,
 				"start": e.event.start,
@@ -429,7 +429,7 @@
 
 
 				calendar.on('eventRemove', (e) => {
-				let url = `/api/${e.event.id}/delete`
+				let url = `/admin/api/${e.event.id}/delete`
 				let donnees = {
 				"id": e.event.id
 				}

@@ -86,6 +86,7 @@ class AdministrationController extends AbstractController
                 $user->setPicture($newFilename);
             }
             $user->setPassword($this->passwordHasher->hashPassword($user, $temporaryPassword));
+            $user->setFullName($user->getFullName());
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 

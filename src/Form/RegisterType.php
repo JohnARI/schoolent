@@ -122,19 +122,10 @@ class RegisterType extends AbstractType
                 ]
             ])
 
-            ->add('is_teacher', ChoiceType::class, [
-                'attr' => [
-                    'class' => 'input100 form-control',  
-                ],
-                'label' => 'Formateur',
-                
-                'required' => true,
-                'multiple' => false,
-                'expanded' => false,
-                'choices'  => [
-                    'Non' => 0,
-                    'Yes' => 1,
-                ]
+            ->add('is_teacher', CheckboxType::class, [
+                'label'    => 'Formateur',
+                'required' => false,
+            
             ])
 
             ->add('submit', SubmitType::class, [

@@ -17,7 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProgrammingLanguageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-
+/**
+ * @Route("/admin")
+ */
 class ApiController extends AbstractController
 {
 
@@ -84,7 +86,7 @@ class ApiController extends AbstractController
     }
 
 
-/**
+    /**
      * @Route("/api/edit", name="api_event_edit", methods={"PUT"})
      */
     public function majEvents(?Calendar $calendar, Request $request, EntityManagerInterface $em, UserRepository $user): Response
@@ -321,7 +323,7 @@ class ApiController extends AbstractController
         
      
 
-
+        //dd($indisponible);
         // if($request->isXmlHttpRequest()) {
         //     var_dump("ok");
         //     $test = $request->request->get('donnees');
@@ -544,7 +546,7 @@ class ApiController extends AbstractController
                                             // echo '<pre>'; print_r($calendario); echo '</pre>';
 
 
-                                                    if(($startDate <= $indisponible && $startDate >=  $indisponible ) || ($endDate <= $indisponible && $end >= $indisponible)){
+                                                    if(($startDate <= $indisponible && $startDate >=  $indisponible ) && ($endDate <= $indisponible && $end >= $indisponible)){
 
                                                         //JE VERIFIE SI "INDISPONIBLE" se trouve dans la zone sélectionnée et j'élimine les formateurs indisponibles
                                                         
