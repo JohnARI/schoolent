@@ -22,7 +22,7 @@
 								</button>
 							</div>
 						{% endfor %}
-						{% if app.user.roles == ['ROLE_TEACHER'] %}
+						{% if app.user.roles != ['ROLE_ADMIN'] %}
 							<div class="form-group col-md-6" style="display:none;">
 								{{form_row(form.title, {'attr': {'value': 'Indisponible' }})}}
 							</div>
@@ -39,10 +39,13 @@
 								{{form_row(form.end)}}
 							</div>
 							<div class="form-group col-md-6">
-								{{form_row(form.Description)}}
+								{{form_row(form.description)}}
 							</div>
 							<div class="form-group col-md-6" style="display:none;">
 								{{form_row(form.background_color, {'attr': {'value': '#FF0000', }})}}
+							</div>
+							<div class="form-group col-md-6" style="display:none;">
+								{{form_row(form.category, {'attr': {'value': '0', }})}}
 							</div>
 
 							<div class="col-md-12">

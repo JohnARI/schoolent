@@ -34,17 +34,23 @@ class CalendarType extends AbstractType
             'label' => 'Intitulé',
         ])
         ->add('description', TextareaType::class, [
-            'label' => 'DEscription',
+            'label' => 'Description',
         ])
-        // ->add('category', TextType::class, [
-        //     'label' => 'Technologie',
+        ->add('teacher_id', TextType::class, [
+        'label' => 'Teacher_id',
             
-        // ])
-        // ->add('session')
+         ])
+        ->add('background_color', TextType::class, [
+            'label'=>'background_color',
+        ])
     
         ->add('teacher_name', TextType::class, [
             'label' => 'Formateur',
 
+        ])
+
+        ->add('category', TextType::class, [
+            'label' => 'Catégoey',
         ])
         ->add('submit', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary btn-block'],
