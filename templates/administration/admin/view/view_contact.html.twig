@@ -8,12 +8,9 @@ Administrator
     <!-- PAGE -->
     <div class="page">
         <div class="page-main">
-<!--app-content open-->
+        <!--app-content open-->
             <div class="main-content app-content mt-0">
                 <div class="side-app">
-
-                    
-
                         <!-- Row -->
                         <div class="row row-sm">
                             <div class="col-lg-12">
@@ -25,19 +22,17 @@ Administrator
                                             <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                                                 <thead>
                                                     <tr>
-                                                        <th class="wd-15p border-bottom-0">Nom</th>
+                                                        <th class="wd-15p border-bottom-0">Nom et PRENOM</th>
                                                         <th class="wd-15p border-bottom-0">Téléphone</th>
                                                         <th class="wd-20p border-bottom-0">Email</th>
                                                         <th class="wd-10p border-bottom-0">Objet</th>
                                                         <th class="wd-10p border-bottom-0">Message</th>
                                                         <th class="wd-10p border-bottom-0">Lu</th>
-                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 {% for contact in contacts %}
                                                     <tr>
-                                
                                                         <td>{{ contact.name }}</td>
                                                         <td>{{ contact.phone }}</td>
                                                         <td>{{ contact.email }}</td>
@@ -46,7 +41,6 @@ Administrator
                                                         <td>{{ contact.lu }}</td>
                                                     </tr>
                                                     {% endfor %}
-                                                    
                                                 </tbody>
                                             </table>
                                         </div>
@@ -55,8 +49,6 @@ Administrator
                             </div>
                         </div>
                         <!-- End Row -->
-
-
                     </div>
                     <!-- CONTAINER CLOSED -->
 
@@ -64,7 +56,4 @@ Administrator
             </div>
             <!--app-content closed-->
         </div>
-
-    
-
         {% endblock %}

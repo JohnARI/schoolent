@@ -171,7 +171,7 @@ class AdministrationController extends AbstractController
             $calendar->setCreatedAt(new DateTime());
 
             $this->entityManager->persist($calendar);
-            $this->entityManager->flush();
+            $this->entityManager->flush(); 
 
             // reinitialiser le cache à chaque modification
             $this->cache->delete('view_all_data');
@@ -232,7 +232,7 @@ class AdministrationController extends AbstractController
     /**
      * @Route("/admin/edit/user/{id}", name="edit_user")
      */
-    public function editUser(User $user, Request $request, string $projectDir): Response
+    public function editUser(User $user, Request $request): Response
     {
         // string $projectDir : la variable est declarée dans bind services.yaml
         $oldFileName = $user->getPicture();
@@ -247,7 +247,7 @@ class AdministrationController extends AbstractController
 
             if ($file != null) {
                 if ($oldFileName != null) {
-                    // $projectDir = $this->getParameter('kernel.project_dir');
+                    $projectDir = $this->getParameter('kernel.project_dir');
                     $fileSystem->remove($projectDir . '/public/uploads/user/' . $oldFileName);
                 }
 
@@ -258,6 +258,7 @@ class AdministrationController extends AbstractController
             }
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
