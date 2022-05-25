@@ -30,6 +30,8 @@
 	
 	</div>
 
+	<a href="{{path('dashboard-admin')}}"><button class="btn btn-primary mb-4">Retour</button></a>
+
 	{# --------------------------------------------------Calendar------------------------------------------ #}
 	<div class="card-body">
 		<div id='calendar2'></div>
@@ -89,8 +91,7 @@
 	<script>
 
 		window.onload = () => {
-
-
+	
 	var calendarEl = document.getElementById('calendar2');
 	let urlVerif = document.location.href;
 	let urlcompte = urlVerif.length;
@@ -98,7 +99,18 @@
 	let UrlParamStart = searchParams.get('start');
 	let UrlParamEnd = searchParams.get('end');
 	var cookieStart = "";
-	var cookieEnd =""; 
+	var cookieEnd ="";
+	let FullCalendarActions = {
+  currentTime: null,
+  isDblClick: function(){
+    let prevTime =
+      typeof FullCalendarActions.currentTime === null
+        ? new Date().getTime() - 1000000
+        : FullCalendarActions.currentTime;
+    FullCalendarActions.currentTime = new Date().getTime();
+    return FullCalendarActions.currentTime - prevTime < 500;
+  },
+};
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 	headerToolbar: {
 	left: 'prev,next today',
@@ -221,14 +233,6 @@
 
 	$(document).ready(function(){
 
-		
-	
-
-    
-
-
-
-
 		$("#envoyerFormulaire").click(function(){
 
 
@@ -238,16 +242,6 @@
 					var teacherName = $("#teacher").val();
 					var category = $("#category").val();
 
-								/*function info(){
-
-										alert('Vous avez deja selectionnées des dates');
-										alert('précedente selectionnée debut: ' + JSON.stringify(cookieStart));
-										alert('précedente selectionnée fin: ' + JSON.stringify(cookieEnd));
-										alert('Veuillez saisir les bonnes dates');
-
-										}*/
-
-			
 									if(title !="" && description !=""){
 
 
@@ -265,57 +259,9 @@
 
 									deleteAllCookies();
 
-									
-
-									
-
-									
-									
 									}
 
 									$('#calendarForm').modal('hide');
-
-									
-									
-
-								//}else{
-
-									
-
-										/*if(arg.start == cookieStart || arg.end == cookieEnd){
-
-											calendar.addEvent({
-
-												title: title,
-												start: arg.start,
-												end: arg.end,
-												allDay: arg.allDay,
-												teacherName: teacherName,
-												description: description,
-												catego: cat,
-
-										})
-
-												deleteAllCookies();
-												location.assign(location.href);
-
-										}else{
-
-
-											return info();*/
-
-
-										//}
-
-
-
-								//}
-
-		
-							//deleteAllCookies();							
-
-			
-							
 
 							location.assign(location.href);
 
@@ -327,28 +273,28 @@
 
 		calendar.unselect();
 
-
-
-
-
-
-
 },
 
 
 
-				eventClick: function (arg) {
+				/*eventClick: function (arg) {
 				if (confirm('Etes-vous sûr de vouloir supprimer cet évènement?')) {
+						arg.event.remove()
+					}
+				},*/
 
-
-					arg.event.remove()
-				}
-
+				eventClick : function(infos){
+				infos.el.addEventListener( 'dblclick' , function () {
+					$('#Mysmallmodal').modal('show');
+					document.getElementById('test').innerText = infos.event.title+" "+infos.event.extendedProps.teacher
+					//'calendar.title ~ ' ' ~ calendar.teacherName '
+				});
 				
 				},
+
 				eventOverlap: function(stillEvent, movingEvent) {
-    			return stillEvent.allDay && movingEvent.allDay;
-  				},
+				return stillEvent.allDay && movingEvent.allDay;
+				},
 
 				
 				editable: true,
@@ -361,27 +307,24 @@
 				description: '{{ calendar.title }}',
 				backgroundColor: '{{ calendar.backgroundColor }}',
 				extendedProps:{
-        			teacher : '{{ calendar.teacherName}}'
-      			},
-
-				
+				teacher : '{{ calendar.teacherName}}'
+				},
 
 				},{% endfor %}],
 
-				eventMouseEnter:(infos)=>{
+				/*eventMouseEnter:(infos)=>{
 
 					$('#Mysmallmodal').modal('show');
 					document.getElementById('test').innerText = infos.event.title+" "+infos.event.extendedProps.teacher
 					//'calendar.title ~ ' ' ~ calendar.teacherName '
 
-				},
+				},*/
 
 				eventMouseLeave:()=>{
 
 					$('#Mysmallmodal').modal('hide');
 
 				},
-			
 				})
 
 				
@@ -460,23 +403,6 @@
 
 				});
 
-		/*calendar.select( start, (e) => {
-		let donnees = {
-			"start": e.event.start,
-			"end" : e.event.end
-		}
-		
-			$.ajax({
-        type: 'POST',
-        url: '/test2',
-        data: {json: JSON.stringify(donnees)},
-        dataType: 'json'            
-    })
-
-	});*/
-
-	
-	
 
 }
 	</script>
