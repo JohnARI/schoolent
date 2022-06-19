@@ -17,6 +17,7 @@
 			</tr>
 		</thead>
 		<tbody>
+		{% if results.admins is defined %}
 			{% for admin in results.admins %}
 				<tr>
 				{% if admin.picture %}
@@ -51,6 +52,9 @@
                     {% endif %}
 				</tr>
 			{% endfor %}
+			{% else %}
+				<p>Aucun admin</p>
+			{% endif %}
 
 		</tbody>
 	</table>
