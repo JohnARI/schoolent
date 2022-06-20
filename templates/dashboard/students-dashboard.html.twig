@@ -14,15 +14,42 @@
 
                 {# Header #}
                 <div class="page-header">
-                    <h1 class="page-title">Elève</h1>
+                    <h1 class="page-title">Bienvenue dans votre espace élève</h1>
                 </div>
+                <div class="col col-sm-12 mx-auto">
+                                <div class="card border p-0">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Espace élève de {{app.user.fullname}}</h3>
+                                        <div class="card-options">
+                                            <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        {% if app.user.picture %}
+
+																<img src="{{ asset('uploads/user/' ~ app.user.picture)}}" class="rounded h-10 w-10" alt="image utilisateur">
+															{% elseif app.user.sexe == 0 %}
+																<img src="{{ asset('uploads/avatar/avatarMen.png')}}" class="rounded h-10 w-10" alt="image utilisateur">
+															{% elseif app.user.sexe == 1 %}
+																<img src="{{ asset('uploads/avatar/avatarWoman.png')}}" class="rounded h-10 w-10" alt="image utilisateur">
+                                                         
+															{% endif %}
+                                        <h4 class="h4 mb-0 mt-3">{{app.user.fullname}}</h4>
+                                        <p class="card-text">{{app.user.role}}</p>
+                                    </div>
+                                   
+                                </div>
+                            </div>
 				
 
 								
-								<div class="col-xl-6">
+								<div class="col">
                                 <div class="card">
                                     <div class="card-header">
                                         <h3 class="card-title">Mes notes</h3>
+                                    <div class="card-options">
+                                            <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                       

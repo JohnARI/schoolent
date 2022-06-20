@@ -44,7 +44,7 @@ class DashboardController extends AbstractController
         $myStudents = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession());
         $mySession = $this->getUser()->getSession($session);
         $gradeTeacher = $this->entityManager->getRepository(Grade::class)->findGradeByTeacher($this->getUser()->getId(), $mySession);
-        $results = $this->cache->get('dashboard-admin', function(ItemInterface $item) use ($myStudents, $mySession) {
+        $results = $this->cache->get('dashboard', function(ItemInterface $item) use ($myStudents) {
             $item->expiresAfter(3600);
             return [ 
             'users' => $this->entityManager->getRepository(User::class)->findAll(),

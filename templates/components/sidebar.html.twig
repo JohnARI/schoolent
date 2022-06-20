@@ -45,7 +45,7 @@
                     <a class="side-menu__item" data-bs-toggle="slide" href="{{path('view-contact')}}"><i
                             class="side-menu__icon fe fe-mail"></i>
                             {# <span class="pulse-contact-danger notif-view">{{ contacts | length }}</span> #}
-                            <span class="side-menu__label">Messages reçus</span></a>
+                            <span class="side-menu__label">Messages assistance</span></a>
                 </li>
 
                 <li class="sub-category">
@@ -81,24 +81,7 @@
                 {% endif %}
 
 
-                {% if app.user.role == 'Eleve' %}
-                <li class="sub-category">
-                    <h3>Espace personnel</h3>
-                </li>
-
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
-                            class="side-menu__icon fe fe-monitor"></i><span class="side-menu__label">Classe virtuelle</span></a>
-                </li>
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
-                            class="side-menu__icon fe fe-folder"></i><span class="side-menu__label">Cours</span></a>
-                </li>
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href=""><i
-                            class="side-menu__icon fe fe-message-circle"></i><span class="side-menu__label">Messagerie instantanée</span></a>
-                </li>
-                
+                {% if app.user.role == 'Eleve' %}       
                 <li class="sub-category">
                     <h3>Planning</h3>
                 </li>
