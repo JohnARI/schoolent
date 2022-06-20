@@ -87,18 +87,7 @@
         "symfony/polyfill-iconv": "*",
         "symfony/polyfill-php72": "*"
     },
-    "scripts": {
-        "auto-scripts": {
-            "enable": true,
-            "install": "composer install --no-dev --prefer-dist --no-progress --no-suggest --no-interaction --optimize-autoloader"
-        },
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
-        "post-update-cmd": [
-            "@auto-scripts"
-        ]
-    },
+
     "conflict": {
         "symfony/symfony": "*"
     },
