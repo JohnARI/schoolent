@@ -146,7 +146,7 @@
 						</div>
 					</div>
 				{% endif %}
-				{% if app.user.id == user.id %}
+				{% if app.user.id == user.id and user.role == 'Eleve' %}
 				<div class="col">
                                 <div class="card">
                                     <div class="card-header">
