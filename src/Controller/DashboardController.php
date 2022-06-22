@@ -66,8 +66,7 @@ class DashboardController extends AbstractController
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
-            return $this->redirect($request->getUri());
-            
+            return $this->redirect($request->getUri());   
         }
 
         return $this->render('dashboard/admins-dashboard.html.twig', [
