@@ -416,8 +416,7 @@ a.text-primary:hover, a.text-primary:focus {
 }
 
 .login-img {
-  background-image: -webkit-gradient(linear, left top, right top, from(var(--primary06)), to(#05c3fb91)), url(../images/media/bg2.jpg);
-  background-image: linear-gradient(to right, var(--primary06) 0%, #05c3fb91 100%), url(../images/media/bg2.jpg);
+  background-image: url("../images/media/bg-img3.jpg");
 }
 
 .avatar {

@@ -451,7 +451,10 @@ a.text-primary {
 }
 
 .login-img {
-    background-image: linear-gradient(to right, $primary-06 0%, #05c3fb91 100%), url(../images/media/bg2.jpg);
+    background-image: url("{{asset('assets/images/media/bg-img3.jpg')}}");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .avatar {

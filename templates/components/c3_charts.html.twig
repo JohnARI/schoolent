@@ -3,13 +3,17 @@
 
 var ctx = document.getElementById("chart-monthly").getContext('2d');;
 
+{% if results.dateByMonth is defined and results.dateByMonth is not null %}
 var labels = [{%for data in results.dateByMonth %}
+
             {% set trans_month_hash = {"January": "Janvier", "February": "Février", "March": "Mars",
                                         "April": "Avril", "May": "Mai", "June": "Juin", "August": "Aout",
                                         "September": "Septembre", "October": "Octobre", "December": "Decembre"} 
             %} "{{ trans_month_hash[data.0.start | date('F')] }}", {% endfor %}];
-
+            {% endif %}
+{% if results.dateByMonth is defined and results.dateByMonth is not null %}
 var data = [{%for data in results.dateByMonth %}{{ data.total }}, {% endfor %}];
+{% endif %}
 
 var myBarChart = new Chart(ctx, {
     type: 'bar',
@@ -69,11 +73,11 @@ var myBarChart = new Chart(ctx, {
 
 
 /*chart-sexe-donut*/
+            {% if results.studentsMan is defined and results.studentsWoman is defined %}
 var chart = c3.generate({
     bindto: '#chart-sexe-donut', // id of chart wrapper
     data: {
         columns: [
-            
             ['data2', {{ results.studentsMan | length}}],
             ['data1', {{ results.studentsWoman | length}}],
         ],
@@ -96,6 +100,10 @@ var chart = c3.generate({
         top: 0
     }
 });
+
+{% else %}
+    <p>0</p>
+{% endif %}
 
     /*chart-month-bar*/
 

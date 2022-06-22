@@ -12,7 +12,13 @@
 
 				<!-- PAGE-HEADER -->
 				<div class="page-header">
-					<h1 class="page-title">Profil de {{user.fullname}}</h1>
+				{% if app.user.id == user.id %}<h1 class="page-title">Votre profil</h1>
+				{% else %}
+				<h1 class="page-title">Profil de {{user.fullname}}</h1>
+				{% endif %}
+				
+					
+					
 					<div>
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">
@@ -43,7 +49,7 @@
 															{% elseif user.sexe == 0 %}
 																<img src="{{ asset('uploads/avatar/avatarMen.png')}}" alt="image utilisateur">
 															{% elseif user.sexe == 1 %}
-																<img src="{{ asset('uploads/avatar/avatarWomen.png')}}" alt="image utilisateur">
+																<img src="{{ asset('uploads/avatar/avatarWoman.png')}}" alt="image utilisateur">
 															{% endif %}
 														</div>
 														<div class="profile-img-content text-dark text-start">
@@ -60,7 +66,7 @@
 																<i class="fa fa-rss"></i>
 																<span>Modifier le profil</span>
 															</a>
-														{% elseif user.session == app.user.session and app.user.role == 'Professeur' or 'Administrateur' %}
+														{% elseif user.session == app.user.session and app.user.role == 'Professeur' %}
 															{% embed "components/modal.html.twig" %}
 																{% set modalType = "modal-lg" %}
 																{% set id = "add-grades" %}
@@ -96,9 +102,17 @@
 					<!-- COL-END -->
 				</div>
 				<!-- ROW-1 CLOSED -->
-
-
-				{% if user.session == app.user.session and app.user.role == 'Professeur' or 'Administrateur' and grade is defined %}
+	{% if user.session == app.user.session and app.user.id != user.id %}
+	 <div class="col-md-12 col">
+                                <div class="card text-white bg-info">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Information</h4>
+                                        <p class="card-text">Cet utilisateur est dans votre session</p>
+                                    </div>
+                                </div>
+                            </div>
+							{% endif %}
+				{% if user.session == app.user.session and app.user.role == 'Professeur' and grade is defined %}
 					<div class="row">
 						<div class="col-xl-6">
 							<div class="card">
@@ -132,8 +146,46 @@
 						</div>
 					</div>
 				{% endif %}
+				{% if app.user.id == user.id and user.role == 'Eleve' %}
+				<div class="col">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Mes notes</h3>
+                                    <div class="card-options">
+                                            <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                      
+                                        <div class="table-responsive">
+                                            <table class="table border text-nowrap text-md-nowrap table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Matière</th>
+                                                        <th>Note</th>
+                                                        <th>Remarque</th>
+                                                        <th>Professeur</th>
+                                                        <th>Date</th>
 
 
+                                                    </tr>
+                                                </thead>
+                                                <tbody>{% for grade in grades %}
+                                                    <tr>
+                                                        <td>{{grade.category}}</td>
+                                                        <td>{{grade.grade}}</td>
+                                                        <td>{{grade.comment}}</td>
+                                                        <td>{{grade.teacher}}</td>
+                                                        <td>{{grade.createdAt | date('d-m-Y')}}</td>
+                                                    </tr>{% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+{% endif %}
 			</div>
 			<!-- CONTAINER CLOSED -->
 

@@ -44,7 +44,7 @@ class DashboardController extends AbstractController
         $myStudents = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession());
         $mySession = $this->getUser()->getSession($session);
         $gradeTeacher = $this->entityManager->getRepository(Grade::class)->findGradeByTeacher($this->getUser()->getId(), $mySession);
-        $results = $this->cache->get('dashboard', function(ItemInterface $item) use ($myStudents, $mySession) {
+        $results = $this->cache->get('dashboard', function(ItemInterface $item) use ($myStudents) {
             $item->expiresAfter(3600);
             return [ 
             'users' => $this->entityManager->getRepository(User::class)->findAll(),
@@ -54,8 +54,8 @@ class DashboardController extends AbstractController
             'sessions' => $this->entityManager->getRepository(Session::class)->findAll(),
             'studentsWoman' => $this->entityManager->getRepository(User::class)->findBySexeStudent(1),
             'studentsMan' => $this->entityManager->getRepository(User::class)->findBySexeStudent(0),
-            'dateByMonth' => $this->entityManager->getRepository(Calendar::class)->findDateMonth(),
             'gradeStudents' => $this->entityManager->getRepository(Grade::class)->findByUser($myStudents),
+            'dateByMonth' => $this->entityManager->getRepository(Calendar::class)->findDateMonth(),
             ];
         });
 
@@ -68,6 +68,7 @@ class DashboardController extends AbstractController
             $this->addFlash('success', 'La note a été attribué');
             return $this->redirect($request->getUri());   
         }
+        
 
         return $this->render('dashboard/admins-dashboard.html.twig', [
             'gradeTeacher' => $gradeTeacher,

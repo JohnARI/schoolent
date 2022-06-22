@@ -37,24 +37,24 @@
 						<div class="card-body">
 							<div class="text-center chat-image mb-5">
 
-
+.
 								{% if app.user.picture %}
-								<a class="" href="profile.html"><img alt="avatar"
+								<a class="" href="#"><img alt="avatar"
 										src="{{ asset('uploads/user/' ~ app.user.picture)}}"
 										class="avatar avatar-xxl chat-profile mb-3 brround"></a>
 								{% elseif app.user.sexe == 0 %}
-								<a class="" href="profile.html"><img alt="avatar"
+								<a class="" href="#"><img alt="avatar"
 										src="{{ asset('uploads/avatar/avatarMen.png')}}"
 										class="avatar avatar-xxl chat-profile mb-3 brround"></a>
 								{% elseif app.user.sexe == 1 %}
-								<a class="" href="profile.html"><img alt="avatar"
+								<a class="" href="#"><img alt="avatar"
 										src="{{ asset('uploads/avatar/avatarWoman.png')}}"
 										class="avatar avatar-xxl chat-profile mb-3 brround"></a>
 								{% endif %}
 
 
 								<div class="main-chat-msg-name">
-									<a href="profile.html">
+									<a href="#">
 										<h5 class="mb-1 text-dark fw-semibold">{{app.user.fullname}}</h5>
 									</a>
 									<p class="text-muted mt-0 mb-0 pt-0 fs-13">{{app.user.role}}</p>

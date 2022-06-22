@@ -93,9 +93,8 @@ class AdministrationController extends AbstractController
             // vider le cache aprés chaque modification
             $this->cache->delete('view_all_data');
             $this->cache->delete('dashboard');
-
-            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' Au ' . date_format($sessionEnd, 'd-m-y') . '. ' . 'Voici votre mot de passe temporaire :'   . $temporaryPassword . ' et veillez à le modifier dans votre espace profil.');
-            $this->notification->sendNotification('Bienvenue Chez SCHOOLENT! vous venez d\'etre iscrits, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' au ' . date_format($sessionEnd, 'd-m-y'), $user);
+            $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! vous venez d\'etre inscrit, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' Au ' . date_format($sessionEnd, 'd-m-y') . '. ' . 'Voici votre mot de passe temporaire :'   . $temporaryPassword . ' et veillez à le modifier dans votre espace profil.');
+            $this->notification->sendNotification('Bienvenue Chez SCHOOLENT! vous venez d\'etre inscrit, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' au ' . date_format($sessionEnd, 'd-m-y'), $user);
             $this->addFlash('success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
             //Message de succès
             return $this->redirect($request->getUri());

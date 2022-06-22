@@ -15,6 +15,7 @@
 				</tr>
 			</thead>
 			<tbody>
+			{% if results.students is defined %}
 				{% for session in results.sessions %}
 					<tr>
 						<td>{{ session.name }}</td>
@@ -42,6 +43,9 @@
 						{% endif %}
 					</tr>
 				{% endfor %}
+				{% else %}
+					<p>Aucune session</p>
+				{% endif %}
 
 			</tbody>
 		</table>

@@ -17,6 +17,7 @@
 			</tr>
 		</thead>
 		<tbody>
+		{% if results.teachers is defined %}
 			{% for teacher in results.teachers %}
 				<tr>
 				{% if teacher.picture %}
@@ -53,6 +54,9 @@
                     {% endif %}
 				</tr>
 			{% endfor %}
+			{% else %}
+				<p>Aucun professeurs</p>
+			{% endif %}
 
 		</tbody>
 	</table>

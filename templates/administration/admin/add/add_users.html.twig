@@ -43,17 +43,12 @@
 					</figure>
 					{{form_widget(formUser.roles)}}
 				</div>
+				{{form_widget(formUser.is_teacher)}}
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
 					<figure class="input-group-text bg-white text-muted">
 						<i class="zmdi zmdi-male-female" aria-hidden="true"></i>
 					</figure>
 					{{form_widget(formUser.sexe)}}
-				</div>
-				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
-					<figure class="input-group-text bg-white text-muted">
-						<i class="zmdi zmdi-male-female" aria-hidden="true"></i>
-					</figure>
-					{{form_widget(formUser.is_teacher)}}
 				</div>
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="">
 					<figure class="input-group-text bg-white text-muted">
@@ -72,8 +67,6 @@
 				<div class="wrap-input100 validate-input input-group" data-bs-validate="z">
 					{{form_widget(formUser.picture)}}
 				</div>
-
-
 			</div>
 			<div class="container-login100-form-btn">
 				{{form_widget(formUser.submit)}}
