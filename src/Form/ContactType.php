@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class ContactType extends AbstractType
 {
@@ -33,6 +34,12 @@ class ContactType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Téléphone',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^\(0\)[0-9]*$',
+                        'message' => 'Votre numéro de téléphone n\'est pas valide',
+                    ]),
                 ]
             ])
             ->add('objet', ChoiceType::class, [
@@ -55,8 +62,6 @@ class ContactType extends AbstractType
                     'type' => 'submit',
                 ]
             ]);
-            
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
