@@ -35,12 +35,12 @@ class ContactType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Téléphone',
                 ],
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '/^\(0\)[0-9]*$',
-                        'message' => 'Votre numéro de téléphone n\'est pas valide',
-                    ]),
-                ]
+                // 'constraints' => [
+                //     new Regex([
+                //         'pattern' => '/^\(0\)[0-9]*$',
+                //         'message' => 'Votre numéro de téléphone n\'est pas valide',
+                //     ]),
+                // ]
             ])
             ->add('objet', ChoiceType::class, [
                     'required' => true,

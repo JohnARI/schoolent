@@ -31,7 +31,7 @@ class Contact
     private $email;
 
     /**
-     * @ORM\Column(type="integer", length=10)
+     * @ORM\Column(type="integer", length=11)
      */
     private $phone;
 
