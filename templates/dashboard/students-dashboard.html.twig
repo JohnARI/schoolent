@@ -72,7 +72,7 @@
                                                         <td>{{grade.grade}}</td>
                                                         <td>{{grade.comment}}</td>
                                                         <td>{{grade.teacher}}</td>
-                                                        <td>{{grade.createdAt}}</td>
+                                                        <td>{{grade.createdAt|date('d-m-Y')}}</td>
                                                     </tr>{% endfor %}
                                                 </tbody>
                                             </table>
