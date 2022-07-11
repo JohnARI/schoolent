@@ -277,20 +277,20 @@
 
 
 
-				/*eventClick: function (arg) {
+				eventClick: function (arg) {
 				if (confirm('Etes-vous sûr de vouloir supprimer cet évènement?')) {
 						arg.event.remove()
 					}
-				},*/
+				},
 
-				eventClick : function(infos){
+				/*eventClick : function(infos){
 				infos.el.addEventListener( 'dblclick' , function () {
 					$('#Mysmallmodal').modal('show');
 					document.getElementById('test').innerText = infos.event.title+" "+infos.event.extendedProps.teacher
 					//'calendar.title ~ ' ' ~ calendar.teacherName '
 				});
 				
-				},
+				},*/
 
 				eventOverlap: function(stillEvent, movingEvent) {
 				return stillEvent.allDay && movingEvent.allDay;
