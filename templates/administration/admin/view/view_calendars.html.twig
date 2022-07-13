@@ -19,9 +19,9 @@
 				{% for calendar in results.calendars %}
 					<tr>
 
-						<td>{{ calendar.name }}</td>
+						<td>{{ calendar.category }}</td>
 						<td>{{ calendar.session }}</td>
-						<td>{{ calendar.teacherName }}</td>
+						<td>{{ calendar.teacher }}</td>
 						<td>{{ calendar.start|date("d/m/Y") }}</td>
 						<td>{{ calendar.end|date("d/m/Y") }}</td>
 

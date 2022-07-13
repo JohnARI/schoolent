@@ -113,11 +113,13 @@ class RegisterType extends AbstractType
 
             ->add('picture', FileType::class, [    
                 'required' => false,
+                'mapped' => false,
                 'constraints'=> [
 
                     new Image([
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp' ,'image/jpg'],
-                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : .jpeg / .png / .webp / .jpg'
+                        'mimeTypesMessage' => 'Les types de fichiers autorisés sont : 
+                        .jpeg / .png / .webp / .jpg'
                     ])
                 ]
             ])

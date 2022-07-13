@@ -29,7 +29,7 @@ class Mailjet
             'message' => $myMessage
         ]);
 
-        $this->send($this->generateSingleBody($user, "School ENT", $message));
+        $this->send($this->generateSingleBody($user, "Unlock Technologie", $message));
     }
 
     private function generateSingleBody(User $user, string $subject, string $message): array
@@ -39,7 +39,7 @@ class Mailjet
                 [
                     'From' => [
                         'Email' => "a.takabait@gmail.com",
-                        'Name' => "School"
+                        'Name' => "Unlock Technologie"
                     ],
                     
                     'To' => [
@@ -67,7 +67,7 @@ class Mailjet
             'message' => $myMessage
         ]);
 
-        $this->send($this->generateSingleBodyContact($contact, "School ENT", $message));
+        $this->send($this->generateSingleBodyContact($contact, "Unlock Technologie", $message));
     }
 
     private function generateSingleBodyContact(Contact $contact, string $subject, string $message): array
@@ -77,7 +77,7 @@ class Mailjet
                 [
                     'From' => [
                         'Email' => "a.takabait@gmail.com",
-                        'Name' => "School"
+                        'Name' => "Unlock Technologie"
                     ],
                     
                     'To' => [

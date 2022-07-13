@@ -40,7 +40,7 @@ class ProgrammingLanguage
     private $grades;
 
     /**
-     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="Category")
+     * @ORM\OneToMany(targetEntity=Calendar::class, mappedBy="category")
      */
     private $calendars;
 
@@ -140,8 +140,15 @@ class ProgrammingLanguage
         return $this;
     }
 
+    public function __toString() {
+        if(is_null($this->name)) {
+            return 'NULL';
+        }
+        return $this->name;
+    }
+
     /**
-     * @return Collection|Calendar[]
+     * @return Collection<int, Calendar>
      */
     public function getCalendars(): Collection
     {
@@ -168,12 +175,5 @@ class ProgrammingLanguage
         }
 
         return $this;
-    }
-
-    public function __toString() {
-        if(is_null($this->name)) {
-            return 'NULL';
-        }
-        return $this->name;
     }
 }

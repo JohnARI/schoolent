@@ -37,7 +37,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AdministrationController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Mailjet $mailjet, FileUploader $fileUploader, NotificationService $notification, CacheInterface $cache)
+    public function __construct(EntityManagerInterface $entityManager, 
+                                UserPasswordHasherInterface $passwordHasher, 
+                                Mailjet $mailjet, FileUploader $fileUploader, 
+                                NotificationService $notification, 
+                                CacheInterface $cache)
     {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
@@ -93,7 +97,9 @@ class AdministrationController extends AbstractController
             // vider le cache aprés chaque modification
             $this->cache->delete('view_all_data');
             $this->cache->delete('dashboard');
+
             $this->mailjet->sendEmail($user, 'Bienvenue Chez SCHOOLENT! vous venez d\'etre inscrit, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' Au ' . date_format($sessionEnd, 'd-m-y') . '. ' . 'Voici votre mot de passe temporaire :'   . $temporaryPassword . ' et veillez à le modifier dans votre espace profil.');
+
             $this->notification->sendNotification('Bienvenue Chez SCHOOLENT! vous venez d\'etre inscrit, votre session est ' . $session . ' qui debutera le ' . date_format($sessionStart, 'd-m-y') . ' au ' . date_format($sessionEnd, 'd-m-y'), $user);
             $this->addFlash('success', 'Votre ajout a bien été pris en compte, un mail a été envoyé!');
             //Message de succès
@@ -178,12 +184,18 @@ class AdministrationController extends AbstractController
             $this->cache->delete('dashboard');
 
 
-            $this->notification->sendNotification("Vous avez une nouvelle intervention sur le cours de: " . $cours . ' ' . $programmingLanguages . " du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . ' avec la session ' . $nameSession, $teacher);
+            $this->notification->sendNotification("Vous avez une nouvelle intervention sur le cours de: " 
+            . $cours . ' ' . $programmingLanguages . " du " . date_format($dateStart, 'd-m-y') . " Au " 
+            . date_format($dateEnd, 'd-m-y.') . ' avec la session ' . $nameSession, $teacher);
 
             $this->mailjet->sendEmail($teacher, "Votre planning pour la semaine du " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Intervention sur " . $cours . " " . $programmingLanguages . ".  avec la session " . $nameSession . ".");
             if ($student) {
                 foreach ($students as $student) {
                     $this->mailjet->sendEmail($student, "Voici votre convocation pour le cours " . $cours . " " . $programmingLanguages . " de la semaine du  : " . date_format($dateStart, 'd-m-y') . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.');
+                    
+                    $this->notification->sendNotification("Voici votre convocation pour le cours: " 
+                    . $cours . $programmingLanguages . " du : " . date_format($dateStart, 'd-m-y') 
+                    . " Au " . date_format($dateEnd, 'd-m-y.') . " Avec le professeur " . $teacher . '.', $student);
                 }
             }
 

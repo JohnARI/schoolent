@@ -23,17 +23,13 @@ class CalendarRepository extends ServiceEntityRepository
 
     /**
      * Calcule du nombres de dates par mois pour l annéé en cour
-     * @return int|mixed
-     * @throws Exception
-     * @throws \Doctrine\DBAL\Exception
      */
     public function findDateMonth(): array
     {
         $date = new \DateTime();
         return $this->createQueryBuilder('c')
-            ->addSelect('MONTH(c.start) as month ,SUM(DATE_DIFF(c.end,c.start)) as total')
+            ->addSelect('MONTH(c.start) as month , SUM(DATE_DIFF(c.end,c.start)) as total')
             ->andWhere('YEAR(c.start) = YEAR(:dateNow)')
-            // ->andWhere('c.title' != 'indisponible')
             ->setParameter('dateNow', $date->format('Y-m-d 00:00:00'))
             ->groupBy('month')
             ->orderBy('month', 'ASC')
@@ -43,7 +39,7 @@ class CalendarRepository extends ServiceEntityRepository
 
 
     /**
-     * Calcule le nombre de dates par mois pour l'annéé en cour
+     * Calcule le nombre de dates par mois pour l'annéé en cour pour chaque professeur
      * @return int|mixed
      * @throws Exception
      * @throws \Doctrine\DBAL\Exception

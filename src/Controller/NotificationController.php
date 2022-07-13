@@ -46,7 +46,7 @@ class NotificationController extends AbstractController
      * Supprimer une notification
      * @Route("/dashboard/notification/{id}/delete", name="notification_delete",methods={"GET"})
      */
-    public function clearNotification(Notification $notification, $id): Response
+    public function clearNotification(Notification $notification): Response
     {
         
         $this->entityManager->remove($notification);
@@ -55,7 +55,8 @@ class NotificationController extends AbstractController
         return $this->json([
             'code' => 200,
             'message' => 'la notification est supprimée',
-            'notifications' => $this->entityManager->getRepository(Notification::class)->count(['user' => $this->getUser()]),
+            'notifications' => $this->entityManager->getRepository(Notification::class)
+            ->count(['user' => $this->getUser()]),
         ], 200);
     }
 

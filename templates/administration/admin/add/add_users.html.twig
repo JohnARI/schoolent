@@ -1,6 +1,4 @@
 {% block addUsers %}
-
-
 			<div class="col">
 				{{form_start(formUser)}}
 				{% for message in app.flashes('contact_success') %}
@@ -72,7 +70,4 @@
 				{{form_widget(formUser.submit)}}
 			</div>
 			{{form_end(formUser)}}
-
-
-
 {% endblock %}

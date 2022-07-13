@@ -50,38 +50,32 @@
 
 							<div class="panel panel-primary">
 								<div class="tab-menu-heading">
-									<div
-										class="tabs-menu">
+									<div class="tabs-menu">
 										{# Tabs #}
 										<ul class="nav panel-tabs panel-info">
 											<li>
 												<a href="#users" class="active modal-effect btn shadow-sm d-grid mb-3" data-bs-toggle="tab">
-													<span>
-														<i class="fe fe-user me-1"></i>Utilisateurs</span>
+													<span> <i class="fe fe-user me-1"></i>Utilisateurs</span>
 												</a>
 											</li>
 											<li>
 												<a href="#sessions" data-bs-toggle="tab" class="modal-effect btn shadow-sm d-grid mb-3">
-													<span>
-														<i class="fe fe-calendar me-1"></i>Sessions</span>
+													<span> <i class="fe fe-calendar me-1"></i>Sessions</span>
 												</a>
 											</li>
 											<li>
 												<a href="#calendars" data-bs-toggle="tab" class="modal-effect btn shadow-sm  d-grid mb-3">
-													<span>
-														<i class="fe fe-settings me-1"></i>Calendrier</span>
+													<span> <i class="fe fe-settings me-1"></i>Calendrier</span>
 												</a>
 											</li>
 											<li>
 												<a href="#technologies" data-bs-toggle="tab" class="modal-effect btn shadow-sm  d-grid mb-3">
-													<span>
-														<i class="fe fe-bell me-1"></i>Technologies</span>
+													<span> <i class="fe fe-bell me-1"></i>Technologies</span>
 												</a>
 											</li>
 											<li>
 												<a href="#courses" data-bs-toggle="tab" class="modal-effect btn shadow-sm  d-grid mb-3">
-													<span>
-														<i class="fe fe-bell me-1"></i>Cours</span>
+													<span> <i class="fe fe-bell me-1"></i>Cours</span>
 												</a>
 											</li>
 										</ul>
@@ -89,8 +83,6 @@
 								</div>
 								<div class="panel-body tabs-menu-body">
 									<div class="tab-content">
-
-
 										<div class="tab-pane active" id="users">
 											{# Modal #}
 											{% embed "components/modal.html.twig" %}
@@ -104,7 +96,6 @@
 												{% endblock %}
 											{% endembed %}
 											{# Fin modal #}
-
 
 											{% include "administration/admin/view/view_users.html.twig" %}
 										</div>

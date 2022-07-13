@@ -41,14 +41,15 @@ class CalendarAdminType extends AbstractType
             'class' => Session::class,
             'choice_label' => 'name',
         ])
-        ->add('teacher_name', EntityType::class, [
+        ->add('teacher', EntityType::class, [
             'label' => 'Professeur',
             'class' => User::class,
             'multiple' => false,
-            // 'query_builder' => function (UserRepository $teacher) {
- 
-            //     return $teacher->findByRole('ROLE_TEACHER');
-            // },
+            'query_builder' => function (UserRepository $teacher) {
+                return $teacher->createQueryBuilder('u')
+                    ->where('u.roles LIKE :role')
+                    ->setParameter('role', "%ROLE_TEACHER%");
+            },
         ])
         ->add('submit', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary btn-block'],

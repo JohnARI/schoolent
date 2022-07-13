@@ -1,19 +1,15 @@
 
 <script>
 
-var ctx = document.getElementById("chart-monthly").getContext('2d');;
-
-{% if results.dateByMonth is defined and results.dateByMonth is not null %}
+var ctx = document.getElementById("chart-monthly").getContext('2d');
 var labels = [{%for data in results.dateByMonth %}
 
-            {% set trans_month_hash = {"January": "Janvier", "February": "Février", "March": "Mars",
-                                        "April": "Avril", "May": "Mai", "June": "Juin", "August": "Aout",
-                                        "September": "Septembre", "October": "Octobre", "December": "Decembre"} 
-            %} "{{ trans_month_hash[data.0.start | date('F')] }}", {% endfor %}];
-            {% endif %}
-{% if results.dateByMonth is defined and results.dateByMonth is not null %}
+    {% set trans_month_hash = {"January": "Janvier", "February": "Février", "March": "Mars",
+        "April": "Avril", "May": "Mai", "June": "Juin", "July":"Juillet", "August": "Aout",
+        "September": "Septembre", "October": "Octobre", "December": "Decembre"} 
+    %} "{{ trans_month_hash[data.0.start | date('F')] }}", {% endfor %}];
+
 var data = [{%for data in results.dateByMonth %}{{ data.total }}, {% endfor %}];
-{% endif %}
 
 var myBarChart = new Chart(ctx, {
     type: 'bar',

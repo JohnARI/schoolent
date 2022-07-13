@@ -19,11 +19,6 @@ class Calendar
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $Category;
 
     /**
      * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="calendars")
@@ -76,6 +71,17 @@ class Calendar
      */
     private $teacher_name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=ProgrammingLanguage::class, inversedBy="calendars")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="calendars")
+     */
+    private $teacher;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
@@ -85,18 +91,6 @@ class Calendar
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCategory(): ?int
-    {
-        return $this->Category;
-    }
-
-    public function setCategory(?int $Category): self
-    {
-        $this->Category = $Category;
-
-        return $this;
     }
 
     public function getSession(): ?Session
@@ -216,6 +210,30 @@ class Calendar
     public function setTeacherName(?string $teacher_name): self
     {
         $this->teacher_name = $teacher_name;
+
+        return $this;
+    }
+
+    public function getCategory(): ?ProgrammingLanguage
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?ProgrammingLanguage $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getTeacher(): ?User
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(?User $teacher): self
+    {
+        $this->teacher = $teacher;
 
         return $this;
     }

@@ -40,10 +40,12 @@ class DashboardController extends AbstractController
         
         $formGrade = $this->createForm(GradeType::class, $grade);
         $formGrade->handleRequest($request);
-        $session = $this->entityManager->getRepository(Session::class)->findAll();
+
         $myStudents = $this->entityManager->getRepository(User::class)->findBySession('ROLE_USER', $this->getUser()->getSession());
+        $session = $this->entityManager->getRepository(Session::class)->findAll();
         $mySession = $this->getUser()->getSession($session);
         $gradeTeacher = $this->entityManager->getRepository(Grade::class)->findGradeByTeacher($this->getUser()->getId(), $mySession);
+
         $results = $this->cache->get('dashboard', function(ItemInterface $item) use ($myStudents) {
             $item->expiresAfter(3600);
             return [ 
@@ -54,8 +56,8 @@ class DashboardController extends AbstractController
             'sessions' => $this->entityManager->getRepository(Session::class)->findAll(),
             'studentsWoman' => $this->entityManager->getRepository(User::class)->findBySexeStudent(1),
             'studentsMan' => $this->entityManager->getRepository(User::class)->findBySexeStudent(0),
-            'gradeStudents' => $this->entityManager->getRepository(Grade::class)->findByUser($myStudents),
             'dateByMonth' => $this->entityManager->getRepository(Calendar::class)->findDateMonth(),
+            'gradeStudents' => $this->entityManager->getRepository(Grade::class)->findByUser($myStudents),
             ];
         });
 
