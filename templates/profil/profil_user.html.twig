@@ -16,9 +16,9 @@
 				{% else %}
 				<h1 class="page-title">Profil de {{user.fullname}}</h1>
 				{% endif %}
-				
-					
-					
+
+
+
 					<div>
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">
@@ -56,7 +56,7 @@
 															<div class="text-dark">
 
 																<h3 class="h3 mb-2">{{user.fullname}}</h3>
-																<h5 class="text-muted">{{user.role}}</h5>
+																<h5 class="text-muted">{{user.role}}{% if user.role != 'Administrateur' %} / Session : {{user.session}} {% endif %}</h5>
 															</div>
 														</div>
 													</div>
@@ -86,11 +86,11 @@
 															{% endembed %}
 
 														{% endif %}
-														
+
 													</div>
 												</div>
 											</div>
-											
+
 										</div>
 
 									</div>
@@ -112,9 +112,9 @@
                                 </div>
                             </div>
 							{% endif %}
-				{% if user.session == app.user.session and app.user.role == 'Professeur' and grade is defined %}
+				{% if (user.session == app.user.session and app.user.role == 'Professeur') or (app.user.role == 'Administrateur') %}
 					<div class="row">
-						<div class="col-xl-6">
+						<div class="col-xl">
 							<div class="card">
 								<div class="card-body">
 
@@ -124,8 +124,12 @@
 												<tr>
 
 													<th>Cours</th>
+													<th>Intitulé</th>
 													<th>Note</th>
-													<th>Moyenne</th>
+													<th>Professeur</th>
+													<th>Commentaire</th>
+													<th>Actions</th>
+
 												</tr>
 											</thead>
 											<tbody>
@@ -133,8 +137,30 @@
 													<tr>
 
 														<td>{{grade.category}}</td>
+														<td>{{grade.name}}</td>
 														<td>{{grade.grade}}</td>
-														<td>En cours</td>
+														<td>{{grade.teacher}}</td>
+														<td>{{grade.comment}}</td>
+														{% if (app.user.fullname == grade.teacher) or (app.user.role == 'Administrateur') %}
+														<td name="bstable-actions">
+											<div
+												class="btn-list">
+												{# Bouton modifier #}
+												<a href="{{path('edit_grade',{'id': grade.id})}}" id="bEdit" type="button" class="btn btn-sm btn-primary" target="_blank">
+													<span class="fe fe-edit"></span>
+												</a>
+												{# fin bouton modifier #}
+
+												{# Bouton supprimer #}
+												<a href="{{path('delete_grade',{'id': grade.id})}}" id="bDel" type="button" class="btn btn-sm btn-danger deleteGrade">
+													<span class="fe fe-trash-2"></span>
+												</a>
+												{# fin bouton supprimer #}
+											</div>
+										</td>
+										{% else %}
+											<td>Non modifiable</td>
+										{% endif %}
 													</tr>
 												{% endfor %}
 											</tbody>
@@ -156,7 +182,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                      
+
                                         <div class="table-responsive">
                                             <table class="table border text-nowrap text-md-nowrap table-bordered mb-0">
                                                 <thead>
@@ -170,7 +196,7 @@
 
                                                     </tr>
                                                 </thead>
-                                                <tbody>{% for grade in grades %}
+                                                <tbody>{% for grade in grades|sort|reverse %}
                                                     <tr>
                                                         <td>{{grade.category}}</td>
                                                         <td>{{grade.grade}}</td>

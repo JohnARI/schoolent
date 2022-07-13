@@ -11,13 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/contact")
- */
 class ContactController extends AbstractController
 {
     /**
-     * @Route("/", name="contact_new", methods={"GET", "POST"})
+     * @Route("/contact", name="contact_new", methods={"GET", "POST"})
     */
     public function new(Request $request, EntityManagerInterface $entityManager, Mailjet $mailjet): Response
     {

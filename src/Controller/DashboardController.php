@@ -68,8 +68,7 @@ class DashboardController extends AbstractController
             $this->entityManager->persist($grade);
             $this->entityManager->flush();
             $this->addFlash('success', 'La note a été attribué');
-            return $this->redirect($request->getUri());
-            
+            return $this->redirect($request->getUri());   
         }
         
 
@@ -96,14 +95,12 @@ class DashboardController extends AbstractController
         $gradeTeacher = $this->entityManager->getRepository(Grade::class)->findGradeByTeacher($this->getUser()->getId(), $mySession);
        
         
-        $results = $this->cache->get('dashboard', function(ItemInterface $item) use($myStudents) {
+        $results = $this->cache->get('dashboard_grade', function(ItemInterface $item) use($myStudents) {
             $item->expiresAfter(3600);
             return [ 
                 'gradeStudents' => $this->entityManager->getRepository(Grade::class)->findByUser($myStudents),
             ];
         });
-
-        
 
         if ($formGrade->isSubmitted() && $formGrade->isValid()) {
             $grade->setCreatedAt(new DateTimeImmutable());

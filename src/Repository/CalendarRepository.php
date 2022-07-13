@@ -19,8 +19,6 @@ class CalendarRepository extends ServiceEntityRepository
         parent::__construct($registry, Calendar::class);
     }
 
-
-
     /**
      * Calcule du nombres de dates par mois pour l annéé en cour
      */

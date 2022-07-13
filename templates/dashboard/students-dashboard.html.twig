@@ -66,13 +66,13 @@
 
                                                     </tr>
                                                 </thead>
-                                                <tbody>{% for grade in grades %}
+                                                <tbody>{% for grade in grades|sort|reverse %}
                                                     <tr>
                                                         <td>{{grade.category}}</td>
                                                         <td>{{grade.grade}}</td>
                                                         <td>{{grade.comment}}</td>
                                                         <td>{{grade.teacher}}</td>
-                                                        <td>{{grade.createdAt | date('d-m-Y')}}</td>
+                                                        <td>{{grade.createdAt|format_datetime(locale='fr')}}</td>
                                                     </tr>{% endfor %}
                                                 </tbody>
                                             </table>
