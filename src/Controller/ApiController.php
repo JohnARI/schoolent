@@ -150,8 +150,6 @@ class ApiController extends AbstractController
 
             if($moninfo){
 
-    
-
                     $query = $this->entityManager->createQuery(
                         'SELECT u.id
                             FROM App:User u
