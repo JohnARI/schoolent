@@ -197,13 +197,14 @@
 
     $('.layout-setting').on("click", function(e) {
         if (document) {
+            
             $('body').toggleClass('dark-mode');
-            $('body').removeClass('transparent-mode');
+            // $('body').removeClass('transparent-mode');
         } else {
-            $('body').removeClass('dark-mode');
-            $('body').removeClass('transparent-mode');
-            $('body').addClass('light-mode');
-        }
+        //     $('body').removeClass('dark-mode');
+        //     $('body').removeClass('transparent-mode');
+            $('body').toggleClass('light-mode');
+         }
     });
 
 
