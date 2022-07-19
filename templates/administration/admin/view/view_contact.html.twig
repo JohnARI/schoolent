@@ -1,7 +1,7 @@
  {% extends 'base.html.twig' %}
 
 {% block title %}
-Administrator
+Message d'assistance
 {% endblock %}
 
 {% block body %}
@@ -36,7 +36,20 @@ Administrator
                                                         <td>{{ contact.phone }}</td>
                                                         <td>{{ contact.email }}</td>
                                                         <td>{{ contact.objet }}</td>
-                                                        <td>{{ contact.message }}</td>
+                                                        <td>	{% embed "components/modal.html.twig" %}
+									{% set modalType = "modal-sm" %}
+									{% set id = "message" %}
+									{% block button %}
+									{% if contact.message | length > 30 %}<button data-bs-toggle="modal" data-bs-target="#{{id}}">{{contact.message | length > 30 ? contact.message|slice(0, 30) ~ '...' : contact.message}}
+														</button>{% endif %}
+									{% endblock %}
+									{% block modalTitle %}Message
+									{% endblock %}
+									{% block dashboard %}
+									
+										<p class="text-wrap">{{contact.message}}</p>
+									{% endblock %}
+								{% endembed %}</td>
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>

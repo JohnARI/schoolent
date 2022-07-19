@@ -112,7 +112,7 @@
                                 </div>
                             </div>
 							{% endif %}
-				{% if (user.session == app.user.session and app.user.role == 'Professeur') or (app.user.role == 'Administrateur') %}
+				{% if (user.session == app.user.session and app.user.role == 'Professeur') or (app.user.role == 'Administrateur' and user.role == 'Eleve') %}
 					<div class="row">
 						<div class="col-xl">
 							<div class="card">
