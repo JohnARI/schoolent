@@ -32,7 +32,7 @@ class DashboardController extends AbstractController
 
     /**
      * Afficher les utilsateurs : le nombre d'administrateurs, d'élèves, et professeurs et leurs calendriers respectifs(élèves et professeurs).
-     * @Route("admin/dashboard", name="dashboard-admin", methods={"GET"})
+     * @Route("admin/dashboard", name="dashboard-admin")
      */
     public function admin(Request $request): Response
     {
